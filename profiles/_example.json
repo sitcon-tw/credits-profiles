@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "SITCON 夥伴",
+  "bio": "曾參與 SITCON 相關活動，關心學生社群與開源協作。",
+  "avatar_url": "https://example.com/avatar.png",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/octocat"
+    },
+    {
+      "type": "website",
+      "url": "https://example.com"
+    },
+    {
+      "type": "custom",
+      "label": "公開作品集",
+      "url": "https://example.com/portfolio"
+    }
+  ]
+}

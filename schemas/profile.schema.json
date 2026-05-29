@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sitcon.org/credits/schemas/profile.schema.json",
+  "title": "SITCON Credits contributor profile",
+  "description": "Opt-in public profile data maintained by a contributor through a GitHub username based profile file.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["display_name", "bio", "avatar_url", "links"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional editor hint for this JSON schema."
+    },
+    "display_name": {
+      "type": "string",
+      "maxLength": 80,
+      "description": "Preferred public display name. Empty string is allowed."
+    },
+    "bio": {
+      "type": "string",
+      "maxLength": 800,
+      "description": "Opt-in public biography. Empty string is allowed."
+    },
+    "avatar_url": {
+      "type": "string",
+      "maxLength": 2048,
+      "pattern": "^$|^https://",
+      "description": "Opt-in public avatar image URL. Empty string is allowed."
+    },
+    "links": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Opt-in public links.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "url"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "github",
+              "gitlab",
+              "website",
+              "blog",
+              "linkedin",
+              "facebook",
+              "instagram",
+              "threads",
+              "x",
+              "discord",
+              "telegram",
+              "mastodon",
+              "youtube",
+              "slides",
+              "custom"
+            ],
+            "description": "Standard link type. Use custom only when no standard type fits."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "description": "Required only for custom links."
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^https://"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "const": "custom"
+                }
+              }
+            },
+            "then": {
+              "required": ["label"]
+            }
+          },
+          {
+            "if": {
+              "required": ["type"],
+              "properties": {
+                "type": {
+                  "not": {
+                    "const": "custom"
+                  }
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "required": ["label"]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
