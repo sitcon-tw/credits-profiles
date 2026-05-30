@@ -56,6 +56,15 @@ pnpm test
 
 `profiles:validate` 只檢查 profile 檔案格式、檔名、URL、public email 格式與基本資料最小化規則。它不會審核身份連結、歷史紀錄修正、移除請求或隱私政策例外。
 
+## GitHub Actions
+
+目前已啟用的 workflow：
+
+- `CI`：在 pull request、`master` push 與手動觸發時執行 `pnpm test` 與 `pnpm profiles:validate`。
+- `Profile self-service guard`：在 pull request 上檢查非維護者的 self-service profile 更新是否只修改 `profiles/<github_username>.json`，且檔名 username 與 PR 作者相符。
+
+`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review。自動建立空白 template、自動接受 PR、branch protection/ruleset 與跨 repository build integration 尚未啟用。
+
 ## 與 SITCON Credits 的關係
 
 未來 [SITCON Credits](https://github.com/sitcon-tw/credits) 的建置流程可以 checkout 或下載本 repo 的 profile 資料，產生公開網站需要的個人資料索引。這個整合流程尚未啟用前，請不要把它描述為已上線。

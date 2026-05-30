@@ -126,4 +126,4 @@ pnpm profiles:validate
 
 ## 目前流程狀態
 
-目前這個資料夾提供 profile 檔案格式、空白範本與本機驗證。GitHub Actions 自動建立空白 template、自動檢查 PR 作者是否符合檔名，以及低風險 profile 更新的自動接受流程都尚未啟用。
+目前這個資料夾提供 profile 檔案格式、空白範本、本機驗證、GitHub Actions 格式驗證，以及 GitHub Actions self-service PR 範圍檢查。自動建立空白 template、低風險 profile 更新的自動接受流程、branch protection/ruleset 與跨 repository build integration 都尚未啟用。

@@ -72,9 +72,11 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 ## Automation Status
 
-Do not describe GitHub Actions automation, PR author ownership checks, branch protection, auto-merge, generated profile templates, or cross-repository build integration as active until the corresponding files and repository settings exist.
+GitHub Actions CI and a self-service PR ownership guard exist in `.github/workflows/`. The guard checks non-maintainer pull requests for low-risk profile scope: a self-service PR may only change the author's own `profiles/<github_username>.json` file.
 
-Future automation may check that a PR author matches the GitHub username represented by the profile filename and that the PR changes only low-risk profile fields. Passing such a check must not be treated as identity-merge approval.
+Do not describe branch protection, auto-merge, generated profile templates, or cross-repository build integration as active until the corresponding files and repository settings exist.
+
+Passing the self-service guard must not be treated as identity-merge approval. It also does not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author.
 
 ## Agent Operating Rules
 
