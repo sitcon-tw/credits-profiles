@@ -2,7 +2,7 @@
 
 SITCON Credits Profiles 是 SITCON Credits 的個人公開資料 repository。
 
-這裡只存放曾經參與 SITCON 相關活動的夥伴自願公開的 profile 資料，例如偏好的顯示名稱、簡介、頭像與公開連結。歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 維護。
+這裡只存放曾經參與 SITCON 相關活動的夥伴自願公開的 profile 資料，例如偏好的顯示名稱、簡介、頭像、公開 email 與公開連結。歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 維護。
 
 ## 為什麼獨立成 repo
 
@@ -23,6 +23,7 @@ profiles/<github_username>.json
 - `display_name`：你希望公開顯示的名稱，可以留空。
 - `bio`：你自願公開的簡短介紹，可以留空。
 - `avatar_url`：你自願公開的 `https://` 頭像 URL，可以留空。
+- `public_email`：你自願公開的 email，可以留空；只有願意讓這個 email 顯示在公開頁面時才填寫。
 - `links`：你自願公開的連結清單。
 
 完整格式請看：
@@ -36,6 +37,7 @@ profiles/<github_username>.json
 請不要在 profile 檔案中放：
 
 - 私人 email、電話、地址、證件資料或內部聯絡資訊。
+- 未經本人同意公開的 email；若要公開自己的 email，請只填在 `public_email`。
 - 未經本人同意公開的社群帳號。
 - 歷史活動角色、組別、來源 URL 或活動紀錄修正。
 - 「這些 appearance 是我」的身份合併宣告。
@@ -52,7 +54,7 @@ pnpm profiles:validate
 pnpm test
 ```
 
-`profiles:validate` 只檢查 profile 檔案格式、檔名、URL 與基本資料最小化規則。它不會審核身份連結、歷史紀錄修正、移除請求或隱私政策例外。
+`profiles:validate` 只檢查 profile 檔案格式、檔名、URL、public email 格式與基本資料最小化規則。它不會審核身份連結、歷史紀錄修正、移除請求或隱私政策例外。
 
 ## 與 SITCON Credits 的關係
 

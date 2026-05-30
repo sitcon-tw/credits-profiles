@@ -27,6 +27,7 @@ GitHub username 只能使用 GitHub 支援的格式：英文字母、數字與 `
 | `display_name` | 你希望在 SITCON Credits 顯示的公開名稱。可以留空，留空時網站可 fallback 到 GitHub username。 |
 | `bio` | 你自願公開的簡短介紹。可以留空。 |
 | `avatar_url` | 你自願公開的頭像圖片 URL。請使用 `https://` URL；可以留空。 |
+| `public_email` | 你自願公開的 email。可以留空；只有願意讓這個 email 顯示在 SITCON Credits 公開頁面時才填寫。 |
 | `links` | 你自願公開的連結清單，例如 GitHub、個人網站或公開社群頁。每筆連結包含 `type` 與 `url`；只有 `type` 是 `custom` 時才需要填 `label`。 |
 
 範例：
@@ -37,6 +38,7 @@ GitHub username 只能使用 GitHub 支援的格式：英文字母、數字與 `
   "display_name": "SITCON 夥伴",
   "bio": "曾參與 SITCON 相關活動，關心學生社群與開源協作。",
   "avatar_url": "https://example.com/avatar.png",
+  "public_email": "",
   "links": [
     {
       "type": "github",
@@ -104,6 +106,7 @@ slides
 profile 檔案只放本人 opt-in 的公開簡介資料。請不要在這裡放：
 
 - 私人 email、電話、地址、證件資料或內部聯絡資訊。
+- 未經本人同意公開的 email；若要公開自己的 email，請只填在 `public_email`。
 - 未經本人同意公開的社群帳號。
 - 歷史活動角色、組別、來源 URL 或活動紀錄修正。
 - 「這些 appearance 是我」的身份合併宣告。
@@ -119,7 +122,7 @@ profile 檔案只放本人 opt-in 的公開簡介資料。請不要在這裡放�
 pnpm profiles:validate
 ```
 
-這個檢查會確認檔名、欄位、URL 與基本資料最小化規則。它不會連線 Google Sheets，也不會讀取 service account credentials。
+這個檢查會確認檔名、欄位、URL、public email 格式與基本資料最小化規則。它不會連線 Google Sheets，也不會讀取 service account credentials。
 
 ## 目前流程狀態
 

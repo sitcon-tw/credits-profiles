@@ -5,7 +5,7 @@
   "description": "Opt-in public profile data maintained by a contributor through a GitHub username based profile file.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["display_name", "bio", "avatar_url", "links"],
+  "required": ["display_name", "bio", "avatar_url", "public_email", "links"],
   "properties": {
     "$schema": {
       "type": "string",
@@ -26,6 +26,12 @@
       "maxLength": 2048,
       "pattern": "^$|^https://",
       "description": "Opt-in public avatar image URL. Empty string is allowed."
+    },
+    "public_email": {
+      "type": "string",
+      "maxLength": 254,
+      "pattern": "^$|^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+      "description": "Opt-in public email address. Empty string is allowed."
     },
     "links": {
       "type": "array",

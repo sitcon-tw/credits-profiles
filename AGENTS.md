@@ -20,6 +20,7 @@ Allowed profile fields are documented by `profiles/README.md`, `profiles/_templa
 - preferred public display name
 - biography
 - avatar URL
+- public email address
 - public links
 
 Do not expand the schema unless the user explicitly asks for a profile policy or schema change.
@@ -45,6 +46,7 @@ Maintainer-approved identity links belong in the main SITCON Credits canonical d
 Profile data is opt-in public data. Do not add, infer, preserve, or publish:
 
 - private email addresses
+- email addresses outside the `public_email` field
 - phone numbers
 - physical addresses
 - identity documents
@@ -66,7 +68,7 @@ pnpm profiles:validate
 pnpm test
 ```
 
-These checks validate file format, filename shape, allowed fields, URL rules, and basic data minimization. They do not approve identity links, historical record corrections, removal requests, or privacy policy changes.
+These checks validate file format, filename shape, allowed fields, URL rules, public email format, and basic data minimization. They do not approve identity links, historical record corrections, removal requests, or privacy policy changes.
 
 ## Automation Status
 

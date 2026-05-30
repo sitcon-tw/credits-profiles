@@ -5,8 +5,8 @@ const DEFAULT_PROFILES_DIR = 'profiles';
 const TEMPLATE_FILE = '_template.json';
 const EXAMPLE_FILE = '_example.json';
 const SUPPORT_FILES = new Set(['README.md', TEMPLATE_FILE, EXAMPLE_FILE]);
-const ALLOWED_KEYS = new Set(['$schema', 'display_name', 'bio', 'avatar_url', 'links']);
-const REQUIRED_KEYS = ['display_name', 'bio', 'avatar_url', 'links'];
+const ALLOWED_KEYS = new Set(['$schema', 'display_name', 'bio', 'avatar_url', 'public_email', 'links']);
+const REQUIRED_KEYS = ['display_name', 'bio', 'avatar_url', 'public_email', 'links'];
 const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 const STANDARD_LINK_TYPES = new Set([
   'github',
@@ -129,6 +129,7 @@ async function validateProfileJson(issues, fileName, options) {
   validateStringField(issues, fileName, profile, 'display_name', { maxLength: 80, allowNewline: false });
   validateStringField(issues, fileName, profile, 'bio', { maxLength: 800, allowNewline: true });
   validateAvatarUrl(issues, fileName, profile.avatar_url);
+  validatePublicEmail(issues, fileName, profile.public_email);
   validateLinks(issues, fileName, profile.links);
 }
 
@@ -181,6 +182,28 @@ function validateAvatarUrl(issues, fileName, value) {
     addIssue(issues, fileName, 'avatar_url', 'must be 2048 characters or fewer');
   }
   validateUrl(issues, fileName, 'avatar_url', value, { protocols: ['https:'] });
+}
+
+function validatePublicEmail(issues, fileName, value) {
+  if (value === undefined) {
+    return;
+  }
+  if (typeof value !== 'string') {
+    addIssue(issues, fileName, 'public_email', 'must be a string');
+    return;
+  }
+  if (value === '') {
+    return;
+  }
+  if (value.length > 254) {
+    addIssue(issues, fileName, 'public_email', 'must be 254 characters or fewer');
+  }
+  if (/[\r\n]/.test(value)) {
+    addIssue(issues, fileName, 'public_email', 'must not contain line breaks');
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+    addIssue(issues, fileName, 'public_email', 'must be a valid email address');
+  }
 }
 
 function validateLinks(issues, fileName, links) {

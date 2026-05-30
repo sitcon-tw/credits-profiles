@@ -18,6 +18,7 @@ async function makeProfilesDir(profile) {
     display_name: '',
     bio: '',
     avatar_url: '',
+    public_email: '',
     links: [],
   });
   await writeProfile(dir, '_example.json', {
@@ -25,6 +26,7 @@ async function makeProfilesDir(profile) {
     display_name: 'SITCON 夥伴',
     bio: '曾參與 SITCON 相關活動。',
     avatar_url: 'https://example.com/avatar.png',
+    public_email: '',
     links: [
       {
         type: 'github',
@@ -59,6 +61,7 @@ function validProfile(link) {
     display_name: 'Octocat',
     bio: '',
     avatar_url: '',
+    public_email: '',
     links: [link],
   };
 }
@@ -115,6 +118,39 @@ test('profile validation rejects non-HTTPS link URLs', async () => {
     type: 'website',
     url: 'http://example.com',
   }));
+
+  await assert.rejects(validateProfiles(dir));
+});
+
+test('profile validation accepts a public email address', async () => {
+  const profile = validProfile({
+    type: 'github',
+    url: 'https://github.com/octocat',
+  });
+  profile.public_email = 'octocat@example.com';
+  const dir = await makeProfilesDir(profile);
+
+  await assert.doesNotReject(validateProfiles(dir));
+});
+
+test('profile validation rejects invalid public email addresses', async () => {
+  const profile = validProfile({
+    type: 'github',
+    url: 'https://github.com/octocat',
+  });
+  profile.public_email = 'not-an-email';
+  const dir = await makeProfilesDir(profile);
+
+  await assert.rejects(validateProfiles(dir));
+});
+
+test('profile validation rejects email addresses outside public_email', async () => {
+  const profile = validProfile({
+    type: 'github',
+    url: 'https://github.com/octocat',
+  });
+  profile.bio = 'Email me at octocat@example.com';
+  const dir = await makeProfilesDir(profile);
 
   await assert.rejects(validateProfiles(dir));
 });

@@ -3,6 +3,7 @@
   "display_name": "SITCON 夥伴",
   "bio": "曾參與 SITCON 相關活動，關心學生社群與開源協作。",
   "avatar_url": "https://example.com/avatar.png",
+  "public_email": "",
   "links": [
     {
       "type": "github",
