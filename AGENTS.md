@@ -72,13 +72,13 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 ## Automation Status
 
-GitHub Actions CI, a self-service PR ownership guard, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks pull requests for low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet.
+GitHub Actions CI, a self-service PR ownership guard, a profile auto-review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks pull requests for low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. The auto-review dispatch workflow runs after `CI` succeeds and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR approve/comment action happen under the main Credits repo's secrets. The review action checks that the guard also passed for the same head SHA and only approves when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet.
 
 Do not describe branch protection, auto-merge, generated profile templates, or cross-repository build integration as active until the corresponding files and repository settings exist.
 
-If branch protection or rulesets are enabled later, require both `CI` and `Profile self-service guard`; the workflow status is only advisory until repository settings make it required.
+If branch protection or rulesets are enabled later, require `CI`, `Profile self-service guard`, and the intended profile review policy checks; workflow status is only advisory until repository settings make it required.
 
-Passing the self-service guard or syncing the `people` helper must not be treated as identity-merge approval. These workflows also do not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author; the `profile-scope-reviewed` label only records maintainer review of the wider PR scope.
+Passing the self-service guard, receiving an automated approval, or syncing the `people` helper must not be treated as identity-merge approval. These workflows also do not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author; the `profile-scope-reviewed` label only records maintainer review of the wider PR scope.
 
 ## Agent Operating Rules
 

@@ -1,0 +1,47 @@
+name: Profile auto review
+
+on:
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    name: Request profile PR review
+    if: >-
+      ${{
+        github.event.workflow_run.event == 'pull_request' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.pull_requests[0]
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Dispatch canonical appearances review
+        uses: actions/github-script@v9
+        env:
+          CREDITS_SYNC_TOKEN: ${{ secrets.CREDITS_SYNC_TOKEN }}
+        with:
+          github-token: ${{ secrets.CREDITS_SYNC_TOKEN }}
+          script: |
+            if (!process.env.CREDITS_SYNC_TOKEN) {
+              core.setFailed('CREDITS_SYNC_TOKEN repository secret is required.');
+              return;
+            }
+
+            await github.rest.repos.createDispatchEvent({
+              owner: 'sitcon-tw',
+              repo: 'credits',
+              event_type: 'review-profile-pr',
+              client_payload: {
+                source_repository: `${context.repo.owner}/${context.repo.repo}`,
+                pull_number: context.payload.workflow_run.pull_requests[0].number,
+                head_sha: context.payload.workflow_run.head_sha,
+              },
+            });

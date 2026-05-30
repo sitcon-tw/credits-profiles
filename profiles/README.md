@@ -126,4 +126,4 @@ pnpm profiles:validate
 
 ## 目前流程狀態
 
-目前這個資料夾提供 profile 檔案格式、空白範本、本機驗證、GitHub Actions 格式驗證、GitHub Actions self-service PR 範圍檢查，以及 merge 後觸發 SITCON Credits 同步 `people` helper sheet 的 workflow。self-service PR 只能修改 PR 作者自己的單一 profile 檔；刪除、rename、修改他人的 profile，或修改支援檔案，都需要維護者審查並加上 `profile-scope-reviewed` label。低風險 profile 更新的自動接受流程、branch protection/ruleset 與 GitHub Pages build integration 都尚未啟用。
+目前這個資料夾提供 profile 檔案格式、空白範本、本機驗證、GitHub Actions 格式驗證、GitHub Actions self-service PR 範圍檢查、自動審查符合條件的 profile PR，以及 merge 後觸發 SITCON Credits 同步 `people` helper sheet 的 workflow。self-service PR 只能修改 PR 作者自己的單一 profile 檔；刪除、rename、修改他人的 profile，或修改支援檔案，都需要維護者審查並加上 `profile-scope-reviewed` label。自動審查由 `sitcon-tw/credits` 在收到 dispatch 後執行，只會在 CI 與 self-service guard 通過，且該 profile username 已出現在 canonical Google Sheets 的 `appearances.github_username` 時 approve；如果 username 尚未出現在 appearances，workflow 會留言提醒維護者先調整或確認 appearances 資料。branch protection/ruleset 與 GitHub Pages build integration 都尚未啟用。

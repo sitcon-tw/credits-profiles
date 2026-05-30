@@ -62,9 +62,10 @@ pnpm test
 
 - `CI`：在 pull request、`master` push 與手動觸發時執行 `pnpm test` 與 `pnpm profiles:validate`。
 - `Profile self-service guard`：在 pull request 上檢查 self-service profile 更新是否只修改 PR 作者自己的 `profiles/<github_username>.json`。超出此範圍的 PR 需要維護者審查後加上 `profile-scope-reviewed` label，不能只因作者是組織成員或協作者就自動通過。
+- `Profile auto review`：在 `CI` 成功後使用 `CREDITS_SYNC_TOKEN` dispatch `sitcon-tw/credits` 的 profile PR review workflow。該 workflow 會讀取 SITCON Credits canonical Google Sheets；若 `Profile self-service guard` 也已通過，且該 profile username 已出現在 `appearances.github_username`，就自動 approve。若 username 尚未出現在 `appearances`，workflow 會留言提醒維護者需要先調整或確認 canonical appearances 資料。
 - `Sync credits people helper`：當 `profiles/*.json` merge 到 `master` 或手動觸發時，使用 `CREDITS_SYNC_TOKEN` dispatch `sitcon-tw/credits` 的 `Sync people helper` workflow，讓 Google Sheets 的 `people` helper sheet 同步出現該 profile username。
 
-`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。`Sync credits people helper` 只同步 helper sheet，不會更改歷史 appearances 或核准身份連結。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。自動接受 PR、branch protection/ruleset 與 GitHub Pages build integration 尚未啟用；若未來要讓 GitHub 阻止未通過檢查的 merge，仍需在 repository 設定中要求 `CI` 與 `Profile self-service guard` 通過。
+`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。`Profile auto review` 只代表 profile 格式、PR 範圍與 canonical appearances 參照都已符合自動審查條件；它不會建立新的身份連結。`Sync credits people helper` 只同步 helper sheet，不會更改歷史 appearances 或核准身份連結。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。branch protection/ruleset 與 GitHub Pages build integration 尚未啟用；若未來要讓 GitHub 阻止未通過檢查的 merge，仍需在 repository 設定中要求 `CI` 與 `Profile self-service guard` 通過。
 
 ## 與 SITCON Credits 的關係
 
