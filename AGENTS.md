@@ -72,11 +72,11 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 ## Automation Status
 
-GitHub Actions CI and a self-service PR ownership guard exist in `.github/workflows/`. The guard checks non-maintainer pull requests for low-risk profile scope: a self-service PR may only change the author's own `profiles/<github_username>.json` file.
+GitHub Actions CI, a self-service PR ownership guard, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks non-maintainer pull requests for low-risk profile scope: a self-service PR may only change the author's own `profiles/<github_username>.json` file. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet.
 
 Do not describe branch protection, auto-merge, generated profile templates, or cross-repository build integration as active until the corresponding files and repository settings exist.
 
-Passing the self-service guard must not be treated as identity-merge approval. It also does not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author.
+Passing the self-service guard or syncing the `people` helper must not be treated as identity-merge approval. These workflows also do not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author.
 
 ## Agent Operating Rules
 
