@@ -61,10 +61,10 @@ pnpm test
 目前已啟用的 workflow：
 
 - `CI`：在 pull request、`master` push 與手動觸發時執行 `pnpm test` 與 `pnpm profiles:validate`。
-- `Profile self-service guard`：在 pull request 上檢查非維護者的 self-service profile 更新是否只修改 `profiles/<github_username>.json`，且檔名 username 與 PR 作者相符。
+- `Profile self-service guard`：在 pull request 上檢查 self-service profile 更新是否只修改 PR 作者自己的 `profiles/<github_username>.json`。超出此範圍的 PR 需要維護者審查後加上 `profile-scope-reviewed` label，不能只因作者是組織成員或協作者就自動通過。
 - `Sync credits people helper`：當 `profiles/*.json` merge 到 `master` 或手動觸發時，使用 `CREDITS_SYNC_TOKEN` dispatch `sitcon-tw/credits` 的 `Sync people helper` workflow，讓 Google Sheets 的 `people` helper sheet 同步出現該 profile username。
 
-`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。`Sync credits people helper` 只同步 helper sheet，不會更改歷史 appearances 或核准身份連結。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review。自動接受 PR、branch protection/ruleset 與 GitHub Pages build integration 尚未啟用。
+`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。`Sync credits people helper` 只同步 helper sheet，不會更改歷史 appearances 或核准身份連結。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。自動接受 PR、branch protection/ruleset 與 GitHub Pages build integration 尚未啟用；若未來要讓 GitHub 阻止未通過檢查的 merge，仍需在 repository 設定中要求 `CI` 與 `Profile self-service guard` 通過。
 
 ## 與 SITCON Credits 的關係
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "preinstall": "node scripts/ensure-pnpm.mjs",
-    "test": "node scripts/ensure-pnpm.mjs && node --test scripts/profiles/validate.test.mjs",
+    "test": "node scripts/ensure-pnpm.mjs && node --test scripts/profiles/*.test.mjs",
     "profiles:validate": "node scripts/ensure-pnpm.mjs && node scripts/profiles/validate.mjs"
   },
   "engines": {

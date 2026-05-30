@@ -7,6 +7,8 @@ on:
       - synchronize
       - reopened
       - ready_for_review
+      - labeled
+      - unlabeled
 
 permissions:
   contents: read
@@ -19,75 +21,24 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - name: Verify self-service profile scope
+      - name: Check out trusted base repository
+        uses: actions/checkout@v6
+
+      - name: Collect changed files
         uses: actions/github-script@v9
+        env:
+          PROFILE_FILES_JSON: ${{ runner.temp }}/profile-files.json
         with:
           script: |
             const pr = context.payload.pull_request;
-            const trustedAssociations = new Set(['OWNER', 'MEMBER', 'COLLABORATOR']);
-
-            if (trustedAssociations.has(pr.author_association)) {
-              core.info(`Trusted author association ${pr.author_association}; self-service guard does not restrict this PR.`);
-              return;
-            }
-
             const files = await github.paginate(github.rest.pulls.listFiles, {
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: pr.number,
               per_page: 100,
             });
+            const fs = require('node:fs');
+            fs.writeFileSync(process.env.PROFILE_FILES_JSON, JSON.stringify(files, null, 2));
 
-            const author = pr.user.login.toLowerCase();
-            const issues = [];
-            const profileUsernames = new Set();
-
-            for (const file of files) {
-              const name = file.filename;
-
-              if (file.status === 'removed') {
-                issues.push(`${name}: profile removal requests require maintainer review.`);
-                continue;
-              }
-
-              if (file.status === 'renamed') {
-                issues.push(`${name}: profile renames require maintainer review.`);
-                continue;
-              }
-
-              const match = /^profiles\/([^/]+)\.json$/.exec(name);
-              if (!match) {
-                issues.push(`${name}: self-service PRs may only change profiles/<github_username>.json.`);
-                continue;
-              }
-
-              const username = match[1];
-              if (username.startsWith('_')) {
-                issues.push(`${name}: support/template files require maintainer review.`);
-                continue;
-              }
-
-              profileUsernames.add(username.toLowerCase());
-              if (username.toLowerCase() !== author) {
-                issues.push(`${name}: filename username must match PR author ${pr.user.login}.`);
-              }
-            }
-
-            if (files.length === 0) {
-              issues.push('No changed files were found.');
-            }
-
-            if (profileUsernames.size === 0) {
-              issues.push('Self-service PRs must change exactly one owned profile file.');
-            }
-
-            if (profileUsernames.size > 1) {
-              issues.push('Self-service PRs may not change more than one GitHub username profile.');
-            }
-
-            if (issues.length > 0) {
-              core.setFailed([
-                'This PR needs maintainer review instead of the self-service path:',
-                ...issues.map((issue) => `- ${issue}`),
-              ].join('\n'));
-            }
+      - name: Verify self-service profile scope
+        run: node scripts/profiles/self-service-guard.mjs --event="$GITHUB_EVENT_PATH" --files="$RUNNER_TEMP/profile-files.json"

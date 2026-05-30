@@ -126,4 +126,4 @@ pnpm profiles:validate
 
 ## 目前流程狀態
 
-目前這個資料夾提供 profile 檔案格式、空白範本、本機驗證、GitHub Actions 格式驗證、GitHub Actions self-service PR 範圍檢查，以及 merge 後觸發 SITCON Credits 同步 `people` helper sheet 的 workflow。低風險 profile 更新的自動接受流程、branch protection/ruleset 與 GitHub Pages build integration 都尚未啟用。
+目前這個資料夾提供 profile 檔案格式、空白範本、本機驗證、GitHub Actions 格式驗證、GitHub Actions self-service PR 範圍檢查，以及 merge 後觸發 SITCON Credits 同步 `people` helper sheet 的 workflow。self-service PR 只能修改 PR 作者自己的單一 profile 檔；刪除、rename、修改他人的 profile，或修改支援檔案，都需要維護者審查並加上 `profile-scope-reviewed` label。低風險 profile 更新的自動接受流程、branch protection/ruleset 與 GitHub Pages build integration 都尚未啟用。
