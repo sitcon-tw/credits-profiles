@@ -1,6 +1,6 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
+  "display_name": "Not my profile",
   "bio": "",
   "avatar_url": "",
   "public_email": "",
