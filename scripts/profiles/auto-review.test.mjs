@@ -5,6 +5,7 @@ import {
   collectAppearanceUsernames,
   decideProfileAutoReview,
   findAssistantMissingAppearanceComment,
+  formatGraphqlMergeMethod,
   formatMergeTitle,
   formatMissingAppearanceComment,
   isAssistantMissingAppearanceComment,
@@ -122,6 +123,11 @@ test('profilePullRequestHeadMatches rejects stale dispatch payloads', () => {
 
 test('formatMergeTitle names the profile update', () => {
   assert.equal(formatMergeTitle('octocat'), 'Update octocat profile');
+});
+
+test('formatGraphqlMergeMethod converts merge method to enum value', () => {
+  assert.equal(formatGraphqlMergeMethod('squash'), 'SQUASH');
+  assert.equal(formatGraphqlMergeMethod('merge'), 'MERGE');
 });
 
 test('assistant missing appearance comment matching ignores legacy user comments', () => {

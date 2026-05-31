@@ -194,7 +194,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
     await approvePullRequest(reviewToken, options, decision.reviewBody);
     console.log(`Profile auto review approved: ${decision.username}`);
     if (options.autoMerge) {
-      await mergePullRequest(reviewToken, options, decision.mergeTitle);
+      await mergePullRequestOrEnableAutoMerge(reviewToken, options, currentPullRequest, decision.mergeTitle);
       console.log(`Profile auto review merged: ${decision.username}`);
     }
   }
@@ -316,12 +316,59 @@ async function approvePullRequest(token, options, body) {
   });
 }
 
+async function mergePullRequestOrEnableAutoMerge(token, options, pullRequest, commitTitle) {
+  try {
+    await mergePullRequest(token, options, commitTitle);
+  } catch (error) {
+    if (!isIntegrationAccessError(error)) {
+      throw error;
+    }
+    await enablePullRequestAutoMerge(token, pullRequest.node_id, {
+      commitTitle,
+      mergeMethod: options.mergeMethod ?? 'squash',
+    });
+  }
+}
+
 async function mergePullRequest(token, options, commitTitle) {
-  await githubRequest(token, `PUT /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}/merge`, {
+  return githubRequest(token, `PUT /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}/merge`, {
     commit_title: commitTitle,
     merge_method: options.mergeMethod ?? 'squash',
     sha: options.headSha,
   });
+}
+
+async function enablePullRequestAutoMerge(token, pullRequestId, options) {
+  if (!pullRequestId) {
+    throw new Error('pull request GraphQL node id is required to enable auto-merge.');
+  }
+  await githubGraphqlRequest(token, `
+    mutation EnablePullRequestAutoMerge($pullRequestId: ID!, $mergeMethod: PullRequestMergeMethod!, $commitHeadline: String!) {
+      enablePullRequestAutoMerge(input: {
+        pullRequestId: $pullRequestId,
+        mergeMethod: $mergeMethod,
+        commitHeadline: $commitHeadline
+      }) {
+        pullRequest {
+          number
+        }
+      }
+    }
+  `, {
+    pullRequestId,
+    mergeMethod: formatGraphqlMergeMethod(options.mergeMethod),
+    commitHeadline: options.commitTitle,
+  });
+}
+
+export function formatGraphqlMergeMethod(method) {
+  return String(method).toUpperCase();
+}
+
+function isIntegrationAccessError(error) {
+  return error instanceof Error &&
+    error.message.includes('GitHub API request failed 403') &&
+    error.message.includes('Resource not accessible by integration');
 }
 
 async function githubPaginate(token, route) {
@@ -342,6 +389,14 @@ async function githubRequest(token, route, body) {
   const request = routeToRequest(route);
   const { data } = await githubFetch(token, request.method, request.url, body);
   return data;
+}
+
+async function githubGraphqlRequest(token, query, variables) {
+  const { data } = await githubFetch(token, 'POST', 'https://api.github.com/graphql', { query, variables });
+  if (data.errors?.length > 0) {
+    throw new Error(`GitHub GraphQL request failed: ${JSON.stringify(data.errors)}`);
+  }
+  return data.data;
 }
 
 async function githubFetch(token, method, url, body) {
