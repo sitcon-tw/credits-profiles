@@ -9,6 +9,7 @@ import {
   formatMergeTitle,
   formatMissingAppearanceComment,
   isAssistantMissingAppearanceComment,
+  isPullRequestNotReadyToMergeGraphqlError,
   profilePullRequestHeadMatches,
   summarizeRequiredChecks,
 } from './auto-review.mjs';
@@ -128,6 +129,21 @@ test('formatMergeTitle names the profile update', () => {
 test('formatGraphqlMergeMethod converts merge method to enum value', () => {
   assert.equal(formatGraphqlMergeMethod('squash'), 'SQUASH');
   assert.equal(formatGraphqlMergeMethod('merge'), 'MERGE');
+});
+
+test('isPullRequestNotReadyToMergeGraphqlError detects merge-state errors only', () => {
+  assert.equal(
+    isPullRequestNotReadyToMergeGraphqlError(new Error('GitHub GraphQL request failed: [{"message":"Pull request is not mergeable"}]')),
+    true,
+  );
+  assert.equal(
+    isPullRequestNotReadyToMergeGraphqlError(new Error('GitHub GraphQL request failed: [{"message":"Pull request Pull request is in unstable status"}]')),
+    true,
+  );
+  assert.equal(
+    isPullRequestNotReadyToMergeGraphqlError(new Error('GitHub GraphQL request failed: [{"message":"Resource not accessible by integration"}]')),
+    false,
+  );
 });
 
 test('assistant missing appearance comment matching ignores legacy user comments', () => {

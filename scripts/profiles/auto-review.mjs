@@ -323,6 +323,17 @@ async function mergePullRequestOrEnableAutoMerge(token, options, pullRequest, co
     if (!isIntegrationAccessError(error)) {
       throw error;
     }
+    try {
+      await mergePullRequestGraphql(token, pullRequest.node_id, {
+        commitTitle,
+        mergeMethod: options.mergeMethod ?? 'squash',
+      });
+      return;
+    } catch (graphqlMergeError) {
+      if (!isPullRequestNotReadyToMergeGraphqlError(graphqlMergeError)) {
+        throw graphqlMergeError;
+      }
+    }
     await enablePullRequestAutoMerge(token, pullRequest.node_id, {
       commitTitle,
       mergeMethod: options.mergeMethod ?? 'squash',
@@ -335,6 +346,29 @@ async function mergePullRequest(token, options, commitTitle) {
     commit_title: commitTitle,
     merge_method: options.mergeMethod ?? 'squash',
     sha: options.headSha,
+  });
+}
+
+async function mergePullRequestGraphql(token, pullRequestId, options) {
+  if (!pullRequestId) {
+    throw new Error('pull request GraphQL node id is required to merge.');
+  }
+  await githubGraphqlRequest(token, `
+    mutation MergePullRequest($pullRequestId: ID!, $mergeMethod: PullRequestMergeMethod!, $commitHeadline: String!) {
+      mergePullRequest(input: {
+        pullRequestId: $pullRequestId,
+        mergeMethod: $mergeMethod,
+        commitHeadline: $commitHeadline
+      }) {
+        pullRequest {
+          number
+        }
+      }
+    }
+  `, {
+    pullRequestId,
+    mergeMethod: formatGraphqlMergeMethod(options.mergeMethod),
+    commitHeadline: options.commitTitle,
   });
 }
 
@@ -369,6 +403,12 @@ function isIntegrationAccessError(error) {
   return error instanceof Error &&
     error.message.includes('GitHub API request failed 403') &&
     error.message.includes('Resource not accessible by integration');
+}
+
+export function isPullRequestNotReadyToMergeGraphqlError(error) {
+  return error instanceof Error &&
+    error.message.includes('GitHub GraphQL request failed') &&
+    /not mergeable|not ready|unstable|blocked|behind|pending/i.test(error.message);
 }
 
 async function githubPaginate(token, route) {
