@@ -5,6 +5,7 @@ import {
   collectAppearanceUsernames,
   decideProfileAutoReview,
   formatMissingAppearanceComment,
+  profilePullRequestHeadMatches,
   summarizeRequiredChecks,
 } from './auto-review.mjs';
 
@@ -109,4 +110,9 @@ test('formatMissingAppearanceComment includes stable marker and maintainer instr
   assert.match(comment, /sitcon-credits-profile-appearance-check/);
   assert.match(comment, /維護者/);
   assert.match(comment, /appearances/);
+});
+
+test('profilePullRequestHeadMatches rejects stale dispatch payloads', () => {
+  assert.equal(profilePullRequestHeadMatches({ head: { sha: 'new-head' } }, 'old-head'), false);
+  assert.equal(profilePullRequestHeadMatches({ head: { sha: 'same-head' } }, 'same-head'), true);
 });

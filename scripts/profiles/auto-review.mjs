@@ -48,6 +48,10 @@ export function decideProfileAutoReview({ pullRequest, files, exportPayload, che
   };
 }
 
+export function profilePullRequestHeadMatches(pullRequest, expectedHeadSha) {
+  return pullRequest?.head?.sha === expectedHeadSha;
+}
+
 export function summarizeRequiredChecks(checkRuns, requiredNames) {
   const latestByName = new Map();
   for (const checkRun of checkRuns ?? []) {
@@ -160,6 +164,12 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
 
   if (decision.action === 'wait' || decision.action === 'skip') {
     console.log(`Profile auto review skipped: ${decision.reason}`);
+    return;
+  }
+
+  const currentPullRequest = await githubRequest(apiToken, `GET /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}`);
+  if (!profilePullRequestHeadMatches(currentPullRequest, options.headSha)) {
+    console.log(`Profile auto review skipped: stale-pr-head`);
     return;
   }
 
