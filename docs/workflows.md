@@ -2,6 +2,8 @@
 
 這份文件給想新增或更新自己 profile 的貢獻者、review profile PR 的維護者，以及想理解 `credits-profiles` 自動化的人閱讀。
 
+`site-profiles/` 是維護者從歷屆活動公開網站整理出的顯示用資料，只接受直接 commit，不屬於自助 profile PR 流程。
+
 ## 一般自助更新
 
 ```mermaid
@@ -43,10 +45,11 @@ flowchart TD
 - 修改別人的 profile。
 - 同時修改多個 profile。
 - 修改 `_template.json`、schema、workflow、script、docs 或其他支援檔案。
+- 修改 `site-profiles/`。
 - 要求移除 profile 資料、解除歷史 appearance 連結或更改隱私政策。
 - 要求新增、改寫、拆分或合併歷史活動紀錄。
 
-維護者若確認這些變更的 profile 範圍可以接受，應加上 `profile-scope-reviewed` label。這個 label 只代表維護者審查過 PR 範圍，不代表身份合併、歷史紀錄修正或隱私請求已被核准。
+維護者若確認這些變更的 profile 範圍可以接受，應加上 `profile-scope-reviewed` label。這個 label 只代表維護者審查過 PR 範圍，不代表身份合併、歷史紀錄修正或隱私請求已被核准。`site-profiles/` 不使用這個 label 開放 PR；若要更新，應由維護者直接 commit 到 repository。
 
 ## Branch Ruleset 建議
 
@@ -68,3 +71,5 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 - `sync-people-from-profiles`：由 `Sync credits people helper` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。
 
 這兩個 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
+
+`site-profiles/**` 的變更不會觸發 `sync-people-from-profiles`，也不會被當作 contributor-owned profile username。

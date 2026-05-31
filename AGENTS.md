@@ -1,15 +1,17 @@
 # AGENTS.md
 
-This repository maintains opt-in public profile files for SITCON Credits contributors.
+This repository maintains opt-in public profile files for SITCON Credits contributors and display-only site profiles derived from public SITCON event websites.
 
 The public reader-facing documentation should be written in Traditional Chinese for Taiwan unless a file explicitly targets another audience. This file is written in English because it is intended for LLM agents and automated maintainers.
 
 ## Repository Role
 
 - This repository stores low-risk, opt-in profile data for GitHub usernames.
+- This repository also stores maintainer-controlled site profile data under `site-profiles/`.
 - The main SITCON Credits repository is https://github.com/sitcon-tw/credits.
 - Historical event appearances, event scope, role records, source URLs, and accepted identity links are not maintained here.
 - A profile file existing here does not prove that any historical appearance belongs to that GitHub username.
+- A site profile existing here does not prove contributor opt-in or identity merge approval.
 
 ## Data Boundary
 
@@ -24,6 +26,13 @@ Allowed profile fields are documented by `profiles/README.md`, `profiles/_templa
 - public links
 
 Do not expand the schema unless the user explicitly asks for a profile policy or schema change.
+
+Site profile files live at `site-profiles/<event_id>/<source_person_id>.json`. They are display-only fallback data from public event websites. The only allowed fields are:
+
+- display name
+- avatar URL
+
+Site profiles must not include biographies, links, public email addresses, aliases, GitHub usernames, identity evidence, appearance lists, or source URL lists. They are not contributor-owned and must not be edited through ordinary pull requests.
 
 ## Identity Handling
 
@@ -65,6 +74,7 @@ Local validation:
 
 ```bash
 pnpm profiles:validate
+pnpm site-profiles:validate
 pnpm test
 ```
 
@@ -72,7 +82,7 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 ## Automation Status
 
-GitHub Actions CI, a self-service PR ownership guard, a trusted profile review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks pull requests for low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. The trusted profile review workflow runs on `pull_request_target`, uses only base repository code, reads the pull request head's single profile JSON through the GitHub API, validates the profile content, and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR approve/comment/merge action happen under the main Credits repo's secrets. The review action checks that the trusted profile review and guard also passed for the same head SHA and only approves/merges when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet.
+GitHub Actions CI, a self-service PR ownership guard, a trusted profile review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks pull requests for low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. Pull requests that touch `site-profiles/` are hard-blocked by the guard because site profiles are maintainer-controlled direct-commit data only. The trusted profile review workflow runs on `pull_request_target`, uses only base repository code, reads the pull request head's single profile JSON through the GitHub API, validates the profile content, and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR approve/comment/merge action happen under the main Credits repo's secrets. The review action checks that the trusted profile review and guard also passed for the same head SHA and only approves/merges when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet. Changes under `site-profiles/` do not trigger people-helper sync.
 
 The workflow files exist for profile scope checks, trusted profile review dispatch, people-helper sync dispatch, and receiving generated blank profile templates from the main `credits` repository. Do not describe branch protection, auto-merge permissions, repository secrets, GitHub App installation, or cross-repository build integration as active unless those repository settings are confirmed.
 
@@ -84,6 +94,7 @@ Passing the self-service guard, receiving an automated approval, or syncing the 
 
 - `README.md` is the friendly starting point for contributors who want to add or update their own profile.
 - `profiles/README.md` is the field-level profile JSON reference.
+- `site-profiles/README.md` documents display-only site profile files.
 - `docs/workflows.md` is the reader-facing explanation of self-service PR checks and cross-repository dispatch.
 - `AGENTS.md` remains the local instruction entrypoint for LLM agents and automated maintainers.
 

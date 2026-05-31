@@ -2,6 +2,8 @@
 
 這個資料夾用來放曾經參與 SITCON 相關活動的夥伴自願提供的公開個人資料。每個 profile 檔案只代表一個 GitHub username 可自行維護的公開簡介，不是歷史貢獻紀錄本身，也不是身份合併的證明。
 
+從歷屆活動網站整理出的顯示用名稱與頭像放在 [`../site-profiles/`](../site-profiles/README.md)。那不是本人 opt-in profile，也不接受一般 Pull Request 修改。
+
 ## 檔名
 
 profile 檔案放在 `profiles/` 底下，檔名使用 GitHub username：

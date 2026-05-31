@@ -1,6 +1,6 @@
 # SITCON Credits Profiles
 
-SITCON Credits Profiles 是 SITCON Credits 的個人公開資料 repository。這裡只存放曾經參與 SITCON 相關活動的夥伴自願公開的 profile 資料，例如偏好的顯示名稱、簡介、頭像、公開 email 與公開連結。
+SITCON Credits Profiles 是 SITCON Credits 的公開 profile 資料 repository。`profiles/` 存放曾經參與 SITCON 相關活動的夥伴自願公開的 profile 資料，例如偏好的顯示名稱、簡介、頭像、公開 email 與公開連結。`site-profiles/` 存放維護者從歷屆活動公開網站整理出的顯示用名稱與頭像。
 
 歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 維護。某個 GitHub username 有 profile 檔案，只代表該 username 有一份 opt-in 公開資料，不代表任何歷史 appearance 已經自動連到這個人。
 
@@ -9,13 +9,14 @@ SITCON Credits Profiles 是 SITCON Credits 的個人公開資料 repository。�
 | 你想做什麼 | 請看 |
 | --- | --- |
 | 新增或更新自己的 profile | [profile 檔案格式](profiles/README.md) |
+| 了解活動網站來源 profile | [site profile 格式](site-profiles/README.md) |
 | 理解 Pull Request 送出後會發生什麼事 | [自助 profile PR 流程](docs/workflows.md) |
 | 了解主 repo 的資料模型與身份審核邊界 | [SITCON Credits 資料模型與治理](https://github.com/sitcon-tw/credits/blob/master/docs/data-model.md) |
 | 了解完整跨 repo 自動化 | [SITCON Credits 自動化流程](https://github.com/sitcon-tw/credits/blob/master/docs/workflows.md) |
 
 ## 可以放什麼
 
-profile 檔案放在：
+本人 opt-in profile 檔案放在：
 
 ```text
 profiles/<github_username>.json
@@ -34,6 +35,14 @@ profiles/<github_username>.json
 - [profiles/README.md](profiles/README.md)
 - [profiles/_template.json](profiles/_template.json)
 - [schemas/profile.schema.json](schemas/profile.schema.json)
+
+活動網站來源 profile 放在：
+
+```text
+site-profiles/<event_id>/<source_person_id>.json
+```
+
+site profile 只允許 `display_name` 與 `avatar_url`，只供前端在尚未有本人 opt-in profile 時顯示活動網站公開資料。這些檔案只由維護者直接 commit，不接受一般 Pull Request 修改。
 
 ## 不可以放什麼
 
@@ -58,7 +67,7 @@ profiles/<github_username>.json
 - 符合條件時，`SITCON Credits Assistant` GitHub App 可以核准並以 squash merge 合併 PR。
 - 如果 username 尚未出現在 appearances，workflow 會留言提醒維護者先確認或調整 canonical data，不會自動建立身份連結。
 
-刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。
+刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。`site-profiles/` 不走這個 PR review 路徑；若要更新，應由維護者直接 commit。
 
 ## 驗證
 
@@ -66,14 +75,19 @@ profiles/<github_username>.json
 
 ```bash
 pnpm profiles:validate
+pnpm site-profiles:validate
 pnpm test
 ```
 
 `profiles:validate` 只檢查 profile 檔案格式、檔名、URL、public email 格式與基本資料最小化規則。它不會審核身份連結、歷史紀錄修正、移除請求或隱私政策例外。
 
+`site-profiles:validate` 只檢查 `site-profiles/` 的活動網站來源顯示資料格式。它不會把 site profile 視為本人 opt-in，也不會建立 GitHub username 身份連結。
+
 ## 與 SITCON Credits 的關係
 
 `credits-profiles` 的 profile 檔案 merge 到 `master` 後，會觸發 `sitcon-tw/credits` 的 people helper 同步 workflow，讓 Google Sheets 的 `people` helper sheet 出現該 profile username 與 display name。這只是維護提示，不會更改歷史 appearances 或核准身份連結。
+
+`site-profiles/` 不會觸發 people helper 同步，也不會讓任何 `site:<source_person_id>` 變成可自助編輯的 GitHub profile。SITCON Credits 前端建置時可以用同一筆 appearance 的 `event_id` 加上 `site:<source_person_id>` 找到對應的 site profile。
 
 未來 [SITCON Credits](https://github.com/sitcon-tw/credits) 的建置流程可以 checkout 或下載本 repo 的 profile 資料，產生公開網站需要的個人資料索引。GitHub Pages 建置整合尚未啟用前，請不要把它描述為已上線。
 
@@ -81,4 +95,4 @@ pnpm test
 
 本 repo 的程式、設定與文件以 [MIT License](LICENSE) 授權。
 
-`profiles/*.json` 中的個人公開 profile 資料是 contributor 自願提供給 SITCON Credits 公開呈現的 opt-in 資料。使用脈絡、public email 邊界與主 repo 的 canonical data 關係請看 [資料使用聲明](DATA_USAGE.md)。
+`profiles/*.json` 中的個人公開 profile 資料是 contributor 自願提供給 SITCON Credits 公開呈現的 opt-in 資料。`site-profiles/**/*.json` 是由維護者從公開活動網站整理的顯示用資料。使用脈絡、public email 邊界與主 repo 的 canonical data 關係請看 [資料使用聲明](DATA_USAGE.md)。
