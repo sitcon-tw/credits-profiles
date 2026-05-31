@@ -3,6 +3,7 @@ name: Trusted profile review
 on:
   pull_request_target:
     types:
+      - edited
       - opened
       - synchronize
       - reopened
