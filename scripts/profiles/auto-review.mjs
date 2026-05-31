@@ -139,6 +139,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
   const options = parseArgs(argv);
   const apiToken = env.GITHUB_TOKEN;
   const reviewToken = env.PROFILE_REVIEW_TOKEN;
+  const assistantLogin = env.CREDITS_ASSISTANT_BOT_LOGIN || CREDITS_ASSISTANT_BOT_LOGIN;
 
   if (!apiToken) {
     throw new Error('GITHUB_TOKEN is required.');
@@ -180,7 +181,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
   }
 
   if (decision.action === 'comment') {
-    await upsertMissingAppearanceComment(apiToken, options, decision.commentBody);
+    await upsertMissingAppearanceComment(apiToken, options, decision.commentBody, assistantLogin);
     console.log(`Profile auto review commented: ${decision.reason}`);
     return;
   }
@@ -189,7 +190,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
     if (!reviewToken) {
       throw new Error('PROFILE_REVIEW_TOKEN is required to approve profile pull requests.');
     }
-    await deleteMissingAppearanceComments(apiToken, options);
+    await deleteMissingAppearanceComments(apiToken, options, assistantLogin);
     await approvePullRequest(reviewToken, options, decision.reviewBody);
     console.log(`Profile auto review approved: ${decision.username}`);
     if (options.autoMerge) {
@@ -280,9 +281,9 @@ function readNextArg(argv, index, name) {
   return value;
 }
 
-async function upsertMissingAppearanceComment(token, options, body) {
+async function upsertMissingAppearanceComment(token, options, body, assistantLogin) {
   const comments = await githubPaginate(token, `GET /repos/${options.owner}/${options.repo}/issues/${options.pullNumber}/comments`);
-  const existing = findAssistantMissingAppearanceComment(comments);
+  const existing = findAssistantMissingAppearanceComment(comments, assistantLogin);
   if (existing) {
     await githubRequest(token, `PATCH /repos/${options.owner}/${options.repo}/issues/comments/${existing.id}`, { body });
     return;
@@ -290,22 +291,22 @@ async function upsertMissingAppearanceComment(token, options, body) {
   await githubRequest(token, `POST /repos/${options.owner}/${options.repo}/issues/${options.pullNumber}/comments`, { body });
 }
 
-async function deleteMissingAppearanceComments(token, options) {
+async function deleteMissingAppearanceComments(token, options, assistantLogin) {
   const comments = await githubPaginate(token, `GET /repos/${options.owner}/${options.repo}/issues/${options.pullNumber}/comments`);
   for (const comment of comments) {
-    if (isAssistantMissingAppearanceComment(comment)) {
+    if (isAssistantMissingAppearanceComment(comment, assistantLogin)) {
       await githubRequest(token, `DELETE /repos/${options.owner}/${options.repo}/issues/comments/${comment.id}`);
     }
   }
 }
 
-export function findAssistantMissingAppearanceComment(comments) {
-  return comments.find(isAssistantMissingAppearanceComment);
+export function findAssistantMissingAppearanceComment(comments, assistantLogin = CREDITS_ASSISTANT_BOT_LOGIN) {
+  return comments.find((comment) => isAssistantMissingAppearanceComment(comment, assistantLogin));
 }
 
-export function isAssistantMissingAppearanceComment(comment) {
+export function isAssistantMissingAppearanceComment(comment, assistantLogin = CREDITS_ASSISTANT_BOT_LOGIN) {
   return comment.body?.includes(MISSING_APPEARANCE_COMMENT_MARKER) &&
-    comment.user?.login === CREDITS_ASSISTANT_BOT_LOGIN;
+    comment.user?.login === assistantLogin;
 }
 
 async function approvePullRequest(token, options, body) {
@@ -366,7 +367,7 @@ async function githubFetch(token, method, url, body) {
 }
 
 function routeToRequest(route) {
-  const [, method, path] = /^(GET|POST|PATCH|DELETE) (\/.*)$/.exec(route) ?? [];
+  const [, method, path] = /^(GET|POST|PUT|PATCH|DELETE) (\/.*)$/.exec(route) ?? [];
   if (!method || !path) {
     throw new Error(`Invalid GitHub route: ${route}`);
   }

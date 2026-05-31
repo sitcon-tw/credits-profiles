@@ -143,3 +143,15 @@ test('assistant missing appearance comment matching ignores legacy user comments
   assert.equal(isAssistantMissingAppearanceComment(assistantComment), true);
   assert.equal(findAssistantMissingAppearanceComment(comments), assistantComment);
 });
+
+test('assistant missing appearance comment matching supports configured app login', () => {
+  const assistantComment = {
+    id: 3,
+    user: { login: 'sitcon-credits' },
+    body: formatMissingAppearanceComment('octocat'),
+  };
+
+  assert.equal(isAssistantMissingAppearanceComment(assistantComment), false);
+  assert.equal(isAssistantMissingAppearanceComment(assistantComment, 'sitcon-credits'), true);
+  assert.equal(findAssistantMissingAppearanceComment([assistantComment], 'sitcon-credits'), assistantComment);
+});
