@@ -1,8 +1,29 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "康喔 / Kason Kang",
+  "bio": "熱愛在各大技術社群打滾。活躍於 SITCON、HITCON、COSCUP 等社群，喜歡用鏡頭記錄每一場活動的精彩瞬間。",
+  "avatar_url": "https://gravatar.com/avatar/08b25778f9a9ca3f2591b4e859be426dbd075608d763daf4fdd244d48eb26f13?s=512",
+  "public_email": "hi@kangjw.me",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://kangjw.me/"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/kangjwme"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/kason-kang/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/kangjwme"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/kangjwme/"
+    }
+  ]
 }
