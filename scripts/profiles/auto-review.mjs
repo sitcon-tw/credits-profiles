@@ -6,6 +6,7 @@ import { checkProfilePullRequestScope } from './self-service-guard.mjs';
 export const REQUIRED_CHECK_NAMES = ['Check trusted profile PR', 'Check profile PR scope'];
 export const MISSING_APPEARANCE_COMMENT_MARKER = '<!-- sitcon-credits-profile-appearance-check -->';
 export const CREDITS_ASSISTANT_BOT_LOGIN = 'sitcon-credits-assistant[bot]';
+const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 
 export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns }) {
   const checkSummary = summarizeRequiredChecks(checkRuns, REQUIRED_CHECK_NAMES);
@@ -107,7 +108,7 @@ export function collectAppearanceUsernames(exportPayload) {
   const usernames = new Set();
   for (const row of rows) {
     const username = String(row.github_username ?? '').trim();
-    if (username !== '') {
+    if (GITHUB_USERNAME_PATTERN.test(username)) {
       usernames.add(username.toLowerCase());
     }
   }

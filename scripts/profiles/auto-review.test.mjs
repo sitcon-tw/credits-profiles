@@ -98,6 +98,18 @@ test('decideProfileAutoReview comments when profile username is not used in appe
   assert.match(decision.commentBody, /appearances\.github_username/);
 });
 
+test('decideProfileAutoReview ignores site profile references in appearances', () => {
+  const decision = decideProfileAutoReview({
+    pullRequest: pullRequest(),
+    files: [profileFile('octocat')],
+    exportPayload: exportPayload(['site:octocat']),
+    checkRuns: successfulChecks(),
+  });
+
+  assert.equal(decision.action, 'comment');
+  assert.equal(decision.reason, 'profile-username-not-in-appearances');
+});
+
 test('decideProfileAutoReview skips PRs outside self-service profile scope', () => {
   const decision = decideProfileAutoReview({
     pullRequest: pullRequest('octocat'),
