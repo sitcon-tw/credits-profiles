@@ -1,6 +1,7 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 
 export const PROFILE_SCOPE_REVIEW_LABEL = 'profile-scope-reviewed';
+export const PROFILE_SCOPE_COMMENT_MARKER = '<!-- sitcon-credits-profile-scope-check -->';
 
 export function checkProfilePullRequestScope({ pullRequest, files }) {
   if (!pullRequest?.user?.login) {
@@ -91,12 +92,52 @@ export function formatProfilePullRequestScopeResult(result) {
   return lines.join('\n');
 }
 
-async function runCli() {
-  const eventPath = getArgValue('--event');
-  const filesPath = getArgValue('--files');
+export function formatProfilePullRequestScopeComment(result) {
+  return [
+    PROFILE_SCOPE_COMMENT_MARKER,
+    '這個 PR 目前不符合 profile 自助更新的範圍，所以 `Check profile PR scope` 沒有通過。',
+    '',
+    '請依照下面項目調整：',
+    ...result.issues.map((issue) => `- ${formatScopeIssueForContributor(issue)}`),
+    '',
+    `如果這次變更確實需要維護者審查，請等待維護者確認後加上 \`${PROFILE_SCOPE_REVIEW_LABEL}\` label。`,
+    '`site-profiles/` 是維護者直接 commit 的資料，不接受一般 PR 修改。',
+  ].join('\n');
+}
+
+export function formatScopeIssueForContributor(issue) {
+  const [target, detail] = issue.split(/: (.*)/s);
+  if (!detail) {
+    return issue;
+  }
+  return `\`${target}\`：${translateScopeIssueDetail(detail)}`;
+}
+
+function translateScopeIssueDetail(detail) {
+  const translations = new Map([
+    ['site profiles are maintained only by direct maintainer commits, not pull requests.', 'site profile 只能由維護者直接 commit，請不要在 PR 中修改。'],
+    ['profile removal requests require maintainer review.', '刪除 profile 需要維護者人工審查，不能走自助更新。'],
+    ['profile renames require maintainer review.', '重新命名 profile 需要維護者人工審查，不能走自助更新。'],
+    ['self-service PRs may only change profiles/<github_username>.json.', '自助更新只能修改 `profiles/<github_username>.json`。'],
+    ['support/template files require maintainer review.', 'template 或支援檔需要維護者人工審查，不能走自助更新。'],
+  ]);
+  if (translations.has(detail)) {
+    return translations.get(detail);
+  }
+  const authorMatch = /^filename username must match PR author (.+)\.$/.exec(detail);
+  if (authorMatch) {
+    return `檔名中的 GitHub username 必須和 PR 作者 \`${authorMatch[1]}\` 一致。`;
+  }
+  return detail;
+}
+
+async function runCli(argv = process.argv.slice(2)) {
+  const eventPath = getArgValue(argv, '--event');
+  const filesPath = getArgValue(argv, '--files');
+  const commentOutputPath = getArgValue(argv, '--comment-output');
 
   if (!eventPath || !filesPath) {
-    throw new Error('usage: node scripts/profiles/self-service-guard.mjs --event=<event.json> --files=<files.json>');
+    throw new Error('usage: node scripts/profiles/self-service-guard.mjs --event=<event.json> --files=<files.json> [--comment-output=<comment.md>]');
   }
 
   const event = JSON.parse(await readFile(eventPath, 'utf8'));
@@ -108,6 +149,9 @@ async function runCli() {
 
   const message = formatProfilePullRequestScopeResult(result);
   if (!result.passed) {
+    if (commentOutputPath) {
+      await writeFile(commentOutputPath, `${formatProfilePullRequestScopeComment(result)}\n`);
+    }
     console.error(message);
     process.exitCode = 1;
     return;
@@ -116,9 +160,9 @@ async function runCli() {
   console.log(message);
 }
 
-function getArgValue(name) {
+function getArgValue(argv, name) {
   const prefix = `${name}=`;
-  const value = process.argv.slice(2).find((arg) => arg.startsWith(prefix));
+  const value = argv.find((arg) => arg.startsWith(prefix));
   return value?.slice(prefix.length);
 }
 

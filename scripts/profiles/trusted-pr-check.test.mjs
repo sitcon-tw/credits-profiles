@@ -6,6 +6,8 @@ import {
   PUBLIC_EMAIL_ACKNOWLEDGEMENT,
   checkTrustedProfileChecklist,
   formatTrustedProfileChecklistComment,
+  formatTrustedProfileScopeComment,
+  formatTrustedProfileValidationComment,
   hasCheckedCheckbox,
   hasNonEmptyPublicEmail,
 } from './trusted-pr-check.mjs';
@@ -69,4 +71,27 @@ test('trusted checklist comment includes a stable marker and issue messages', ()
   assert.match(comment, /sitcon-credits-profile-trusted-checklist/);
   assert.match(comment, /public_email/);
   assert.match(comment, /惡意 HTML/);
+});
+
+test('trusted validation comment explains profile JSON fixes', () => {
+  const comment = formatTrustedProfileValidationComment([
+    { fileName: 'octocat.json', field: 'avatar_url', message: 'must use https:' },
+    { fileName: 'octocat.json', field: 'links[0].label', message: 'must be omitted unless link type is custom' },
+  ]);
+
+  assert.match(comment, /sitcon-credits-profile-trusted-checklist/);
+  assert.match(comment, /profile JSON/);
+  assert.match(comment, /`octocat\.json` 的 `avatar_url`/);
+  assert.match(comment, /https:\/\//);
+  assert.match(comment, /移除 `label`/);
+});
+
+test('trusted scope comment uses contributor-facing issue text', () => {
+  const comment = formatTrustedProfileScopeComment({
+    issues: ['profiles/hubot.json: filename username must match PR author octocat.'],
+  });
+
+  assert.match(comment, /sitcon-credits-profile-trusted-checklist/);
+  assert.match(comment, /`profiles\/hubot\.json`/);
+  assert.match(comment, /PR 作者 `octocat`/);
 });

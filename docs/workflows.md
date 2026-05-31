@@ -36,6 +36,8 @@ flowchart TD
 
 自動合併只代表 profile PR 符合低風險自助更新條件。它不代表 workflow 建立了新的身份連結，也不代表它處理了歷史資料更正、profile 刪除、profile rename 或隱私政策例外。
 
+如果 `Check profile PR scope` 或 `Check trusted profile PR` 沒有通過，bot 會在 PR 留言中指出目前失敗的項目與可採取的修正方式；修正後重新 push，通過檢查時舊的提醒留言會自動移除。
+
 ## 需要維護者 review 的情況
 
 以下 PR 不屬於低風險自助更新：

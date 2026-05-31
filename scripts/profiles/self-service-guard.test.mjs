@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import {
   PROFILE_SCOPE_REVIEW_LABEL,
   checkProfilePullRequestScope,
+  formatProfilePullRequestScopeComment,
 } from './self-service-guard.mjs';
 
 function check({ author = 'octocat', labels = [], files }) {
@@ -110,4 +111,19 @@ test('profile self-service guard requires review for removals and renames', () =
   assert.equal(result.passed, false);
   assert.match(result.issues.join('\n'), /profile removal requests require maintainer review/);
   assert.match(result.issues.join('\n'), /profile renames require maintainer review/);
+});
+
+test('profile self-service scope comment explains how to fix the PR', () => {
+  const result = check({
+    author: 'octocat',
+    files: [
+      { filename: 'profiles/hubot.json', status: 'modified' },
+    ],
+  });
+  const comment = formatProfilePullRequestScopeComment(result);
+
+  assert.match(comment, /sitcon-credits-profile-scope-check/);
+  assert.match(comment, /`profiles\/hubot\.json`/);
+  assert.match(comment, /PR 作者 `octocat`/);
+  assert.match(comment, /profile-scope-reviewed/);
 });
