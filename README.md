@@ -60,12 +60,12 @@ pnpm test
 
 目前已啟用的 workflow：
 
-- `CI`：在 pull request、`master` push 與手動觸發時執行 `pnpm test` 與 `pnpm profiles:validate`。
+- `CI`：在非 profile-only 的 pull request、`master` push 與手動觸發時執行 `pnpm test` 與 `pnpm profiles:validate`。只修改 `profiles/*.json` 的 PR 不觸發一般 `pull_request` CI，避免 fork PR 停在 workflow approval；這類 PR 由下列 trusted checks 驗證。
 - `Profile self-service guard`：在 pull request 上檢查 self-service profile 更新是否只修改 PR 作者自己的 `profiles/<github_username>.json`。超出此範圍的 PR 需要維護者審查後加上 `profile-scope-reviewed` label，不能只因作者是組織成員或協作者就自動通過。
 - `Trusted profile review`：在 `pull_request_target` 上只使用 base repository 的可信任程式碼，透過 GitHub API 讀取 PR head 的單一 profile JSON 內容，確認 self-service 範圍與 profile 格式後，使用 `SITCON Credits Assistant` GitHub App dispatch `sitcon-tw/credits` 的 profile PR review workflow。該 workflow 會讀取 SITCON Credits canonical Google Sheets；若 `Profile self-service guard` 也已通過，且該 profile username 已出現在 `appearances.github_username`，就自動 approve 並 merge。若 username 尚未出現在 `appearances`，workflow 會留言提醒維護者需要先調整或確認 canonical appearances 資料。
 - `Sync credits people helper`：當 `profiles/*.json` merge 到 `master` 或手動觸發時，使用 `SITCON Credits Assistant` GitHub App dispatch `sitcon-tw/credits` 的 `Sync people helper` workflow，讓 Google Sheets 的 `people` helper sheet 同步出現該 profile username。
 
-`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。`Trusted profile review` 只代表 profile 格式、PR 範圍與 canonical appearances 參照都已符合自動審查條件；它不會建立新的身份連結。`Sync credits people helper` 只同步 helper sheet，不會更改歷史 appearances 或核准身份連結。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。branch protection/ruleset 應要求 `Check trusted profile PR`、`Check profile PR scope` 與 profile review policy；GitHub Pages build integration 尚未啟用。
+`Profile self-service guard` 是低風險 profile PR 的範圍檢查，不是身份合併審核。`Trusted profile review` 只代表 profile 格式、PR 範圍與 canonical appearances 參照都已符合自動審查條件；它不會建立新的身份連結。`Sync credits people helper` 只同步 helper sheet，不會更改歷史 appearances 或核准身份連結。刪除 profile、rename profile、修改 template/schema/docs/workflow、或修改他人的 profile，都需要維護者人工 review，並以 `profile-scope-reviewed` label 明確標記已審查此 PR 的 profile 範圍。branch protection/ruleset 應要求 `Check trusted profile PR`、`Check profile PR scope` 與 profile review policy；若要求一般 `CI`，profile-only fork PR 會因 workflow approval 造成 auto-merge 停住。GitHub Pages build integration 尚未啟用。
 
 ## 與 SITCON Credits 的關係
 

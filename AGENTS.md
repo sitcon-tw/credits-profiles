@@ -76,7 +76,7 @@ GitHub Actions CI, a self-service PR ownership guard, a trusted profile review d
 
 Do not describe branch protection, auto-merge, generated profile templates, or cross-repository build integration as active until the corresponding files and repository settings exist.
 
-If branch protection or rulesets are enabled later, require `CI`, `Profile self-service guard`, and the intended profile review policy checks; workflow status is only advisory until repository settings make it required.
+Branch protection for profile self-service automation should require `Check profile PR scope`, `Check trusted profile PR`, and the intended profile review policy checks. Do not require the general `CI` workflow for profile-only fork PRs, because those PRs intentionally avoid `pull_request` CI approval waits and are validated by the trusted checks instead.
 
 Passing the self-service guard, receiving an automated approval, or syncing the `people` helper must not be treated as identity-merge approval. These workflows also do not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author; the `profile-scope-reviewed` label only records maintainer review of the wider PR scope.
 
