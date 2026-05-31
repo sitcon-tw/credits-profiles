@@ -117,17 +117,17 @@ export function collectAppearanceUsernames(exportPayload) {
 export function formatMissingAppearanceComment(username) {
   return [
     MISSING_APPEARANCE_COMMENT_MARKER,
-    `這個 PR 的 profile username \`${username}\` 目前沒有出現在 SITCON Credits canonical Google Sheets 的 \`appearances.github_username\`。`,
+    `這個 PR 的 profile username \`${username}\` 目前沒有出現在 SITCON Credits canonical Google Sheets 的 \`appearances.github_username\` 欄位。`,
     '',
-    '因此這個 PR 不會自動 approve。請維護者先確認是否需要在 `sitcon-tw/credits` 的 Google Sheets `appearances` 中補上或修正對應資料；如果這是刻意建立尚未連到 historical appearance 的 profile，請由維護者人工審查。',
+    '因此這個 PR 不會自動核准。請維護者先確認是否需要在 `sitcon-tw/credits` 的 Google Sheets `appearances` 中補上或修正對應資料；如果這是刻意建立尚未連到歷史貢獻紀錄的 profile，請由維護者人工審查。',
   ].join('\n');
 }
 
 export function formatApprovalReviewBody(username) {
   return [
-    `Automated approval: profile checks passed for \`${username}\`.`,
+    `自動核准：\`${username}\` 的 profile 檢查已通過。`,
     '',
-    `The username is already referenced by SITCON Credits canonical \`appearances.github_username\`.`,
+    '這個 username 已經出現在 SITCON Credits canonical `appearances.github_username` 欄位中。',
   ].join('\n');
 }
 

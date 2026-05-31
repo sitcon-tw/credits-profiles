@@ -122,7 +122,7 @@ export function hasCheckedCheckbox(markdown, label) {
 export function formatTrustedProfileChecklistComment(issues) {
   return [
     TRUSTED_PROFILE_CHECKLIST_COMMENT_MARKER,
-    '這個 PR 還需要補勾 profile 自助提交確認事項，trusted profile check 才會通過：',
+    '這個 PR 還需要補勾 profile 自助提交確認事項，可信任 profile 檢查才會通過：',
     '',
     ...issues.map((issue) => `- ${issue.message}`),
     '',

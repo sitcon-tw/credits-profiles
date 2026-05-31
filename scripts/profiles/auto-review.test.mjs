@@ -5,6 +5,7 @@ import {
   collectAppearanceUsernames,
   decideProfileAutoReview,
   findAssistantMissingAppearanceComment,
+  formatApprovalReviewBody,
   formatGraphqlMergeMethod,
   formatMergeTitle,
   formatMissingAppearanceComment,
@@ -115,6 +116,15 @@ test('formatMissingAppearanceComment includes stable marker and maintainer instr
   assert.match(comment, /sitcon-credits-profile-appearance-check/);
   assert.match(comment, /維護者/);
   assert.match(comment, /appearances/);
+  assert.doesNotMatch(comment, /Automated approval|historical appearance|auto approve/);
+});
+
+test('formatApprovalReviewBody uses Traditional Chinese reader-facing text', () => {
+  const body = formatApprovalReviewBody('octocat');
+
+  assert.match(body, /自動核准/);
+  assert.match(body, /profile 檢查已通過/);
+  assert.doesNotMatch(body, /Automated approval|checks passed|already referenced/);
 });
 
 test('profilePullRequestHeadMatches rejects stale dispatch payloads', () => {
