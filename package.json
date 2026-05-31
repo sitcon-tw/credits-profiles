@@ -1,6 +1,7 @@
 {
   "name": "sitcon-credits-profiles",
   "private": true,
+  "license": "MIT",
   "packageManager": "pnpm@10.18.0",
   "type": "module",
   "scripts": {

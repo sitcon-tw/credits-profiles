@@ -76,3 +76,9 @@ pnpm test
 `credits-profiles` 的 profile 檔案 merge 到 `master` 後，會觸發 `sitcon-tw/credits` 的 people helper 同步 workflow，讓 Google Sheets 的 `people` helper sheet 出現該 profile username 與 display name。這只是維護提示，不會更改歷史 appearances 或核准身份連結。
 
 未來 [SITCON Credits](https://github.com/sitcon-tw/credits) 的建置流程可以 checkout 或下載本 repo 的 profile 資料，產生公開網站需要的個人資料索引。GitHub Pages 建置整合尚未啟用前，請不要把它描述為已上線。
+
+## 授權與資料使用
+
+本 repo 的程式、設定與文件以 [MIT License](LICENSE) 授權。
+
+`profiles/*.json` 中的個人公開 profile 資料是 contributor 自願提供給 SITCON Credits 公開呈現的 opt-in 資料。使用脈絡、public email 邊界與主 repo 的 canonical data 關係請看 [資料使用聲明](DATA_USAGE.md)。
