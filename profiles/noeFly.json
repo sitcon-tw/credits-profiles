@@ -1,8 +1,37 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
+  "display_name": "noeFly",
   "bio": "",
   "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "public_email": "w@noefly.cc",
+  "links": [
+      {
+          "type": "blog",
+          "url": "https://noefly.cc/blog"
+      },
+      {
+          "type": "discord",
+          "url": "https://noefly.cc/dc"
+      },
+      {
+          "type": "github",
+          "url": "https://noefly.cc/github"
+      },
+      {
+          "type": "gitlab",
+          "url": "https://noefly.cc/gitlab"
+      },
+      {
+          "type": "instagram",
+          "url": "https://noefly.cc/ig"
+      },
+      {
+          "type": "telegram",
+          "url": "https://noefly.cc/tg"
+      },
+      {
+          "type": "website",
+          "url": "https://noefly.cc"
+      }
+  ]
 }
