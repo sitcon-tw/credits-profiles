@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { checkProfilePullRequestScope } from './self-service-guard.mjs';
@@ -6,6 +6,12 @@ import {
   formatIssue,
   validateProfileJsonText,
 } from './validate.mjs';
+
+export const TRUSTED_PROFILE_CHECKLIST_COMMENT_MARKER = '<!-- sitcon-credits-profile-trusted-checklist -->';
+export const PUBLIC_EMAIL_ACKNOWLEDGEMENT =
+  '我理解 public_email 會公開顯示在網路上，可能被搜尋引擎、爬蟲或第三方保存。';
+export const CONTENT_SAFETY_ACKNOWLEDGEMENT =
+  '我確認這份 profile 沒有放入惡意 HTML、JavaScript、刻意破壞頁面顯示的內容，或任何可能造成 SITCON 夥伴困擾的資料；我理解若發生這類行為，維護者可以拒絕信任這次自助提交並改由人工審查。';
 
 async function runCli(argv = process.argv.slice(2), env = process.env) {
   const options = parseArgs(argv);
@@ -34,6 +40,19 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
     throw new Error(issues.map(formatIssue).join('\n'));
   }
 
+  const profile = JSON.parse(profileText);
+  const checklistIssues = checkTrustedProfileChecklist({
+    pullRequest,
+    profile,
+  });
+  if (checklistIssues.length > 0) {
+    const commentBody = formatTrustedProfileChecklistComment(checklistIssues);
+    if (options.commentOutputPath) {
+      await writeFile(options.commentOutputPath, `${commentBody}\n`);
+    }
+    throw new Error(formatTrustedProfileChecklistFailure(checklistIssues));
+  }
+
   console.log(`Trusted profile PR check passed for ${profileFile.filename}.`);
 }
 
@@ -52,6 +71,11 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (arg === '--comment-output') {
+      options.commentOutputPath = readNextArg(argv, index, arg);
+      index += 1;
+      continue;
+    }
     throw new Error(`Unknown argument: ${arg}`);
   }
 
@@ -62,6 +86,59 @@ function parseArgs(argv) {
   }
 
   return options;
+}
+
+export function checkTrustedProfileChecklist({ pullRequest, profile }) {
+  const body = pullRequest?.body ?? '';
+  const issues = [];
+
+  if (hasNonEmptyPublicEmail(profile) && !hasCheckedCheckbox(body, PUBLIC_EMAIL_ACKNOWLEDGEMENT)) {
+    issues.push({
+      code: 'public-email-acknowledgement',
+      message: `請勾選「${PUBLIC_EMAIL_ACKNOWLEDGEMENT}」`,
+    });
+  }
+
+  if (!hasCheckedCheckbox(body, CONTENT_SAFETY_ACKNOWLEDGEMENT)) {
+    issues.push({
+      code: 'content-safety-acknowledgement',
+      message: `請勾選「${CONTENT_SAFETY_ACKNOWLEDGEMENT}」`,
+    });
+  }
+
+  return issues;
+}
+
+export function hasNonEmptyPublicEmail(profile) {
+  return typeof profile?.public_email === 'string' && profile.public_email.trim() !== '';
+}
+
+export function hasCheckedCheckbox(markdown, label) {
+  const escapedLabel = escapeRegExp(label).replaceAll('\\ ', '\\s+');
+  const pattern = new RegExp(`^\\s*[-*]\\s+\\[[xX]\\]\\s+${escapedLabel}\\s*$`, 'm');
+  return pattern.test(markdown ?? '');
+}
+
+export function formatTrustedProfileChecklistComment(issues) {
+  return [
+    TRUSTED_PROFILE_CHECKLIST_COMMENT_MARKER,
+    '這個 PR 還需要補勾 profile 自助提交確認事項，trusted profile check 才會通過：',
+    '',
+    ...issues.map((issue) => `- ${issue.message}`),
+    '',
+    '請更新 PR 說明中的 checkbox 後重新觸發檢查。這些確認事項是為了保護提交者本人、其他 SITCON 夥伴，以及未來公開呈現 profile 的讀者。',
+  ].join('\n');
+}
+
+function formatTrustedProfileChecklistFailure(issues) {
+  return [
+    'Trusted profile PR check requires the PR template acknowledgements below:',
+    ...issues.map((issue) => `- ${issue.message}`),
+  ].join('\n');
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function readNextArg(argv, index, name) {

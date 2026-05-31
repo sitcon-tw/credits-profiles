@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
   pull-requests: read
 
 jobs:
@@ -39,12 +40,91 @@ jobs:
             fs.writeFileSync(process.env.PROFILE_FILES_JSON, JSON.stringify(files, null, 2));
 
       - name: Verify trusted profile content
+        id: trusted_check
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          TRUSTED_PROFILE_COMMENT: ${{ runner.temp }}/trusted-profile-comment.md
         run: >-
           node scripts/profiles/trusted-pr-check.mjs
           --event "$GITHUB_EVENT_PATH"
           --files "$RUNNER_TEMP/profile-files.json"
+          --comment-output "$TRUSTED_PROFILE_COMMENT"
+
+      - name: Comment trusted profile checklist reminder
+        if: steps.trusted_check.outcome == 'failure'
+        uses: actions/github-script@v9
+        env:
+          TRUSTED_PROFILE_COMMENT: ${{ runner.temp }}/trusted-profile-comment.md
+        with:
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- sitcon-credits-profile-trusted-checklist -->';
+            const bodyPath = process.env.TRUSTED_PROFILE_COMMENT;
+            if (!fs.existsSync(bodyPath)) {
+              return;
+            }
+
+            const body = fs.readFileSync(bodyPath, 'utf8');
+            const pr = context.payload.pull_request;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) =>
+              comment.user?.login === 'github-actions[bot]' &&
+              comment.body?.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              body,
+            });
+
+      - name: Clear trusted profile checklist reminder
+        if: steps.trusted_check.outcome == 'success'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const marker = '<!-- sitcon-credits-profile-trusted-checklist -->';
+            const pr = context.payload.pull_request;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              per_page: 100,
+            });
+
+            for (const comment of comments) {
+              if (
+                comment.user?.login === 'github-actions[bot]' &&
+                comment.body?.includes(marker)
+              ) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: comment.id,
+                });
+              }
+            }
+
+      - name: Fail trusted profile content
+        if: steps.trusted_check.outcome == 'failure'
+        run: exit 1
 
       - name: Create credits assistant token
         id: credits-assistant-token
