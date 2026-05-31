@@ -1,8 +1,22 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "阿六",
+  "bio": "早安你好我是阿六",
+  "avatar_url": "https://gravatar.com/avatar/e43859d0899c0dd1fe4d12ef5260d73c1f83c18369722947f61f5f62cd6774f7?v=1697860245000&size=512&d=initials",
+  "public_email": "hyslchs@gmail.com",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://sixhuan.com/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/hyslchs"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/hyslchs"
+    }
+  ]
 }
+
