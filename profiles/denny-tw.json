@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Denny Huang",
+  "bio": "",
+  "avatar_url": "",
+  "public_email": "",
+  "links": []
+}
