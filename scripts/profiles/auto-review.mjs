@@ -5,6 +5,7 @@ import { checkProfilePullRequestScope } from './self-service-guard.mjs';
 
 export const REQUIRED_CHECK_NAMES = ['Check trusted profile PR', 'Check profile PR scope'];
 export const MISSING_APPEARANCE_COMMENT_MARKER = '<!-- sitcon-credits-profile-appearance-check -->';
+export const CREDITS_ASSISTANT_BOT_LOGIN = 'sitcon-credits-assistant[bot]';
 
 export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns }) {
   const checkSummary = summarizeRequiredChecks(checkRuns, REQUIRED_CHECK_NAMES);
@@ -281,7 +282,7 @@ function readNextArg(argv, index, name) {
 
 async function upsertMissingAppearanceComment(token, options, body) {
   const comments = await githubPaginate(token, `GET /repos/${options.owner}/${options.repo}/issues/${options.pullNumber}/comments`);
-  const existing = comments.find((comment) => comment.body?.includes(MISSING_APPEARANCE_COMMENT_MARKER));
+  const existing = findAssistantMissingAppearanceComment(comments);
   if (existing) {
     await githubRequest(token, `PATCH /repos/${options.owner}/${options.repo}/issues/comments/${existing.id}`, { body });
     return;
@@ -292,10 +293,19 @@ async function upsertMissingAppearanceComment(token, options, body) {
 async function deleteMissingAppearanceComments(token, options) {
   const comments = await githubPaginate(token, `GET /repos/${options.owner}/${options.repo}/issues/${options.pullNumber}/comments`);
   for (const comment of comments) {
-    if (comment.body?.includes(MISSING_APPEARANCE_COMMENT_MARKER)) {
+    if (isAssistantMissingAppearanceComment(comment)) {
       await githubRequest(token, `DELETE /repos/${options.owner}/${options.repo}/issues/comments/${comment.id}`);
     }
   }
+}
+
+export function findAssistantMissingAppearanceComment(comments) {
+  return comments.find(isAssistantMissingAppearanceComment);
+}
+
+export function isAssistantMissingAppearanceComment(comment) {
+  return comment.body?.includes(MISSING_APPEARANCE_COMMENT_MARKER) &&
+    comment.user?.login === CREDITS_ASSISTANT_BOT_LOGIN;
 }
 
 async function approvePullRequest(token, options, body) {

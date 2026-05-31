@@ -46,18 +46,21 @@ jobs:
           --event "$GITHUB_EVENT_PATH"
           --files "$RUNNER_TEMP/profile-files.json"
 
+      - name: Create credits assistant token
+        id: credits-assistant-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SITCON_CREDITS_ASSISTANT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SITCON_CREDITS_ASSISTANT_APP_PRIVATE_KEY }}
+          owner: sitcon-tw
+          repositories: credits
+          permission-contents: write
+
       - name: Dispatch canonical appearances review
         uses: actions/github-script@v9
-        env:
-          CREDITS_SYNC_TOKEN: ${{ secrets.CREDITS_SYNC_TOKEN }}
         with:
-          github-token: ${{ secrets.CREDITS_SYNC_TOKEN }}
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
           script: |
-            if (!process.env.CREDITS_SYNC_TOKEN) {
-              core.setFailed('CREDITS_SYNC_TOKEN repository secret is required.');
-              return;
-            }
-
             const pr = context.payload.pull_request;
             if (pr.state !== 'open') {
               core.warning(`PR #${pr.number} is ${pr.state}; skipping profile review dispatch.`);

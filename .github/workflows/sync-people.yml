@@ -18,16 +18,21 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Create credits assistant token
+        id: credits-assistant-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SITCON_CREDITS_ASSISTANT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SITCON_CREDITS_ASSISTANT_APP_PRIVATE_KEY }}
+          owner: sitcon-tw
+          repositories: credits
+          permission-contents: write
+
       - name: Dispatch credits sync workflow
         uses: actions/github-script@v9
         with:
-          github-token: ${{ secrets.CREDITS_SYNC_TOKEN }}
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
           script: |
-            if (!process.env.CREDITS_SYNC_TOKEN) {
-              core.setFailed('CREDITS_SYNC_TOKEN repository secret is required to dispatch sitcon-tw/credits.');
-              return;
-            }
-
             await github.rest.repos.createDispatchEvent({
               owner: 'sitcon-tw',
               repo: 'credits',
@@ -38,5 +43,3 @@ jobs:
                 source_run_id: context.runId,
               },
             });
-        env:
-          CREDITS_SYNC_TOKEN: ${{ secrets.CREDITS_SYNC_TOKEN }}

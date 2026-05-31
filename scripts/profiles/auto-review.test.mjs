@@ -4,8 +4,10 @@ import { test } from 'node:test';
 import {
   collectAppearanceUsernames,
   decideProfileAutoReview,
+  findAssistantMissingAppearanceComment,
   formatMergeTitle,
   formatMissingAppearanceComment,
+  isAssistantMissingAppearanceComment,
   profilePullRequestHeadMatches,
   summarizeRequiredChecks,
 } from './auto-review.mjs';
@@ -120,4 +122,24 @@ test('profilePullRequestHeadMatches rejects stale dispatch payloads', () => {
 
 test('formatMergeTitle names the profile update', () => {
   assert.equal(formatMergeTitle('octocat'), 'Update octocat profile');
+});
+
+test('assistant missing appearance comment matching ignores legacy user comments', () => {
+  const assistantComment = {
+    id: 2,
+    user: { login: 'sitcon-credits-assistant[bot]' },
+    body: formatMissingAppearanceComment('octocat'),
+  };
+  const comments = [
+    {
+      id: 1,
+      user: { login: 'denny0223' },
+      body: formatMissingAppearanceComment('octocat'),
+    },
+    assistantComment,
+  ];
+
+  assert.equal(isAssistantMissingAppearanceComment(comments[0]), false);
+  assert.equal(isAssistantMissingAppearanceComment(assistantComment), true);
+  assert.equal(findAssistantMissingAppearanceComment(comments), assistantComment);
 });
