@@ -74,11 +74,18 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 GitHub Actions CI, a self-service PR ownership guard, a trusted profile review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks pull requests for low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. The trusted profile review workflow runs on `pull_request_target`, uses only base repository code, reads the pull request head's single profile JSON through the GitHub API, validates the profile content, and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR approve/comment/merge action happen under the main Credits repo's secrets. The review action checks that the trusted profile review and guard also passed for the same head SHA and only approves/merges when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet.
 
-Do not describe branch protection, auto-merge, generated profile templates, or cross-repository build integration as active until the corresponding files and repository settings exist.
+The workflow files exist for profile scope checks, trusted profile review dispatch, people-helper sync dispatch, and receiving generated blank profile templates from the main `credits` repository. Do not describe branch protection, auto-merge permissions, repository secrets, GitHub App installation, or cross-repository build integration as active unless those repository settings are confirmed.
 
 Branch protection for profile self-service automation should require `Check profile PR scope`, `Check trusted profile PR`, and the intended profile review policy checks. Do not require the general `CI` workflow for pull requests, because fork PRs intentionally avoid `pull_request` CI approval waits and profile PRs are validated by the trusted checks instead.
 
 Passing the self-service guard, receiving an automated approval, or syncing the `people` helper must not be treated as identity-merge approval. These workflows also do not approve historical record corrections, profile removals, profile renames, privacy policy exceptions, or changes outside the profile file owned by the PR author; the `profile-scope-reviewed` label only records maintainer review of the wider PR scope.
+
+## Documentation Expectations
+
+- `README.md` is the friendly starting point for contributors who want to add or update their own profile.
+- `profiles/README.md` is the field-level profile JSON reference.
+- `docs/workflows.md` is the reader-facing explanation of self-service PR checks and cross-repository dispatch.
+- `AGENTS.md` remains the local instruction entrypoint for LLM agents and automated maintainers.
 
 ## Agent Operating Rules
 

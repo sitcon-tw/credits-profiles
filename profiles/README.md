@@ -124,6 +124,10 @@ pnpm profiles:validate
 
 這個檢查會確認檔名、欄位、URL、public email 格式與基本資料最小化規則。它不會連線 Google Sheets，也不會讀取 service account credentials。
 
-## 目前流程狀態
+## Pull Request 送出後
 
-目前這個資料夾提供 profile 檔案格式、空白範本、本機驗證、GitHub Actions 格式驗證、GitHub Actions self-service PR 範圍檢查、自動審查符合條件的 profile PR，以及合併後觸發 SITCON Credits 同步 `people` helper sheet 的 workflow。self-service PR 只能修改 PR 作者自己的單一 profile 檔；刪除、rename、修改他人的 profile，或修改支援檔案，都需要維護者審查並加上 `profile-scope-reviewed` label。自動審查由 `pull_request_target` workflow 使用 base repository 的可信任程式碼驗證單一 profile JSON，再由 `sitcon-tw/credits` 在收到 dispatch 後執行 canonical appearances 檢查；只會在可信任 profile 檢查與 self-service guard 通過，且該 profile username 已出現在 canonical Google Sheets 的 `appearances.github_username` 時核准並合併。一般 `pull_request` CI 不啟用，避免 fork PR 停在 workflow approval；profile PR 由可信任檢查驗證。如果 username 尚未出現在 appearances，workflow 會留言提醒維護者先調整或確認 appearances 資料。GitHub Pages build integration 尚未啟用。
+自助 PR 的低風險範圍是：只修改 PR 作者自己的單一 profile 檔。GitHub Actions 會檢查 profile 格式、PR template 必要確認事項、profile 檔名是否對應 PR 作者，以及 canonical Google Sheets 中是否已經有這個 `appearances.github_username`。
+
+符合條件時，`SITCON Credits Assistant` GitHub App 可以核准並合併 PR；如果 username 尚未出現在 canonical appearances，workflow 會留言提醒維護者先確認或調整資料。這不會自動建立新的身份連結。
+
+完整流程請看 [自助 profile PR 流程](../docs/workflows.md)。
