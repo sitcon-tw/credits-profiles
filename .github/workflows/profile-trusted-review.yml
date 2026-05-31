@@ -1,0 +1,76 @@
+name: Trusted profile review
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  trusted-profile:
+    name: Check trusted profile PR
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out trusted base repository
+        uses: actions/checkout@v6
+
+      - name: Collect changed files
+        uses: actions/github-script@v9
+        env:
+          PROFILE_FILES_JSON: ${{ runner.temp }}/profile-files.json
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              per_page: 100,
+            });
+            const fs = require('node:fs');
+            fs.writeFileSync(process.env.PROFILE_FILES_JSON, JSON.stringify(files, null, 2));
+
+      - name: Verify trusted profile content
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          node scripts/profiles/trusted-pr-check.mjs
+          --event "$GITHUB_EVENT_PATH"
+          --files "$RUNNER_TEMP/profile-files.json"
+
+      - name: Dispatch canonical appearances review
+        uses: actions/github-script@v9
+        env:
+          CREDITS_SYNC_TOKEN: ${{ secrets.CREDITS_SYNC_TOKEN }}
+        with:
+          github-token: ${{ secrets.CREDITS_SYNC_TOKEN }}
+          script: |
+            if (!process.env.CREDITS_SYNC_TOKEN) {
+              core.setFailed('CREDITS_SYNC_TOKEN repository secret is required.');
+              return;
+            }
+
+            const pr = context.payload.pull_request;
+            if (pr.state !== 'open') {
+              core.warning(`PR #${pr.number} is ${pr.state}; skipping profile review dispatch.`);
+              return;
+            }
+
+            await github.rest.repos.createDispatchEvent({
+              owner: 'sitcon-tw',
+              repo: 'credits',
+              event_type: 'review-profile-pr',
+              client_payload: {
+                source_repository: `${context.repo.owner}/${context.repo.repo}`,
+                pull_number: pr.number,
+                head_sha: pr.head.sha,
+              },
+            });

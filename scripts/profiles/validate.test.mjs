@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { test } from 'node:test';
 
+import { validateProfileJsonText } from './validate.mjs';
+
 const execFileAsync = promisify(execFile);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -73,6 +75,27 @@ test('profile validation accepts a standard link type without label', async () =
   }));
 
   await assert.doesNotReject(validateProfiles(dir));
+});
+
+test('validateProfileJsonText validates a single profile JSON payload', () => {
+  const issues = validateProfileJsonText('octocat.json', JSON.stringify(validProfile({
+    type: 'github',
+    url: 'https://github.com/octocat',
+  })));
+
+  assert.deepEqual(issues, []);
+});
+
+test('validateProfileJsonText rejects private contact in a single profile JSON payload', () => {
+  const profile = validProfile({
+    type: 'github',
+    url: 'https://github.com/octocat',
+  });
+  profile.bio = 'Email me at octocat@example.com';
+
+  const issues = validateProfileJsonText('octocat.json', JSON.stringify(profile));
+
+  assert.match(issues.map((issue) => issue.message).join('\n'), /email addresses or phone numbers/);
 });
 
 test('profile validation accepts a custom link with label', async () => {

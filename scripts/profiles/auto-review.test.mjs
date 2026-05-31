@@ -36,15 +36,15 @@ function exportPayload(usernames) {
 
 function successfulChecks() {
   return [
-    { name: 'Validate profile data', status: 'completed', conclusion: 'success', completed_at: '2026-05-31T00:00:01Z' },
+    { name: 'Check trusted profile PR', status: 'completed', conclusion: 'success', completed_at: '2026-05-31T00:00:01Z' },
     { name: 'Check profile PR scope', status: 'completed', conclusion: 'success', completed_at: '2026-05-31T00:00:02Z' },
   ];
 }
 
 test('summarizeRequiredChecks waits for missing required checks', () => {
   const summary = summarizeRequiredChecks([
-    { name: 'Validate profile data', status: 'completed', conclusion: 'success' },
-  ], ['Validate profile data', 'Check profile PR scope']);
+    { name: 'Check trusted profile PR', status: 'completed', conclusion: 'success' },
+  ], ['Check trusted profile PR', 'Check profile PR scope']);
 
   assert.equal(summary.ready, false);
   assert.equal(summary.success, false);
@@ -53,9 +53,9 @@ test('summarizeRequiredChecks waits for missing required checks', () => {
 
 test('summarizeRequiredChecks requires successful conclusions', () => {
   const summary = summarizeRequiredChecks([
-    { name: 'Validate profile data', status: 'completed', conclusion: 'success' },
+    { name: 'Check trusted profile PR', status: 'completed', conclusion: 'success' },
     { name: 'Check profile PR scope', status: 'completed', conclusion: 'failure' },
-  ], ['Validate profile data', 'Check profile PR scope']);
+  ], ['Check trusted profile PR', 'Check profile PR scope']);
 
   assert.equal(summary.ready, true);
   assert.equal(summary.success, false);

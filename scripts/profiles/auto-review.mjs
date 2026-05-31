@@ -3,7 +3,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 
 import { checkProfilePullRequestScope } from './self-service-guard.mjs';
 
-export const REQUIRED_CHECK_NAMES = ['Validate profile data', 'Check profile PR scope'];
+export const REQUIRED_CHECK_NAMES = ['Check trusted profile PR', 'Check profile PR scope'];
 export const MISSING_APPEARANCE_COMMENT_MARKER = '<!-- sitcon-credits-profile-appearance-check -->';
 
 export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns }) {

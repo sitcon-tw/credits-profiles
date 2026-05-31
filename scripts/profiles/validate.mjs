@@ -27,15 +27,24 @@ const STANDARD_LINK_TYPES = new Set([
 const CUSTOM_LINK_TYPE = 'custom';
 const ALLOWED_LINK_TYPES = new Set([...STANDARD_LINK_TYPES, CUSTOM_LINK_TYPE]);
 
-const args = process.argv.slice(2);
-const profilesDir = getArgValue('--dir') ?? DEFAULT_PROFILES_DIR;
+async function main(argv = process.argv.slice(2)) {
+  const profilesDir = getArgValue(argv, '--dir') ?? DEFAULT_PROFILES_DIR;
+  const result = await validateProfilesDirectory(profilesDir);
 
-main().catch((error) => {
-  console.error(error instanceof Error ? error.message : error);
-  process.exitCode = 1;
-});
+  for (const issue of result.issues) {
+    console.error(formatIssue(issue));
+  }
 
-async function main() {
+  if (result.issues.length > 0) {
+    console.error(`Profile validation failed: ${result.issues.length} errors.`);
+    process.exitCode = 1;
+    return;
+  }
+
+  console.log(`Profile validation passed: ${result.profileCount} profile files checked.`);
+}
+
+export async function validateProfilesDirectory(profilesDir = DEFAULT_PROFILES_DIR) {
   const issues = [];
   const entries = await readdir(profilesDir, { withFileTypes: true });
   const entryNames = new Set(entries.map((entry) => entry.name));
@@ -75,28 +84,18 @@ async function main() {
     }
   }
 
-  await validateProfileJson(issues, TEMPLATE_FILE, { template: true });
+  await validateProfileJson(issues, profilesDir, TEMPLATE_FILE, { template: true });
   if (entryNames.has(EXAMPLE_FILE)) {
-    await validateProfileJson(issues, EXAMPLE_FILE, { template: false });
+    await validateProfileJson(issues, profilesDir, EXAMPLE_FILE, { template: false });
   }
   for (const fileName of profileFiles.sort()) {
-    await validateProfileJson(issues, fileName, { template: false });
+    await validateProfileJson(issues, profilesDir, fileName, { template: false });
   }
 
-  for (const issue of issues) {
-    console.error(formatIssue(issue));
-  }
-
-  if (issues.length > 0) {
-    console.error(`Profile validation failed: ${issues.length} errors.`);
-    process.exitCode = 1;
-    return;
-  }
-
-  console.log(`Profile validation passed: ${profileFiles.length} profile files checked.`);
+  return { issues, profileCount: profileFiles.length };
 }
 
-async function validateProfileJson(issues, fileName, options) {
+async function validateProfileJson(issues, profilesDir, fileName, options) {
   const filePath = path.join(profilesDir, fileName);
   let profile;
 
@@ -108,6 +107,26 @@ async function validateProfileJson(issues, fileName, options) {
     return;
   }
 
+  validateProfileObject(issues, fileName, profile, options);
+}
+
+export function validateProfileJsonText(fileName, text, options = { template: false }) {
+  const issues = [];
+  let profile;
+
+  try {
+    profile = JSON.parse(text);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    addIssue(issues, fileName, '', `must contain valid JSON: ${message}`);
+    return issues;
+  }
+
+  validateProfileObject(issues, fileName, profile, options);
+  return issues;
+}
+
+export function validateProfileObject(issues, fileName, profile, options = { template: false }) {
   if (!profile || typeof profile !== 'object' || Array.isArray(profile)) {
     addIssue(issues, fileName, '', 'profile must be a JSON object');
     return;
@@ -296,13 +315,20 @@ function addIssue(issues, fileName, field, message) {
   issues.push({ fileName, field, message });
 }
 
-function formatIssue(issue) {
+export function formatIssue(issue) {
   const location = issue.field ? `${issue.fileName} ${issue.field}` : issue.fileName;
   return `ERROR ${location}: ${issue.message}`;
 }
 
-function getArgValue(name) {
+function getArgValue(args, name) {
   const prefix = `${name}=`;
   const value = args.find((arg) => arg.startsWith(prefix));
   return value?.slice(prefix.length);
+}
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((error) => {
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  });
 }
