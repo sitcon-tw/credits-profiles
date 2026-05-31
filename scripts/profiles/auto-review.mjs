@@ -132,7 +132,7 @@ export function formatApprovalReviewBody(username) {
 }
 
 export function formatMergeTitle(username) {
-  return `Update ${username} profile`;
+  return `chore: update ${username} profile`;
 }
 
 async function runCli(argv = process.argv.slice(2), env = process.env) {

@@ -123,7 +123,7 @@ test('profilePullRequestHeadMatches rejects stale dispatch payloads', () => {
 });
 
 test('formatMergeTitle names the profile update', () => {
-  assert.equal(formatMergeTitle('octocat'), 'Update octocat profile');
+  assert.equal(formatMergeTitle('octocat'), 'chore: update octocat profile');
 });
 
 test('formatGraphqlMergeMethod converts merge method to enum value', () => {
