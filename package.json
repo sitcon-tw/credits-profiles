@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "preinstall": "node scripts/ensure-pnpm.mjs",
-    "test": "node scripts/ensure-pnpm.mjs && node --test scripts/profiles/*.test.mjs",
-    "profiles:validate": "node scripts/ensure-pnpm.mjs && node scripts/profiles/validate.mjs"
+    "test": "node scripts/ensure-pnpm.mjs && node --test scripts/profiles/*.test.mjs scripts/site-profiles/*.test.mjs",
+    "profiles:validate": "node scripts/ensure-pnpm.mjs && node scripts/profiles/validate.mjs",
+    "site-profiles:validate": "node scripts/ensure-pnpm.mjs && node scripts/site-profiles/validate.mjs"
   },
   "engines": {
     "node": ">=18"

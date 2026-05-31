@@ -69,6 +69,21 @@ test('profile self-service guard accepts wider scope with maintainer review labe
   assert.equal(result.hasScopeReview, true);
 });
 
+test('profile self-service guard rejects site profiles even with review label', () => {
+  const result = check({
+    author: 'octocat',
+    labels: [PROFILE_SCOPE_REVIEW_LABEL],
+    files: [
+      { filename: 'site-profiles/SITCON-2026/speaker-1.json', status: 'modified' },
+    ],
+  });
+
+  assert.equal(result.passed, false);
+  assert.equal(result.selfService, false);
+  assert.equal(result.hasScopeReview, true);
+  assert.match(result.issues.join('\n'), /direct maintainer commits/);
+});
+
 test('profile self-service guard requires review for docs and support files', () => {
   const result = check({
     author: 'octocat',

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sitcon.org/credits/schemas/site-profile.schema.json",
+  "title": "SITCON Credits site profile",
+  "description": "Display-only profile data derived from a public event website and maintained by SITCON Credits maintainers.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["display_name", "avatar_url"],
+  "properties": {
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Public display name from the source event website."
+    },
+    "avatar_url": {
+      "type": "string",
+      "maxLength": 2048,
+      "description": "HTTPS avatar image URL from the source event website. Empty string is allowed."
+    }
+  }
+}

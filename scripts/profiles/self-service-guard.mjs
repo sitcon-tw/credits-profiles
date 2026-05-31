@@ -14,10 +14,16 @@ export function checkProfilePullRequestScope({ pullRequest, files }) {
   const labels = new Set((pullRequest.labels ?? []).map((label) => label.name?.toLowerCase()).filter(Boolean));
   const hasScopeReview = labels.has(PROFILE_SCOPE_REVIEW_LABEL);
   const issues = [];
+  const hardBlockIssues = [];
   const profileUsernames = new Set();
 
   for (const file of files) {
     const name = file.filename;
+
+    if (name === 'site-profiles' || name.startsWith('site-profiles/')) {
+      hardBlockIssues.push(`${name}: site profiles are maintained only by direct maintainer commits, not pull requests.`);
+      continue;
+    }
 
     if (file.status === 'removed') {
       issues.push(`${name}: profile removal requests require maintainer review.`);
@@ -60,10 +66,10 @@ export function checkProfilePullRequestScope({ pullRequest, files }) {
   }
 
   return {
-    passed: issues.length === 0 || hasScopeReview,
-    selfService: issues.length === 0,
+    passed: hardBlockIssues.length === 0 && (issues.length === 0 || hasScopeReview),
+    selfService: hardBlockIssues.length === 0 && issues.length === 0,
     hasScopeReview,
-    issues,
+    issues: [...hardBlockIssues, ...issues],
   };
 }
 

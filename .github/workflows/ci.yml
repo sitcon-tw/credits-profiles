@@ -39,6 +39,9 @@ jobs:
       - name: Validate profiles
         run: pnpm profiles:validate
 
+      - name: Validate site profiles
+        run: pnpm site-profiles:validate
+
       - name: Save PR metadata
         if: github.event_name == 'pull_request'
         run: |
