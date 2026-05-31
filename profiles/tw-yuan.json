@@ -1,8 +1,25 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "Yuan",
+  "bio": "SCINT 北臺灣學生資訊社群共同創辦人、SITCON Threads 小編，喜歡玩網路跟資安，熟悉 Linux，也常到各個不同的社群晃，曾參與過 SITCON、COSCUP、HITCON、TWNOG、G0V 等各類資訊社群。",
+  "avatar_url": "https://www.gravatar.com/avatar/725330f134732796feb51fc589a0f456",
+  "public_email": "me@yuan-tw.net",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/tw-yuan"
+    },
+    {
+      "type": "website",
+      "url": "https://yuan-tw.net"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.yuan-tw.net"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/yuan-tw"
+    }
+  ]
 }
