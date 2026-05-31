@@ -4,5 +4,15 @@
   "bio": "",
   "avatar_url": "",
   "public_email": "me@nath.tw",
-  "links": ["https://nath.tw", "https://nath.tw/cal"]
+  "links": [
+    {
+      "type": "website",
+      "url": "https://nath.tw"
+    },
+    {
+      "type": "custom",
+      "label": "Calendar",
+      "url": "https://nath.tw/cal"
+    }
+  ]
 }
