@@ -1,8 +1,8 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
+  "display_name": "Nathan",
   "bio": "",
   "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "public_email": "me@nath.tw",
+  "links": ["https://nath.tw", "https://nath.tw/cal"]
 }
