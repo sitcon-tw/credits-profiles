@@ -45,6 +45,7 @@ export function decideProfileAutoReview({ pullRequest, files, exportPayload, che
     reason: 'profile-username-present-in-appearances',
     username,
     reviewBody: formatApprovalReviewBody(username),
+    mergeTitle: formatMergeTitle(username),
   };
 }
 
@@ -129,6 +130,10 @@ export function formatApprovalReviewBody(username) {
   ].join('\n');
 }
 
+export function formatMergeTitle(username) {
+  return `Update ${username} profile`;
+}
+
 async function runCli(argv = process.argv.slice(2), env = process.env) {
   const options = parseArgs(argv);
   const apiToken = env.GITHUB_TOKEN;
@@ -186,6 +191,10 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
     await deleteMissingAppearanceComments(apiToken, options);
     await approvePullRequest(reviewToken, options, decision.reviewBody);
     console.log(`Profile auto review approved: ${decision.username}`);
+    if (options.autoMerge) {
+      await mergePullRequest(reviewToken, options, decision.mergeTitle);
+      console.log(`Profile auto review merged: ${decision.username}`);
+    }
   }
 }
 
@@ -222,6 +231,15 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (arg === '--auto-merge') {
+      options.autoMerge = true;
+      continue;
+    }
+    if (arg === '--merge-method') {
+      options.mergeMethod = readNextArg(argv, index, arg);
+      index += 1;
+      continue;
+    }
     if (arg === '--wait-ms') {
       options.waitMs = Number(readNextArg(argv, index, arg));
       index += 1;
@@ -245,6 +263,9 @@ function parseArgs(argv) {
   }
   if (!Number.isFinite(options.intervalMs) || options.intervalMs <= 0) {
     throw new Error('--interval-ms must be a positive number.');
+  }
+  if (options.mergeMethod && !['merge', 'squash', 'rebase'].includes(options.mergeMethod)) {
+    throw new Error('--merge-method must be one of: merge, squash, rebase.');
   }
 
   return options;
@@ -281,6 +302,14 @@ async function approvePullRequest(token, options, body) {
   await githubRequest(token, `POST /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}/reviews`, {
     event: 'APPROVE',
     body,
+  });
+}
+
+async function mergePullRequest(token, options, commitTitle) {
+  await githubRequest(token, `PUT /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}/merge`, {
+    commit_title: commitTitle,
+    merge_method: options.mergeMethod ?? 'squash',
+    sha: options.headSha,
   });
 }
 
