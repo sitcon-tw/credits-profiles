@@ -47,7 +47,7 @@
 1. 登入 GitHub。
 2. 打開 [`sitcon-tw/credits-profiles` 的 `profiles/` 資料夾](https://github.com/sitcon-tw/credits-profiles/tree/master/profiles)。
 3. 按右上角 `Add file`，選 `Create new file`。也可以直接打開 [新增 profile 檔案頁面](https://github.com/sitcon-tw/credits-profiles/new/master/profiles)。
-4. 在檔名欄輸入 `profiles/<你的 GitHub username>.json`，例如 `profiles/octocat.json`。
+4. 在檔名欄輸入 `<你的 GitHub username>.json`，例如 `octocat.json`。
 5. 複製 [`profiles/_template.json`](profiles/_template.json) 的內容貼上。
 6. 只修改雙引號裡的內容；不想公開的欄位保留空字串 `""`，不想公開連結就保留 `"links": []`。
 7. 按 `Commit changes...`。
