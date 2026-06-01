@@ -95,3 +95,13 @@ test('trusted scope comment uses contributor-facing issue text', () => {
   assert.match(comment, /`profiles\/hubot\.json`/);
   assert.match(comment, /PR 作者 `octocat`/);
 });
+
+test('trusted scope comment explains missing json filename extension', () => {
+  const comment = formatTrustedProfileScopeComment({
+    issues: ['profiles/joeangel: profile filename must end with .json; expected profiles/joeangel.json for this PR author.'],
+  });
+
+  assert.match(comment, /sitcon-credits-profile-trusted-checklist/);
+  assert.match(comment, /`profiles\/joeangel`/);
+  assert.match(comment, /請把檔案改名成 `profiles\/joeangel\.json`/);
+});

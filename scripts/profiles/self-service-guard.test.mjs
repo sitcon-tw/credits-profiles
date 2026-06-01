@@ -99,6 +99,21 @@ test('profile self-service guard requires review for docs and support files', ()
   assert.match(result.issues.join('\n'), /self-service PRs may only change profiles/);
 });
 
+test('profile self-service scope comment explains missing json filename extension', () => {
+  const result = check({
+    author: 'joeangel',
+    files: [
+      { filename: 'profiles/joeangel', status: 'added' },
+    ],
+  });
+  const comment = formatProfilePullRequestScopeComment(result);
+
+  assert.equal(result.passed, false);
+  assert.match(result.issues.join('\n'), /profile filename must end with \.json/);
+  assert.match(comment, /`profiles\/joeangel`/);
+  assert.match(comment, /請把檔案改名成 `profiles\/joeangel\.json`/);
+});
+
 test('profile self-service guard requires review for removals and renames', () => {
   const result = check({
     author: 'octocat',

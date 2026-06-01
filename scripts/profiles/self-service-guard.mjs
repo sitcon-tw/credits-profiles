@@ -36,6 +36,11 @@ export function checkProfilePullRequestScope({ pullRequest, files }) {
       continue;
     }
 
+    if (/^profiles\/[^/]+$/.test(name) && !name.endsWith('.json')) {
+      issues.push(`${name}: profile filename must end with .json; expected profiles/${pullRequest.user.login}.json for this PR author.`);
+      continue;
+    }
+
     const match = /^profiles\/([^/]+)\.json$/.exec(name);
     if (!match) {
       issues.push(`${name}: self-service PRs may only change profiles/<github_username>.json.`);
@@ -127,6 +132,10 @@ function translateScopeIssueDetail(detail) {
   const authorMatch = /^filename username must match PR author (.+)\.$/.exec(detail);
   if (authorMatch) {
     return `檔名中的 GitHub username 必須和 PR 作者 \`${authorMatch[1]}\` 一致。`;
+  }
+  const missingJsonMatch = /^profile filename must end with \.json; expected (profiles\/[^/]+\.json) for this PR author\.$/.exec(detail);
+  if (missingJsonMatch) {
+    return `profile 檔名需要以 \`.json\` 結尾。請把檔案改名成 \`${missingJsonMatch[1]}\`。`;
   }
   return detail;
 }
