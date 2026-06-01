@@ -14,8 +14,20 @@
 - [ ] 我確認這份 profile 沒有放入惡意 HTML、JavaScript、刻意破壞頁面顯示的內容，或任何可能造成 SITCON 夥伴困擾的資料；我理解若發生這類行為，維護者可以拒絕信任這次自助提交並改由人工審查。
 - [ ] 我理解這個 PR 不會自動修改 SITCON Credits 的歷史貢獻紀錄，也不會自動完成身份合併。
 
-## 希望維護者協助確認的歷史紀錄（選填）
+## 想請維護者將貢獻紀錄與自己建立關聯（選填）
 
-如果你希望[貢獻紀錄](https://docs.google.com/spreadsheets/d/1L2drpIE2ocZF3Stba9X0DnLGmYi_igeGWUhaQB_evsQ/edit?gid=1532717308#gid=1532717308)能連到這個 profile，請列出活動年份、活動名稱與當時顯示名稱。
+如果只是更新 profile，這段可以留空。
 
-這只是維護者審查線索，不會自動更改 Google Sheets 中的 `appearances.github_username`。
+如果你本人確定[貢獻紀錄表](https://docs.google.com/spreadsheets/d/1L2drpIE2ocZF3Stba9X0DnLGmYi_igeGWUhaQB_evsQ/edit?gid=517327050#gid=517327050)中某一列是在記錄你，而不是只是名稱或暱稱相似，可以在下面提供該列的最少必要資訊，請維護者協助確認是否能在主 SITCON Credits 資料中連到你的 GitHub username。
+
+這段會公開出現在 PR 中；請只填表格中已公開、能協助維護者辨識該列的資訊，不要提供私人 email、電話、私訊截圖、證件或其他非公開身份證明。
+
+如果有多筆紀錄，請每筆各填一組：
+
+- 貢獻紀錄表上的活動年份與活動名稱／event id：
+- 那筆紀錄目前顯示的 GitHub 帳號或代號（請完整貼上，例如 `site:...`）：
+- 表格上的顯示名稱：
+- 表格上的角色／職稱：
+- 希望連到的 GitHub username：
+
+這只是提供給維護者確認用的線索；填了不代表貢獻紀錄會自動連到你的 profile，也不會自動修改試算表。
