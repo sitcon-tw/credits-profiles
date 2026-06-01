@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Ya",
+  "bio": "",
+  "avatar_url": "",
+  "public_email": "yuyaowu3@gmail.com",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/yu._yao/"
+    }
+  ]
+}
