@@ -52,15 +52,28 @@ jobs:
           --files="$RUNNER_TEMP/profile-files.json"
           --comment-output="$PROFILE_SCOPE_COMMENT"
 
+      - name: Create credits assistant token
+        id: credits-assistant-token
+        if: steps.scope_check.outcome == 'failure' || steps.scope_check.outcome == 'success'
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SITCON_CREDITS_ASSISTANT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SITCON_CREDITS_ASSISTANT_APP_PRIVATE_KEY }}
+          owner: sitcon-tw
+          repositories: credits-profiles
+          permission-issues: write
+
       - name: Comment profile scope reminder
         if: steps.scope_check.outcome == 'failure'
         uses: actions/github-script@v9
         env:
           PROFILE_SCOPE_COMMENT: ${{ runner.temp }}/profile-scope-comment.md
         with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
           script: |
             const fs = require('node:fs');
             const marker = '<!-- sitcon-credits-profile-scope-check -->';
+            const commentBotLogins = new Set(['github-actions[bot]', 'sitcon-credits[bot]']);
             const bodyPath = process.env.PROFILE_SCOPE_COMMENT;
             if (!fs.existsSync(bodyPath)) {
               return;
@@ -75,7 +88,7 @@ jobs:
               per_page: 100,
             });
             const existing = comments.find((comment) =>
-              comment.user?.login === 'github-actions[bot]' &&
+              commentBotLogins.has(comment.user?.login) &&
               comment.body?.includes(marker)
             );
 
@@ -100,8 +113,10 @@ jobs:
         if: steps.scope_check.outcome == 'success'
         uses: actions/github-script@v9
         with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
           script: |
             const marker = '<!-- sitcon-credits-profile-scope-check -->';
+            const commentBotLogins = new Set(['github-actions[bot]', 'sitcon-credits[bot]']);
             const pr = context.payload.pull_request;
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner: context.repo.owner,
@@ -112,7 +127,7 @@ jobs:
 
             for (const comment of comments) {
               if (
-                comment.user?.login === 'github-actions[bot]' &&
+                commentBotLogins.has(comment.user?.login) &&
                 comment.body?.includes(marker)
               ) {
                 await github.rest.issues.deleteComment({
