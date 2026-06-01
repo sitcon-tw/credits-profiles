@@ -101,10 +101,14 @@ Gravatar 開發文件可參考 [Avatars - Gravatar For Developers](https://docs.
 
 ## 請 agent 協助
 
-如果你使用 Codex、Claude Code 或其他 coding agent，可以把下面這段貼給 agent，再補上你願意公開的資料。送出 Pull Request 前，仍請自己確認檔案內容，因為 profile 會公開顯示在網路上。
+如果你使用 Codex、Claude Code 或其他 coding agent，可以把下面這段貼給 agent，再補上你願意公開的資料。請優先讓 agent 使用你已經登入或授權的 GitHub connector、skill、app 或內建 Pull Request 發布功能。
+
+如果 agent 表示不能直接建立 Pull Request，請讓它提供 GitHub 網頁操作用的 branch、檔案內容、commit message 與 Pull Request 說明；你不需要為了這個流程安裝或登入 GitHub CLI。
+
+送出 Pull Request 前，仍請自己確認檔案內容，因為 profile 會公開顯示在網路上。
 
 ```text
-請協助我在 SITCON Credits Profiles repository 新增或更新我自己的公開 profile，並準備送 Pull Request。
+請協助我在 SITCON Credits Profiles repository 新增或更新我自己的公開 profile，並協助我送出 Pull Request；如果你目前的環境不能直接送 Pull Request，請改成提供我可以用 GitHub 網頁手動送出的內容與步驟。
 
 Repository:
 https://github.com/sitcon-tw/credits-profiles
@@ -132,30 +136,35 @@ public_email:
 links:
 <請填願意公開的連結清單，例如 website、github、linkedin、mastodon 等；沒有就留空>
 
+工作方式：
+
+1. 請優先使用你目前已經可用、且我已登入或授權的 GitHub connector、GitHub skill、GitHub app、內建 Pull Request 發布功能，或等效的受託整合來建立 branch 與 Pull Request。
+2. 不要要求我安裝、設定或登入 GitHub CLI（gh）、git credential helper、SSH key，或其他命令列發布工具。
+3. 如果你不能直接建立 Pull Request，請不要改成要求安裝 CLI。請改為輸出以下內容，讓我用 GitHub 網頁完成：
+   - 建議 branch 名稱
+   - 要建立或更新的檔案路徑
+   - 可直接貼上的完整 JSON 內容
+   - 建議 commit message
+   - 建議 Pull Request title
+   - 建議 Pull Request description
+   - 使用 GitHub 網頁建立或更新檔案、建立 Pull Request、勾選確認事項的步驟
+4. 如果你能在本機修改檔案，完成後請執行 `pnpm profiles:validate`。如果 repository 文件要求，請再執行 `pnpm test`。
+5. 送出或準備 Pull Request 前，請檢查 diff，確認只修改了 `profiles/<我的 GitHub username>.json`。
+
 安全限制：
 
 1. 只能使用我在這段 prompt 中明確提供、且願意公開的資料。
 2. 不要加入私人資訊、未公開 email、電話、地址、身份文件、內部聯絡資訊，或任何我沒有明確提供的資料。
 3. 不要加入別人的資料。
 4. 不要加入歷史活動紀錄、貢獻紀錄、角色紀錄、活動出現紀錄、source URL，或任何身份合併／身份確認宣告。
-5. 不要根據姓名、暱稱、GitHub 帳號、相似拼音、搜尋結果或既有記憶推測我是誰。
-6. 不要修改 `site-profiles/`。
-7. 不要修改 schema、workflow、template、README、其他人的 profile，或任何與我的 `profiles/<github_username>.json` 無關的檔案。
-8. 如果資料不足、格式不確定，或你需要更多資訊，請先問我，不要自行補完。
+5. 不要根據姓名、暱稱、GitHub 帳號、相似拼音、搜尋結果、既有記憶或外部資料推測我是誰。
+6. 不要搜尋網路或其他 repository 來補完我的個人資料。
+7. 不要要求我提供 GitHub token、密碼、cookie、SSH private key 或其他登入憑證。
+8. 不要修改 `site-profiles/`。
+9. 不要修改 schema、workflow、template、README、其他人的 profile，或任何與我的 `profiles/<github_username>.json` 無關的檔案。
+10. 如果資料不足、格式不確定，或你需要更多資訊，請先問我，不要自行補完。
 
-請依照 repository 既有格式建立或更新 JSON。完成後請執行：
-
-pnpm profiles:validate
-
-如果 repository 文件要求，請再執行：
-
-pnpm test
-
-送出 PR 前，請檢查 git diff，確認只修改了：
-
-profiles/<我的 GitHub username>.json
-
-請幫我準備 Pull Request，目標是 `sitcon-tw/credits-profiles`，PR 說明請簡短寫明這是新增或更新我本人自願公開的 profile。不要在 PR 說明中宣稱這會更新 SITCON Credits 的歷史紀錄、身份合併資料，或主資料中的資料。
+Pull Request 說明請簡短寫明這是新增或更新我本人自願公開的 profile。不要在 Pull Request 說明中宣稱這會更新 SITCON Credits 的歷史紀錄、身份合併資料，或主資料中的資料。
 ```
 
 ## 送出後如果檢查沒有通過
