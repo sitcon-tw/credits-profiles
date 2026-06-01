@@ -27,9 +27,14 @@
 - 活動名稱和年份（event_id）：
 - 目前該列的 github_username：
 
-範例：
+範例（多筆）：
 
+---
 - 活動名稱和年份（event_id）：SITCON-2013
 - 目前該列的 github_username：site:c1c7dfa8-4b94-51d2-93a3-5d2a9121af15
+---
+- 活動名稱和年份（event_id）：SITCON-Camp-2014
+- 目前該列的 github_username：site:p-402f18f90f2030ee8b3ac837
+---
 
 填寫這段只是提供線索，不代表系統會自動認定那筆紀錄是你，也不會自動修改貢獻紀錄表。
