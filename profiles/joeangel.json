@@ -1,0 +1,32 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Joe Angel",
+  "bio": "SITCON 學生計算機年會共同發起人，長年混跡開源社群，博覽多種程式語言。不求完美解，擅長在複雜混亂中，以一次次優雅取捨破浪前行。",
+  "avatar_url": "https://gravatar.com/avatar/e9d9b6bb45788d233ac739fd72d9284c86685be06c5ce690c771705633c0a6b7?s=512&r=g",
+  "public_email": "joe10330@gmail.com",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://blog.joeangel.tw/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/JoeAngel"
+    },
+    {
+      "type": "facebook",
+      "url": "https://fb.me/joeangel.tw"
+    },
+      "type": "instagram",
+      "url": "https://www.instagram.com/joeangel.tw//"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://tw.linkedin.com/in/joeangel-huang"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/denny0223"
+    }
+  ]
+}
