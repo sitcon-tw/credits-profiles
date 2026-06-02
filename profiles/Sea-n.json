@@ -1,0 +1,33 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Sean Wei 韋詠祥",
+  "bio": "資工背景的後端工程師，專長軟體開發、網路與資安。長期在 SITCON 打滾，當過議程組與 Camp 課程組，也在 Kubernetes SIG-Docs 擔任中文語系 Approver、於 TWIGF 投入網路治理；熱愛開源，最愛把學到的東西分享給更多人。下了班閒不下來：FPV 穿越機、帆船競賽、花式滑冰、西洋棋樣樣來，也常跑音樂劇與古典樂演出。歡迎找我聊技術與社群，或揪我做任何運動 🏄",
+  "avatar_url": "https://img.sean.taipei/sean/avatar.jpg",
+  "public_email": "me@sean.cat",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://sean.cat"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/_sean64_"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/S_ean"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/Sea-n"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/sean64/"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/@Sean-Wei"
+    }
+  ]
+}
