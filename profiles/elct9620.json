@@ -1,0 +1,22 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "蒼時弦也",
+  "bio": "興趣使然的工程師，喜歡 Ruby 語言，也會用 Go / TypeScript 等不同語言，最近正在當 AI 工程師。",
+  "avatar_url": "https://gravatar.com/avatar/3012983dff22198abfc52b0f7fa4bc5a1200ef0a80f20456c3e091160a1d532b?s=512&r=g",
+  "public_email": "contact@aotoki.me",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/elct9620"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.aotoki.me"
+    },
+    {
+      "type": "custom",
+      "label": "Technology Radar",
+      "url": "https://radar.aotoki.me"
+    }
+  ]
+}
