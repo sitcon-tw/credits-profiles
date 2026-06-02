@@ -1,8 +1,33 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "OsGa",
+  "bio": "家有一隻狗叫 cookie，請不要偷我的 cookie",
+  "avatar_url": "https://gravatar.com/avatar/5e5faa1632e059c945888331f3d6215b45b03dded682353468ebc49be5dd4920?s=512&r=g",
+  "public_email": "hi@osga.dev",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://osga.dev"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.osga.dev"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/os324_/"
+    },
+    {
+      "type": "threads",
+      "url": "https://www.threads.com/@os324_"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/osga/"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/osga24"
+    }
+  ]
 }
