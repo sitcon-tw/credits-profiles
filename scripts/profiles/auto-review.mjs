@@ -65,6 +65,16 @@ export function isAssistantAuthoredPullRequest(pullRequest, assistantLogin = CRE
     authorLogin === `app/${assistantLogin}`;
 }
 
+export function getDeletableProfileRequestBranch(pullRequest, options) {
+  const branchName = pullRequest?.head?.ref;
+  const headRepo = pullRequest?.head?.repo?.full_name;
+  const expectedRepo = `${options.owner}/${options.repo}`;
+  if (headRepo !== expectedRepo || !branchName?.startsWith('profile-request/')) {
+    return null;
+  }
+  return branchName;
+}
+
 export function summarizeRequiredChecks(checkRuns, requiredNames) {
   const latestByName = new Map();
   for (const checkRun of checkRuns ?? []) {
@@ -211,8 +221,13 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
       console.log(`Profile auto review approved: ${decision.username}`);
     }
     if (options.autoMerge) {
-      await mergePullRequestOrEnableAutoMerge(reviewToken, options, currentPullRequest, decision.mergeTitle);
-      console.log(`Profile auto review merged: ${decision.username}`);
+      const mergeResult = await mergePullRequestOrEnableAutoMerge(reviewToken, options, currentPullRequest, decision.mergeTitle);
+      if (mergeResult.merged) {
+        console.log(`Profile auto review merged: ${decision.username}`);
+        await deleteProfileRequestBranch(reviewToken, options, currentPullRequest);
+      } else {
+        console.log(`Profile auto review enabled auto-merge: ${decision.username}`);
+      }
     }
   }
 }
@@ -362,6 +377,7 @@ async function approvePullRequest(token, options, body) {
 async function mergePullRequestOrEnableAutoMerge(token, options, pullRequest, commitTitle) {
   try {
     await mergePullRequest(token, options, commitTitle);
+    return { merged: true };
   } catch (error) {
     if (!isIntegrationAccessError(error)) {
       throw error;
@@ -371,7 +387,7 @@ async function mergePullRequestOrEnableAutoMerge(token, options, pullRequest, co
         commitTitle,
         mergeMethod: options.mergeMethod ?? 'squash',
       });
-      return;
+      return { merged: true };
     } catch (graphqlMergeError) {
       if (!isPullRequestNotReadyToMergeGraphqlError(graphqlMergeError)) {
         throw graphqlMergeError;
@@ -381,7 +397,17 @@ async function mergePullRequestOrEnableAutoMerge(token, options, pullRequest, co
       commitTitle,
       mergeMethod: options.mergeMethod ?? 'squash',
     });
+    return { merged: false };
   }
+}
+
+async function deleteProfileRequestBranch(token, options, pullRequest) {
+  const branchName = getDeletableProfileRequestBranch(pullRequest, options);
+  if (!branchName) {
+    return;
+  }
+  await githubRequest(token, `DELETE /repos/${options.owner}/${options.repo}/git/refs/heads/${branchName}`);
+  console.log(`Profile auto review deleted branch: ${branchName}`);
 }
 
 async function mergePullRequest(token, options, commitTitle) {

@@ -10,6 +10,7 @@ import {
   formatGraphqlMergeMethod,
   formatMergeTitle,
   formatMissingAppearanceComment,
+  getDeletableProfileRequestBranch,
   hasProfileRequestLabel,
   isAssistantMissingAppearanceComment,
   isAssistantAuthoredPullRequest,
@@ -197,6 +198,37 @@ test('isAssistantAuthoredPullRequest detects app-authored pull requests', () => 
   assert.equal(isAssistantAuthoredPullRequest({ user: { login: 'sitcon-credits[bot]' } }, 'sitcon-credits'), true);
   assert.equal(isAssistantAuthoredPullRequest({ user: { login: 'app/sitcon-credits' } }, 'sitcon-credits'), true);
   assert.equal(isAssistantAuthoredPullRequest({ user: { login: 'octocat' } }, 'sitcon-credits'), false);
+});
+
+test('getDeletableProfileRequestBranch only accepts same-repo profile request branches', () => {
+  const options = { owner: 'sitcon-tw', repo: 'credits-profiles' };
+  assert.equal(
+    getDeletableProfileRequestBranch({
+      head: {
+        ref: 'profile-request/issue-25-yuyaoooooo',
+        repo: { full_name: 'sitcon-tw/credits-profiles' },
+      },
+    }, options),
+    'profile-request/issue-25-yuyaoooooo',
+  );
+  assert.equal(
+    getDeletableProfileRequestBranch({
+      head: {
+        ref: 'profile-request/issue-25-yuyaoooooo',
+        repo: { full_name: 'octocat/credits-profiles' },
+      },
+    }, options),
+    null,
+  );
+  assert.equal(
+    getDeletableProfileRequestBranch({
+      head: {
+        ref: 'feature/profile',
+        repo: { full_name: 'sitcon-tw/credits-profiles' },
+      },
+    }, options),
+    null,
+  );
 });
 
 test('formatMergeTitle names the profile update', () => {
