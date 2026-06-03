@@ -1,13 +1,25 @@
 {
   "$schema": "../schemas/profile.schema.json",
   "display_name": "Ya",
-  "bio": "",
-  "avatar_url": "",
+  "bio": "嗨我 Ya，歪欸不是耶\n完全沒有資訊背景的資訊社群人\n\n最近的夢想是睡滿六小時，阿巴阿巴：Ｄ",
+  "avatar_url": "https://gravatar.com/avatar/3dc682683048afd1630ae4329b7269a2dc9fa301480a8abe6e974893eba6683d?s=512&r=g",
   "public_email": "yuyaowu3@gmail.com",
   "links": [
     {
       "type": "instagram",
       "url": "https://www.instagram.com/yu._yao/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/yuyaoooooo"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://gitlab.com/yuyaoooooo"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/yu._yao"
     }
   ]
 }
