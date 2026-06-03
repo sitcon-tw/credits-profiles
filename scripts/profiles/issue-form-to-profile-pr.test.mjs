@@ -25,7 +25,6 @@ function formBody(overrides = {}) {
   const values = {
     [FORM_LABELS.displayName]: 'Octocat',
     [FORM_LABELS.bio]: '曾參與 SITCON 相關活動。',
-    [FORM_LABELS.gravatarSha256]: '',
     [FORM_LABELS.avatarUrl]: '',
     [FORM_LABELS.publicEmail]: '',
     GitHub: 'https://github.com/octocat',
@@ -85,7 +84,6 @@ test('issue form labels stay aligned with parser labels', () => {
   const expectedLabels = [
     FORM_LABELS.displayName,
     FORM_LABELS.bio,
-    FORM_LABELS.gravatarSha256,
     FORM_LABELS.avatarUrl,
     FORM_LABELS.publicEmail,
     ...[
@@ -121,33 +119,12 @@ test('buildAvatarUrl defaults to GitHub public avatar', () => {
   assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), 'https://github.com/octocat.png?size=512');
 });
 
-test('buildAvatarUrl accepts a Gravatar SHA-256 hash', () => {
-  const hash = 'a'.repeat(64);
+test('buildAvatarUrl accepts an explicit advanced avatar URL', () => {
   const fields = parseIssueFormBody(formBody({
-    [FORM_LABELS.gravatarSha256]: hash,
-  }));
-
-  assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), `https://gravatar.com/avatar/${hash}?s=512&r=g`);
-});
-
-test('buildAvatarUrl prefers explicit advanced avatar URL over Gravatar hash', () => {
-  const fields = parseIssueFormBody(formBody({
-    [FORM_LABELS.gravatarSha256]: 'a'.repeat(64),
     [FORM_LABELS.avatarUrl]: 'https://example.com/avatar.png',
   }));
 
   assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), 'https://example.com/avatar.png');
-});
-
-test('buildAvatarUrl rejects email-looking Gravatar input', () => {
-  const fields = parseIssueFormBody(formBody({
-    [FORM_LABELS.gravatarSha256]: 'octocat@example.com',
-  }));
-
-  assert.throws(
-    () => buildAvatarUrl({ fields, username: 'octocat' }),
-    /請不要填 email/,
-  );
 });
 
 test('collectLinks reads one input per supported platform and keeps custom labels', () => {

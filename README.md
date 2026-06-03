@@ -20,7 +20,7 @@
 | --- | --- |
 | 公開顯示名稱 | 必填。你希望在 SITCON Credits 上公開顯示的名稱。 |
 | 公開簡介 | 選填。一句到幾句自願公開的簡短介紹。 |
-| 頭像 | 選填。留空時會使用 GitHub 公開頭像；也可以填 Gravatar SHA-256 hash 或進階圖片 URL。 |
+| 頭像 | 選填。留空時會使用 GitHub 公開頭像；想更換頭像時，建議先更新 GitHub 帳號的大頭貼。 |
 | 公開 email | 選填。只有願意讓 email 公開顯示、被搜尋引擎或第三方保存時才填。 |
 | 公開連結 | 選填。GitHub、個人網站、Blog、Instagram、Telegram、LinkedIn、Facebook、YouTube、Slides、GitLab、Discord、Mastodon、Threads、X 或自訂連結。 |
 | 貢獻紀錄線索 | 選填。若你看到公開貢獻紀錄中可能是在記錄你本人的資料，可以提供給維護者人工確認。 |

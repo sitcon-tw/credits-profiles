@@ -14,12 +14,10 @@ export const PROFILE_REQUEST_COMMENT_MARKER = '<!-- sitcon-credits-profile-reque
 
 const NO_RESPONSE = '_No response_';
 const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
-const GRAVATAR_SHA256_PATTERN = /^[a-f0-9]{64}$/;
 
 export const FORM_LABELS = {
   displayName: '公開顯示名稱',
   bio: '公開簡介',
-  gravatarSha256: 'Gravatar SHA-256 hash',
   avatarUrl: '進階：公開頭像圖片 URL',
   publicEmail: '公開 email',
   acknowledgements: '公開資料確認',
@@ -105,14 +103,6 @@ export function buildAvatarUrl({ fields, username }) {
   const explicitAvatarUrl = readOptionalField(fields, FORM_LABELS.avatarUrl);
   if (explicitAvatarUrl) {
     return explicitAvatarUrl;
-  }
-
-  const gravatarHash = readOptionalField(fields, FORM_LABELS.gravatarSha256).toLowerCase();
-  if (gravatarHash) {
-    if (!GRAVATAR_SHA256_PATTERN.test(gravatarHash)) {
-      throw new Error('Gravatar SHA-256 hash 必須是 64 個小寫十六進位字元；請不要填 email。');
-    }
-    return `https://gravatar.com/avatar/${gravatarHash}?s=512&r=g`;
   }
 
   return `https://github.com/${username}.png?size=512`;

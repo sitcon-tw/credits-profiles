@@ -30,15 +30,7 @@ body:
       value: |
         ### 頭像
 
-        可以全部留空；系統會預設使用你 GitHub 帳號的公開頭像。若你想使用其他頭像，可以填 Gravatar SHA-256 hash，或使用進階圖片 URL。
-  - type: input
-    id: gravatar_sha256
-    attributes:
-      label: Gravatar SHA-256 hash
-      description: 可以留空。如果你使用 Gravatar，請只填 email 計算後的 SHA-256 hash，不要在這裡填 email。請確認這個 Gravatar 頭像與 email 關聯本來就願意公開。
-      placeholder: 64 個十六進位字元
-    validations:
-      required: false
+        可以全部留空；系統會預設使用你 GitHub 帳號的公開頭像。如果想更換頭像，建議先更新 GitHub 帳號的大頭貼。
   - type: input
     id: avatar_url
     attributes:
