@@ -1,8 +1,25 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
+  "display_name": "Arnoldsky",
+  "bio": "嗨！目前在學習心理學、社會學，並研究人工智慧與 VR、機器人應用，歡迎找我聊天，不論是社群或是技術或是價值觀都非常歡迎！",
+  "avatar_url": "https://github.com/arnoldsky-yu.png?size=512",
   "public_email": "",
-  "links": []
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/arnoldsky-yu"
+    },
+    {
+      "type": "website",
+      "url": "https://xn--29s.tw/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/arnoldsky._0219/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/Arnodsky"
+    }
+  ]
 }
