@@ -88,9 +88,17 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 ## Automation Status
 
-GitHub Actions CI, a self-service PR ownership guard, a trusted profile review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`. The guard checks pull requests for low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. Pull requests that touch `site-profiles/` are hard-blocked by the guard because site profiles are maintainer-controlled direct-commit data only. The trusted profile review workflow runs on `pull_request_target`, uses only base repository code, reads the pull request head's single profile JSON through the GitHub API, validates the profile content, and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR approve/comment/merge action happen under the main Credits repo's secrets. The review action checks that the trusted profile review and guard also passed for the same head SHA and only approves/merges when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet. Changes under `site-profiles/` do not trigger people-helper sync.
+GitHub Actions CI, a profile issue form request workflow, a self-service PR ownership guard, a trusted profile review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`.
 
-The workflow files exist for profile scope checks, trusted profile review dispatch, people-helper sync dispatch, and receiving generated blank profile templates from the main `credits` repository. Do not describe branch protection, auto-merge permissions, repository secrets, GitHub App installation, or cross-repository build integration as active unless those repository settings are confirmed.
+The preferred non-technical contributor entrypoint is `.github/ISSUE_TEMPLATE/profile-request.yml`. That issue form creates a public `profile-request` issue. `Profile issue request` reads the issue body, uses the issue author's GitHub username as the profile filename key, creates or updates `profiles/<github_username>.json` on a `profile-request/...` branch, opens or updates a Pull Request, and links the PR back to the issue with `Closes #...`.
+
+For ordinary Pull Requests, the guard checks low-risk profile scope: a self-service PR may only change the author's own single `profiles/<github_username>.json` file. For assistant-created profile issue form PRs, the PR author is `sitcon-credits[bot]`; when the PR body closes a same-repo `profile-request` issue, the guard and trusted review use the linked issue author as the self-service owner. A PR outside that scope must be maintainer-reviewed and marked with the `profile-scope-reviewed` label; organization membership or collaborator status alone must not bypass the guard. Pull requests that touch `site-profiles/` are hard-blocked by the guard because site profiles are maintainer-controlled direct-commit data only.
+
+The trusted profile review workflow runs on `pull_request_target`, uses only base repository code, reads the pull request head's single profile JSON through the GitHub API, validates the profile content, and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR comment/merge action happen under the main Credits repo's secrets. The review action checks that the trusted profile review and guard also passed for the same head SHA and only merges when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. Assistant-created PRs skip self-approval because GitHub Apps cannot approve their own pull requests. When an immediate auto-merge succeeds for a same-repo `profile-request/...` branch, the automation deletes that branch after merge.
+
+The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet. Changes under `site-profiles/` do not trigger people-helper sync.
+
+The workflow files exist for profile issue form PR creation, profile scope checks, trusted profile review dispatch, people-helper sync dispatch, and receiving generated blank profile templates from the main `credits` repository. Do not describe branch protection, auto-merge permissions, repository secrets, GitHub App installation, or cross-repository build integration as active unless those repository settings are confirmed.
 
 Branch protection for profile self-service automation should require `Check profile PR scope`, `Check trusted profile PR`, and the intended profile review policy checks. Do not require the general `CI` workflow for pull requests, because fork PRs intentionally avoid `pull_request` CI approval waits and profile PRs are validated by the trusted checks instead.
 
@@ -98,10 +106,11 @@ Passing the self-service guard, receiving an automated approval, or syncing the 
 
 ## Documentation Expectations
 
-- `README.md` is the friendly starting point for contributors who want to add or update their own profile.
+- `README.md` is the friendly form-first starting point for contributors who want to add or update their own profile.
 - `profiles/README.md` is the field-level profile JSON reference.
 - `site-profiles/README.md` documents display-only site profile files.
 - `docs/workflows.md` is the reader-facing explanation of self-service PR checks and cross-repository dispatch.
+- `CONTRIBUTING.md` is the copyable prompt for technically comfortable users who want a coding agent to prepare a profile PR.
 - `AGENTS.md` remains the local instruction entrypoint for LLM agents and automated maintainers.
 
 ## Agent Operating Rules
