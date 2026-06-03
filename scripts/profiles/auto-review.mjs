@@ -1,14 +1,17 @@
 import { readFile } from 'node:fs/promises';
 import { setTimeout as sleep } from 'node:timers/promises';
 
-import { checkProfilePullRequestScope } from './self-service-guard.mjs';
+import {
+  PROFILE_REQUEST_LABEL,
+  checkProfilePullRequestScope,
+} from './self-service-guard.mjs';
 
 export const REQUIRED_CHECK_NAMES = ['Check trusted profile PR', 'Check profile PR scope'];
 export const MISSING_APPEARANCE_COMMENT_MARKER = '<!-- sitcon-credits-profile-appearance-check -->';
 export const CREDITS_ASSISTANT_BOT_LOGIN = 'sitcon-credits-assistant[bot]';
 const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 
-export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns }) {
+export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns, sourceIssue = null }) {
   const checkSummary = summarizeRequiredChecks(checkRuns, REQUIRED_CHECK_NAMES);
   if (!checkSummary.ready) {
     return { action: 'wait', reason: 'required-checks-pending', checkSummary };
@@ -17,7 +20,7 @@ export function decideProfileAutoReview({ pullRequest, files, exportPayload, che
     return { action: 'skip', reason: 'required-checks-not-successful', checkSummary };
   }
 
-  const scope = checkProfilePullRequestScope({ pullRequest, files });
+  const scope = checkProfilePullRequestScope({ pullRequest, files, sourceIssue });
   if (!scope.selfService) {
     return { action: 'skip', reason: 'not-self-service-profile-pr', scope };
   }
@@ -148,6 +151,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
 
   const pullRequest = await githubRequest(apiToken, `GET /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}`);
   const files = await githubPaginate(apiToken, `GET /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}/files`);
+  const sourceIssue = await fetchLinkedProfileRequestIssue(apiToken, options, pullRequest);
   const exportPayload = JSON.parse(await readFile(options.exportPath, 'utf8'));
 
   const deadline = Date.now() + options.waitMs;
@@ -162,6 +166,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
       files,
       exportPayload,
       checkRuns: checks.check_runs ?? [],
+      sourceIssue,
     });
 
     if (decision.action !== 'wait' || Date.now() >= deadline) {
@@ -199,6 +204,32 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
       console.log(`Profile auto review merged: ${decision.username}`);
     }
   }
+}
+
+export async function fetchLinkedProfileRequestIssue(token, options, pullRequest) {
+  const issueNumber = extractLinkedIssueNumber(pullRequest?.body ?? '');
+  if (!issueNumber) {
+    return null;
+  }
+
+  const issue = await githubRequest(token, `GET /repos/${options.owner}/${options.repo}/issues/${issueNumber}`);
+  if (!hasProfileRequestLabel(issue)) {
+    return null;
+  }
+
+  return issue;
+}
+
+export function extractLinkedIssueNumber(body) {
+  const match = body?.match(/\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)\b/i);
+  return match ? Number(match[1]) : null;
+}
+
+export function hasProfileRequestLabel(issue) {
+  return (issue?.labels ?? []).some((label) => {
+    const name = typeof label === 'string' ? label : label?.name;
+    return name === PROFILE_REQUEST_LABEL;
+  });
 }
 
 function parseArgs(argv) {

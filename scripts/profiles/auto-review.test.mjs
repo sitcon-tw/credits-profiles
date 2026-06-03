@@ -4,11 +4,13 @@ import { test } from 'node:test';
 import {
   collectAppearanceUsernames,
   decideProfileAutoReview,
+  extractLinkedIssueNumber,
   findAssistantMissingAppearanceComment,
   formatApprovalReviewBody,
   formatGraphqlMergeMethod,
   formatMergeTitle,
   formatMissingAppearanceComment,
+  hasProfileRequestLabel,
   isAssistantMissingAppearanceComment,
   isPullRequestNotReadyToMergeGraphqlError,
   profilePullRequestHeadMatches,
@@ -19,6 +21,13 @@ function pullRequest(login = 'octocat') {
   return {
     user: { login },
     labels: [],
+  };
+}
+
+function profileRequestIssue(login = 'octocat') {
+  return {
+    user: { login },
+    labels: [{ name: 'profile-request' }],
   };
 }
 
@@ -120,6 +129,45 @@ test('decideProfileAutoReview skips PRs outside self-service profile scope', () 
 
   assert.equal(decision.action, 'skip');
   assert.equal(decision.reason, 'not-self-service-profile-pr');
+});
+
+test('decideProfileAutoReview accepts assistant PR linked to profile request issue author', () => {
+  const decision = decideProfileAutoReview({
+    pullRequest: pullRequest('sitcon-credits[bot]'),
+    files: [profileFile('octocat')],
+    sourceIssue: profileRequestIssue('octocat'),
+    exportPayload: exportPayload(['hubot']),
+    checkRuns: successfulChecks(),
+  });
+
+  assert.equal(decision.action, 'comment');
+  assert.equal(decision.reason, 'profile-username-not-in-appearances');
+  assert.equal(decision.username, 'octocat');
+});
+
+test('decideProfileAutoReview rejects assistant PR when linked issue author does not match profile', () => {
+  const decision = decideProfileAutoReview({
+    pullRequest: pullRequest('sitcon-credits[bot]'),
+    files: [profileFile('hubot')],
+    sourceIssue: profileRequestIssue('octocat'),
+    exportPayload: exportPayload(['hubot']),
+    checkRuns: successfulChecks(),
+  });
+
+  assert.equal(decision.action, 'skip');
+  assert.equal(decision.reason, 'not-self-service-profile-pr');
+});
+
+test('extractLinkedIssueNumber reads closing keywords from PR body', () => {
+  assert.equal(extractLinkedIssueNumber('Closes #21'), 21);
+  assert.equal(extractLinkedIssueNumber('fixes #22'), 22);
+  assert.equal(extractLinkedIssueNumber('No linked issue'), null);
+});
+
+test('hasProfileRequestLabel accepts profile request label objects and strings', () => {
+  assert.equal(hasProfileRequestLabel({ labels: [{ name: 'profile-request' }] }), true);
+  assert.equal(hasProfileRequestLabel({ labels: ['profile-request'] }), true);
+  assert.equal(hasProfileRequestLabel({ labels: [{ name: 'bug' }] }), false);
 });
 
 test('formatMissingAppearanceComment includes stable marker and maintainer instruction', () => {
