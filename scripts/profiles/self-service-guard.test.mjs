@@ -17,6 +17,20 @@ function check({ author = 'octocat', labels = [], files }) {
   });
 }
 
+function checkFromProfileRequestIssue({ issueAuthor = 'octocat', files }) {
+  return checkProfilePullRequestScope({
+    pullRequest: {
+      user: { login: 'sitcon-credits[bot]' },
+      labels: [],
+    },
+    files,
+    sourceIssue: {
+      user: { login: issueAuthor },
+      labels: [{ name: 'profile-request' }],
+    },
+  });
+}
+
 test('profile self-service guard accepts one owned profile file', () => {
   const result = check({
     author: 'octocat',
@@ -41,6 +55,31 @@ test('profile self-service guard rejects editing another profile without review 
   assert.equal(result.passed, false);
   assert.equal(result.selfService, false);
   assert.match(result.issues.join('\n'), /filename username must match PR author octocat/);
+});
+
+test('profile self-service guard accepts app PR linked to profile request issue author', () => {
+  const result = checkFromProfileRequestIssue({
+    issueAuthor: 'octocat',
+    files: [
+      { filename: 'profiles/octocat.json', status: 'modified' },
+    ],
+  });
+
+  assert.equal(result.passed, true);
+  assert.equal(result.selfService, true);
+  assert.deepEqual(result.issues, []);
+});
+
+test('profile self-service guard rejects app PR when profile request issue author does not match filename', () => {
+  const result = checkFromProfileRequestIssue({
+    issueAuthor: 'octocat',
+    files: [
+      { filename: 'profiles/hubot.json', status: 'modified' },
+    ],
+  });
+
+  assert.equal(result.passed, false);
+  assert.match(result.issues.join('\n'), /filename username must match profile request issue author octocat/);
 });
 
 test('profile self-service guard rejects multiple profile usernames without review label', () => {

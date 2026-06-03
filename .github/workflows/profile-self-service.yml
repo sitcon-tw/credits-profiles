@@ -41,6 +41,32 @@ jobs:
             const fs = require('node:fs');
             fs.writeFileSync(process.env.PROFILE_FILES_JSON, JSON.stringify(files, null, 2));
 
+      - name: Collect linked profile request issue
+        uses: actions/github-script@v9
+        env:
+          PROFILE_SOURCE_ISSUE_JSON: ${{ runner.temp }}/profile-source-issue.json
+        with:
+          script: |
+            const fs = require('node:fs');
+            const pr = context.payload.pull_request;
+            const match = pr.body?.match(/\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?)\s+#(\d+)\b/i);
+            if (!match) {
+              fs.writeFileSync(process.env.PROFILE_SOURCE_ISSUE_JSON, 'null');
+              return;
+            }
+
+            const issue_number = Number(match[1]);
+            const { data: issue } = await github.rest.issues.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number,
+            });
+            if (!issue.labels.some((label) => label.name === 'profile-request')) {
+              fs.writeFileSync(process.env.PROFILE_SOURCE_ISSUE_JSON, 'null');
+              return;
+            }
+            fs.writeFileSync(process.env.PROFILE_SOURCE_ISSUE_JSON, JSON.stringify(issue, null, 2));
+
       - name: Verify self-service profile scope
         id: scope_check
         continue-on-error: true
@@ -50,6 +76,7 @@ jobs:
           node scripts/profiles/self-service-guard.mjs
           --event="$GITHUB_EVENT_PATH"
           --files="$RUNNER_TEMP/profile-files.json"
+          --source-issue="$RUNNER_TEMP/profile-source-issue.json"
           --comment-output="$PROFILE_SCOPE_COMMENT"
 
       - name: Create credits assistant token

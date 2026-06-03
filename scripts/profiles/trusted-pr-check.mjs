@@ -25,9 +25,12 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
 
   const event = JSON.parse(await readFile(options.eventPath, 'utf8'));
   const files = JSON.parse(await readFile(options.filesPath, 'utf8'));
+  const sourceIssue = options.sourceIssuePath
+    ? JSON.parse(await readFile(options.sourceIssuePath, 'utf8'))
+    : null;
   const pullRequest = event.pull_request;
 
-  const scope = checkProfilePullRequestScope({ pullRequest, files });
+  const scope = checkProfilePullRequestScope({ pullRequest, files, sourceIssue });
   if (!scope.selfService) {
     await writeTrustedProfileComment(options, formatTrustedProfileScopeComment(scope));
     throw new Error(formatScopeFailure(scope));
@@ -76,6 +79,11 @@ function parseArgs(argv) {
     }
     if (arg === '--comment-output') {
       options.commentOutputPath = readNextArg(argv, index, arg);
+      index += 1;
+      continue;
+    }
+    if (arg === '--source-issue') {
+      options.sourceIssuePath = readNextArg(argv, index, arg);
       index += 1;
       continue;
     }

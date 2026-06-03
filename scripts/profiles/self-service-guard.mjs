@@ -2,8 +2,10 @@ import { readFile, writeFile } from 'node:fs/promises';
 
 export const PROFILE_SCOPE_REVIEW_LABEL = 'profile-scope-reviewed';
 export const PROFILE_SCOPE_COMMENT_MARKER = '<!-- sitcon-credits-profile-scope-check -->';
+export const PROFILE_REQUEST_LABEL = 'profile-request';
+const TRUSTED_PROFILE_REQUEST_BOT_LOGINS = new Set(['sitcon-credits[bot]']);
 
-export function checkProfilePullRequestScope({ pullRequest, files }) {
+export function checkProfilePullRequestScope({ pullRequest, files, sourceIssue = null }) {
   if (!pullRequest?.user?.login) {
     throw new Error('pull request user login is required');
   }
@@ -11,7 +13,8 @@ export function checkProfilePullRequestScope({ pullRequest, files }) {
     throw new Error('pull request files must be an array');
   }
 
-  const author = pullRequest.user.login.toLowerCase();
+  const owner = getSelfServiceOwnerLogin({ pullRequest, sourceIssue });
+  const author = owner.login.toLowerCase();
   const labels = new Set((pullRequest.labels ?? []).map((label) => label.name?.toLowerCase()).filter(Boolean));
   const hasScopeReview = labels.has(PROFILE_SCOPE_REVIEW_LABEL);
   const issues = [];
@@ -55,7 +58,7 @@ export function checkProfilePullRequestScope({ pullRequest, files }) {
 
     profileUsernames.add(username.toLowerCase());
     if (username.toLowerCase() !== author) {
-      issues.push(`${name}: filename username must match PR author ${pullRequest.user.login}.`);
+      issues.push(`${name}: filename username must match ${owner.description} ${owner.login}.`);
     }
   }
 
@@ -77,6 +80,27 @@ export function checkProfilePullRequestScope({ pullRequest, files }) {
     hasScopeReview,
     issues: [...hardBlockIssues, ...issues],
   };
+}
+
+export function getSelfServiceOwnerLogin({ pullRequest, sourceIssue = null }) {
+  const prAuthor = pullRequest.user.login;
+  if (!TRUSTED_PROFILE_REQUEST_BOT_LOGINS.has(prAuthor)) {
+    return { login: prAuthor, description: 'PR author' };
+  }
+
+  if (!isTrustedProfileRequestIssue(sourceIssue)) {
+    return { login: prAuthor, description: 'PR author' };
+  }
+
+  return { login: sourceIssue.user.login, description: 'profile request issue author' };
+}
+
+export function isTrustedProfileRequestIssue(issue) {
+  if (!issue?.user?.login) {
+    return false;
+  }
+  const labels = new Set((issue.labels ?? []).map((label) => label.name?.toLowerCase?.() ?? String(label).toLowerCase()));
+  return labels.has(PROFILE_REQUEST_LABEL);
 }
 
 export function formatProfilePullRequestScopeResult(result) {
@@ -133,6 +157,10 @@ function translateScopeIssueDetail(detail) {
   if (authorMatch) {
     return `檔名中的 GitHub username 必須和 PR 作者 \`${authorMatch[1]}\` 一致。`;
   }
+  const issueAuthorMatch = /^filename username must match profile request issue author (.+)\.$/.exec(detail);
+  if (issueAuthorMatch) {
+    return `檔名中的 GitHub username 必須和 profile request issue 作者 \`${issueAuthorMatch[1]}\` 一致。`;
+  }
   const missingJsonMatch = /^profile filename must end with \.json; expected (profiles\/[^/]+\.json) for this PR author\.$/.exec(detail);
   if (missingJsonMatch) {
     return `profile 檔名需要以 \`.json\` 結尾。請把檔案改名成 \`${missingJsonMatch[1]}\`。`;
@@ -143,6 +171,7 @@ function translateScopeIssueDetail(detail) {
 async function runCli(argv = process.argv.slice(2)) {
   const eventPath = getArgValue(argv, '--event');
   const filesPath = getArgValue(argv, '--files');
+  const sourceIssuePath = getArgValue(argv, '--source-issue');
   const commentOutputPath = getArgValue(argv, '--comment-output');
 
   if (!eventPath || !filesPath) {
@@ -151,9 +180,11 @@ async function runCli(argv = process.argv.slice(2)) {
 
   const event = JSON.parse(await readFile(eventPath, 'utf8'));
   const files = JSON.parse(await readFile(filesPath, 'utf8'));
+  const sourceIssue = sourceIssuePath ? JSON.parse(await readFile(sourceIssuePath, 'utf8')) : null;
   const result = checkProfilePullRequestScope({
     pullRequest: event.pull_request,
     files,
+    sourceIssue,
   });
 
   const message = formatProfilePullRequestScopeResult(result);
