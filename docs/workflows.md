@@ -4,6 +4,31 @@
 
 `site-profiles/` 是維護者從歷屆活動公開網站整理出的顯示用資料，只接受直接 commit，不屬於自助 profile PR 流程。
 
+## GitHub 表單協助入口
+
+```mermaid
+flowchart TD
+  contributor["貢獻者填寫 profile issue form"] --> issue["建立 profile-request issue"]
+  issue --> assistant["SITCON Credits Assistant 解析表單"]
+  assistant --> valid{"表單可轉成有效 profile JSON？"}
+  valid -->|否| issueComment["在 issue 留言提醒可修正項目"]
+  valid -->|是| branch["建立或更新 profile-request branch"]
+  branch --> pr["建立或更新 profile PR"]
+  pr --> linked["PR body Closes 原 issue"]
+  linked --> normal["進入一般自助更新檢查"]
+```
+
+表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。
+
+因為 PR 作者會是 `sitcon-credits[bot]`，不是填表者本人，`Check profile PR scope` 和 `Check trusted profile PR` 會在符合下列條件時，改用原始 issue 作者作為自助流程 owner：
+
+- PR 作者是 `sitcon-credits[bot]`。
+- PR body 使用 `Closes #...` 連到同 repo issue。
+- 該 issue 有 `profile-request` label。
+- profile 檔名中的 GitHub username 來自 issue 作者。
+
+其他 PR 仍使用 PR 作者作為 owner。這個例外只讓表單入口能沿用既有低風險自助檢查，不代表 assistant 可以替任意使用者提交 profile，也不代表身份合併已被核准。
+
 ## 一般自助更新
 
 ```mermaid

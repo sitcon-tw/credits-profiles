@@ -10,11 +10,22 @@
 
 | 你的狀況 | 建議方式 |
 | --- | --- |
-| 有 GitHub 帳號，也願意照網頁步驟操作 | 走 [GitHub 網頁自助流程](#github-網頁自助流程)。 |
+| 有 GitHub 帳號，不熟 JSON 或不想自己開 PR | 走 [GitHub 表單協助流程](#github-表單協助流程)。 |
+| 有 GitHub 帳號，也願意照網頁步驟自己改檔案 | 走 [GitHub 網頁自助流程](#github-網頁自助流程)。 |
 | 有 GitHub 帳號，但不熟 GitHub 或不想自己操作 | 看 [請 agent 協助](#請-agent-協助)，或請維護者協助代送。 |
 | 沒有 GitHub 帳號 | 先看 [沒有 GitHub 帳號](#沒有-github-帳號)。目前 `profiles/*.json` 需要 GitHub username 作為檔名。 |
 
-## 三分鐘版本：GitHub 自助流程
+## 三分鐘版本：GitHub 表單流程
+
+1. 登入 GitHub，打開 [新增或更新個人公開資料表單](https://github.com/sitcon-tw/credits-profiles/issues/new?template=profile-request.yml)。
+2. 填寫公開顯示名稱，並只填你本人願意公開的其他資料；不知道要不要公開的欄位就留空。
+3. 勾選公開資料確認後送出 issue。
+4. `SITCON Credits Assistant` 會使用你送出 issue 的 GitHub 帳號判斷 `profiles/<你的 GitHub username>.json` 是否已存在，自動建立新增或更新 profile 的 Pull Request，並在 issue 留下 PR 連結。
+5. 後續自動檢查、維護者提醒與合併流程仍會在 Pull Request 上進行；PR 合併後，issue 會因為 PR 關聯自動關閉。
+
+表單流程只適合用自己的 GitHub 帳號新增或更新自己的單一 profile 檔。表單公開送出後會建立 GitHub issue；請不要填私人 email、電話、地址、證件資料、內部聯絡方式或別人的資料。
+
+## 三分鐘版本：GitHub 網頁自助流程
 
 1. 登入 GitHub，先建立一份放在自己帳號底下、可以編輯的副本。GitHub 按鈕名稱叫 `Fork`。
 2. 在自己的副本新增或更新 `profiles/<你的 GitHub username>.json`。
@@ -28,6 +39,7 @@
 
 | 你想做什麼 | 請看 |
 | --- | --- |
+| 用表單新增或更新自己的 profile，讓 GitHub App 協助開 PR | [GitHub 表單協助流程](#github-表單協助流程) |
 | 用 GitHub 網頁新增或更新自己的 profile | [GitHub 網頁自助流程](#github-網頁自助流程) |
 | 沒有 GitHub 帳號 | [沒有 GitHub 帳號](#沒有-github-帳號) |
 | 請 Codex、Claude Code 等 agent 協助 | [請-agent-協助](#請-agent-協助) |
@@ -49,6 +61,20 @@
 | `links` | 你自願公開的連結清單，例如 GitHub、個人網站、作品集或公開社群頁，可以留空。 |
 
 請不要填私人 email、電話、地址、證件資料、內部聯絡方式、別人的資料、歷史活動紀錄，或「哪些歷史紀錄是我」的身份合併宣告。
+
+## GitHub 表單協助流程
+
+如果你不想直接編輯 JSON，可以使用 [新增或更新個人公開資料表單](https://github.com/sitcon-tw/credits-profiles/issues/new?template=profile-request.yml)。表單會把欄位拆成 GitHub 網頁上的輸入框與確認框；送出後，`SITCON Credits Assistant` 會使用你送出 issue 的 GitHub 帳號作為檔名，把表單內容轉成 profile JSON，自動判斷這是新增或更新，開一個 Pull Request，並把 PR 連回原本的 issue。
+
+這個流程會公開建立 issue 和 Pull Request。公開顯示名稱是必填；其他欄位請只填你本人願意公開的資料，不想公開的欄位留空就好。
+
+頭像可以全部留空，系統會預設使用你 GitHub 帳號的公開頭像。若你使用 Gravatar，表單只接受 SHA-256 hash，請不要在公開 issue 裡填 Gravatar email；也可以使用進階圖片 URL 欄位提供你願意公開使用的 `https://` 圖片網址。
+
+送出後如果資料格式有問題，例如 URL 不是 `https://`、公開顯示名稱缺漏，或 Gravatar SHA-256 hash 格式不正確，assistant 會在 issue 留言提醒；你可以直接編輯 issue 內容，workflow 會重試並更新同一則留言。
+
+公開連結會依平台分成不同輸入框，例如 GitHub、GitLab、個人網站、Blog、LinkedIn、Facebook、Instagram、Threads、X、Discord、Telegram、Mastodon、YouTube 和 Slides。請只填你願意公開的 `https://` 連結；如果上面沒有適合的平台，可以填一組自訂連結名稱與 URL。
+
+如果表單成功建立 Pull Request，後續仍會跑 [自助 profile PR 流程](docs/workflows.md)。自動開 PR 不代表身份連結已經核准，也不代表 Google Sheets 的歷史貢獻紀錄已經修改。
 
 ## GitHub 網頁自助流程
 
