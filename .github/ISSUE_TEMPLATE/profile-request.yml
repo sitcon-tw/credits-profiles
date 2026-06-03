@@ -1,6 +1,6 @@
 name: 新增或更新個人公開資料
 description: 用表單填寫 SITCON Credits 願意公開顯示的個人公開資料
-title: "新增或更新我的個人公開資料"
+title: "新增或更新我的個人公開資料（不用改這欄，請直接往下填）"
 labels: ["profile-request"]
 body:
   - type: markdown
