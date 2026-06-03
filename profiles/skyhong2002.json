@@ -1,8 +1,13 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "Sky 蓋蓋",
+  "bio": "我的個人網站： https://skyhong.tw/",
+  "avatar_url": "https://gravatar.com/avatar/68da3023527b7935df5426dd8fd55e1762de8f05b0d3cbe93b7b29a85d0de2cd?s=512&r=g",
+  "public_email": "sitcon.tw@skyhong.tw",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://skyhong.tw/"
+    }
+  ]
 }
