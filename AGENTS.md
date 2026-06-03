@@ -4,6 +4,12 @@ This repository maintains opt-in public profile files for SITCON Credits contrib
 
 The public reader-facing documentation should be written in Traditional Chinese for Taiwan unless a file explicitly targets another audience. This file is written in English because it is intended for LLM agents and automated maintainers.
 
+## Instruction Source of Truth
+
+`AGENTS.md` is the single maintained instruction source for coding agents in this repository. Do not copy these rules into tool-specific instruction files.
+
+Compatibility entrypoints may exist only as thin pointers to `AGENTS.md`. For example, `CLAUDE.md` imports `AGENTS.md` for Claude Code. If a tool does not automatically load `AGENTS.md`, load this file manually before editing.
+
 ## Repository Role
 
 - This repository stores low-risk, opt-in profile data for GitHub usernames.
@@ -102,6 +108,7 @@ Passing the self-service guard, receiving an automated approval, or syncing the 
 
 - Inspect the current repository state before editing.
 - Keep changes small, reviewable, and aligned with the existing documentation.
+- Preserve `AGENTS.md` as the canonical agent instruction file; do not duplicate these rules in compatibility bridge files.
 - Do not invent people, roles, aliases, biographies, avatar URLs, links, source URLs, event names, or profile links.
 - Do not turn guesses into data. Mark uncertainty for human review instead.
 - Do not add historical appearance records to this repository.
