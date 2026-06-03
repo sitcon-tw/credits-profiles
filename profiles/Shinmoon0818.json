@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "螢光",
+  "bio": "一隻對資安有興趣的資訊小白",
+  "avatar_url": "https://github.com/Shinmoon0818.png?size=512",
+  "public_email": "xiaojiang980818@gmail.com",
+  "links": []
+}
