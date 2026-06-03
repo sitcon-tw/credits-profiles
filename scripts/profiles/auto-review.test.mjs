@@ -12,6 +12,7 @@ import {
   formatMissingAppearanceComment,
   hasProfileRequestLabel,
   isAssistantMissingAppearanceComment,
+  isAssistantAuthoredPullRequest,
   isPullRequestNotReadyToMergeGraphqlError,
   profilePullRequestHeadMatches,
   summarizeRequiredChecks,
@@ -190,6 +191,12 @@ test('formatApprovalReviewBody uses Traditional Chinese reader-facing text', () 
 test('profilePullRequestHeadMatches rejects stale dispatch payloads', () => {
   assert.equal(profilePullRequestHeadMatches({ head: { sha: 'new-head' } }, 'old-head'), false);
   assert.equal(profilePullRequestHeadMatches({ head: { sha: 'same-head' } }, 'same-head'), true);
+});
+
+test('isAssistantAuthoredPullRequest detects app-authored pull requests', () => {
+  assert.equal(isAssistantAuthoredPullRequest({ user: { login: 'sitcon-credits[bot]' } }, 'sitcon-credits'), true);
+  assert.equal(isAssistantAuthoredPullRequest({ user: { login: 'app/sitcon-credits' } }, 'sitcon-credits'), true);
+  assert.equal(isAssistantAuthoredPullRequest({ user: { login: 'octocat' } }, 'sitcon-credits'), false);
 });
 
 test('formatMergeTitle names the profile update', () => {

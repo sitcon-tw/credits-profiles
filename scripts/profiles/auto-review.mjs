@@ -58,6 +58,13 @@ export function profilePullRequestHeadMatches(pullRequest, expectedHeadSha) {
   return pullRequest?.head?.sha === expectedHeadSha;
 }
 
+export function isAssistantAuthoredPullRequest(pullRequest, assistantLogin = CREDITS_ASSISTANT_BOT_LOGIN) {
+  const authorLogin = pullRequest?.user?.login;
+  return authorLogin === assistantLogin ||
+    authorLogin === `${assistantLogin}[bot]` ||
+    authorLogin === `app/${assistantLogin}`;
+}
+
 export function summarizeRequiredChecks(checkRuns, requiredNames) {
   const latestByName = new Map();
   for (const checkRun of checkRuns ?? []) {
@@ -197,8 +204,12 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
       throw new Error('PROFILE_REVIEW_TOKEN is required to approve profile pull requests.');
     }
     await deleteMissingAppearanceComments(apiToken, options, assistantLogin);
-    await approvePullRequest(reviewToken, options, decision.reviewBody);
-    console.log(`Profile auto review approved: ${decision.username}`);
+    if (isAssistantAuthoredPullRequest(currentPullRequest, assistantLogin)) {
+      console.log(`Profile auto review skipped approval for assistant-authored PR: ${decision.username}`);
+    } else {
+      await approvePullRequest(reviewToken, options, decision.reviewBody);
+      console.log(`Profile auto review approved: ${decision.username}`);
+    }
     if (options.autoMerge) {
       await mergePullRequestOrEnableAutoMerge(reviewToken, options, currentPullRequest, decision.mergeTitle);
       console.log(`Profile auto review merged: ${decision.username}`);
