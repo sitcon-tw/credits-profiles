@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Mina",
+  "bio": "SITCON Camp 2026 編輯組組長",
+  "avatar_url": "https://github.com/MinaChenJC.png?size=512",
+  "public_email": "mina.mj.chen@gmail.com",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/mina.chen0430"
+    }
+  ]
+}
