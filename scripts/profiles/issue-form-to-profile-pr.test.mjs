@@ -1,0 +1,258 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { test } from 'node:test';
+import { fileURLToPath } from 'node:url';
+
+import {
+  CONTENT_SAFETY_ACKNOWLEDGEMENT,
+  PUBLIC_EMAIL_ACKNOWLEDGEMENT,
+} from './trusted-pr-check.mjs';
+import {
+  CUSTOM_LINK_LABEL_FIELD,
+  CUSTOM_LINK_URL_FIELD,
+  FORM_LABELS,
+  ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT,
+  buildAvatarUrl,
+  collectLinks,
+  buildProfileRequestPullRequest,
+  parseIssueFormBody,
+} from './issue-form-to-profile-pr.mjs';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+
+function formBody(overrides = {}) {
+  const values = {
+    [FORM_LABELS.displayName]: 'Octocat',
+    [FORM_LABELS.bio]: '曾參與 SITCON 相關活動。',
+    [FORM_LABELS.gravatarSha256]: '',
+    [FORM_LABELS.avatarUrl]: '',
+    [FORM_LABELS.publicEmail]: '',
+    GitHub: 'https://github.com/octocat',
+    GitLab: '',
+    個人網站: '',
+    Blog: '',
+    LinkedIn: '',
+    Facebook: '',
+    Instagram: '',
+    Threads: '',
+    X: '',
+    Discord: '',
+    Telegram: '',
+    Mastodon: '',
+    YouTube: '',
+    Slides: '',
+    [CUSTOM_LINK_LABEL_FIELD]: '個人網站',
+    [CUSTOM_LINK_URL_FIELD]: 'https://example.com',
+    [FORM_LABELS.historicalHints]: '',
+    [FORM_LABELS.acknowledgements]: [
+      '- [x] 我確認這是我自願公開的個人資料。',
+      '- [x] 我沒有放入私人 email、電話、地址、證件資料或內部聯絡資訊。',
+      '- [x] 我沒有放入未經本人或他人同意公開的 email 或社群帳號。',
+      `- [x] ${PUBLIC_EMAIL_ACKNOWLEDGEMENT}`,
+      `- [x] ${ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT}`,
+      '- [x] 我理解這個 PR 不會自動修改 SITCON Credits 的歷史貢獻紀錄，也不會自動完成身份合併。',
+    ].join('\n'),
+    ...overrides,
+  };
+
+  return Object.entries(values)
+    .map(([label, value]) => `### ${label}\n\n${value || '_No response_'}`)
+    .join('\n\n');
+}
+
+function issue(body = formBody(), login = 'octocat') {
+  return {
+    number: 123,
+    user: { login },
+    body,
+  };
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+test('parseIssueFormBody reads GitHub issue form markdown headings', () => {
+  const fields = parseIssueFormBody(formBody());
+
+  assert.equal(fields.get(FORM_LABELS.displayName), 'Octocat');
+  assert.match(fields.get(FORM_LABELS.bio), /SITCON/);
+});
+
+test('issue form labels stay aligned with parser labels', () => {
+  const formText = readFileSync(path.join(repoRoot, '.github/ISSUE_TEMPLATE/profile-request.yml'), 'utf8');
+  const expectedLabels = [
+    FORM_LABELS.displayName,
+    FORM_LABELS.bio,
+    FORM_LABELS.gravatarSha256,
+    FORM_LABELS.avatarUrl,
+    FORM_LABELS.publicEmail,
+    ...[
+      'GitHub',
+      '個人網站',
+      'Blog',
+      'Instagram',
+      'Telegram',
+      'LinkedIn',
+      'Facebook',
+      'YouTube',
+      'Slides',
+      'GitLab',
+      'Discord',
+      'Mastodon',
+      'Threads',
+      'X',
+    ],
+    CUSTOM_LINK_LABEL_FIELD,
+    CUSTOM_LINK_URL_FIELD,
+    FORM_LABELS.historicalHints,
+    FORM_LABELS.acknowledgements,
+  ];
+
+  for (const label of expectedLabels) {
+    assert.match(formText, new RegExp(`label: ${escapeRegExp(label)}(?:\\n|$)`));
+  }
+});
+
+test('buildAvatarUrl defaults to GitHub public avatar', () => {
+  const fields = parseIssueFormBody(formBody());
+
+  assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), 'https://github.com/octocat.png?size=512');
+});
+
+test('buildAvatarUrl accepts a Gravatar SHA-256 hash', () => {
+  const hash = 'a'.repeat(64);
+  const fields = parseIssueFormBody(formBody({
+    [FORM_LABELS.gravatarSha256]: hash,
+  }));
+
+  assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), `https://gravatar.com/avatar/${hash}?s=512&r=g`);
+});
+
+test('buildAvatarUrl prefers explicit advanced avatar URL over Gravatar hash', () => {
+  const fields = parseIssueFormBody(formBody({
+    [FORM_LABELS.gravatarSha256]: 'a'.repeat(64),
+    [FORM_LABELS.avatarUrl]: 'https://example.com/avatar.png',
+  }));
+
+  assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), 'https://example.com/avatar.png');
+});
+
+test('buildAvatarUrl rejects email-looking Gravatar input', () => {
+  const fields = parseIssueFormBody(formBody({
+    [FORM_LABELS.gravatarSha256]: 'octocat@example.com',
+  }));
+
+  assert.throws(
+    () => buildAvatarUrl({ fields, username: 'octocat' }),
+    /請不要填 email/,
+  );
+});
+
+test('collectLinks reads one input per supported platform and keeps custom labels', () => {
+  const fields = parseIssueFormBody(formBody());
+
+  assert.deepEqual(collectLinks(fields), [
+    {
+      type: 'github',
+      url: 'https://github.com/octocat',
+    },
+    {
+      type: 'custom',
+      url: 'https://example.com',
+      label: '個人網站',
+    },
+  ]);
+});
+
+test('collectLinks preserves contributor-friendly platform priority', () => {
+  const fields = parseIssueFormBody(formBody({
+    GitHub: 'https://github.com/octocat',
+    個人網站: 'https://example.com',
+    Blog: 'https://blog.example.com',
+    Instagram: 'https://www.instagram.com/octocat',
+    Telegram: 'https://t.me/octocat',
+    LinkedIn: 'https://www.linkedin.com/in/octocat',
+    Facebook: 'https://www.facebook.com/octocat',
+    YouTube: 'https://www.youtube.com/@octocat',
+    Slides: 'https://speakerdeck.com/octocat',
+    GitLab: 'https://gitlab.com/octocat',
+    Discord: 'https://discord.gg/example',
+    Mastodon: 'https://mastodon.social/@octocat',
+    Threads: 'https://www.threads.net/@octocat',
+    X: 'https://x.com/octocat',
+    [CUSTOM_LINK_URL_FIELD]: '',
+  }));
+
+  assert.deepEqual(collectLinks(fields).map((link) => link.type), [
+    'github',
+    'website',
+    'blog',
+    'instagram',
+    'telegram',
+    'linkedin',
+    'facebook',
+    'youtube',
+    'slides',
+    'gitlab',
+    'discord',
+    'mastodon',
+    'threads',
+    'x',
+  ]);
+});
+
+test('buildProfileRequestPullRequest creates profile JSON and linked PR body', () => {
+  const result = buildProfileRequestPullRequest({
+    issue: issue(),
+  });
+
+  assert.equal(result.username, 'octocat');
+  assert.equal(result.branchName, 'profile-request/issue-123-octocat');
+  assert.equal(result.profilePath, 'profiles/octocat.json');
+  assert.equal(result.prTitle, '新增我的 profile: octocat');
+  assert.match(result.profileText, /"display_name": "Octocat"/);
+  assert.match(result.profileText, /"avatar_url": "https:\/\/github.com\/octocat.png\?size=512"/);
+  assert.match(result.profileText, /"type": "github"/);
+  assert.match(result.prBody, /Closes #123/);
+  assert.match(result.prBody, /我確認這份 profile 沒有放入惡意 HTML/);
+});
+
+test('buildProfileRequestPullRequest marks existing profile as update', () => {
+  const result = buildProfileRequestPullRequest({
+    issue: issue(),
+    profileExists: true,
+  });
+
+  assert.equal(result.prTitle, '更新我的 profile: octocat');
+  assert.match(result.prBody, /- \[x\] 更新我的 profile/);
+  assert.match(result.prBody, /- \[ \] 新增我的 profile/);
+});
+
+test('buildProfileRequestPullRequest requires display name even if issue body is edited', () => {
+  assert.throws(
+    () => buildProfileRequestPullRequest({
+      issue: issue(formBody({ [FORM_LABELS.displayName]: '' })),
+    }),
+    /表單缺少必要欄位：公開顯示名稱/,
+  );
+});
+
+test('buildProfileRequestPullRequest validates generated profile JSON', () => {
+  assert.throws(
+    () => buildProfileRequestPullRequest({
+      issue: issue(formBody({ [FORM_LABELS.avatarUrl]: 'http://example.com/avatar.png' })),
+    }),
+    /must use https:/,
+  );
+});
+
+test('buildProfileRequestPullRequest rejects edited issue body with missing acknowledgement', () => {
+  assert.throws(
+    () => buildProfileRequestPullRequest({
+      issue: issue(formBody({ [FORM_LABELS.acknowledgements]: '- [x] 我確認這是我自願公開的個人資料。' })),
+    }),
+    /請保留並勾選所有公開資料確認事項/,
+  );
+});

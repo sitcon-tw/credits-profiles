@@ -1,0 +1,254 @@
+name: Profile issue request
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+      - reopened
+      - labeled
+
+permissions:
+  contents: read
+  issues: read
+
+jobs:
+  create-pr:
+    name: Create profile PR from issue form
+    if: contains(github.event.issue.labels.*.name, 'profile-request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out trusted base repository
+        uses: actions/checkout@v6
+
+      - name: Build profile PR payload
+        id: build
+        continue-on-error: true
+        env:
+          PROFILE_REQUEST_METADATA: ${{ runner.temp }}/profile-request-metadata.json
+          PROFILE_REQUEST_PROFILE: ${{ runner.temp }}/profile-request-profile.json
+          PROFILE_REQUEST_PR_BODY: ${{ runner.temp }}/profile-request-pr-body.md
+          PROFILE_REQUEST_COMMENT: ${{ runner.temp }}/profile-request-comment.md
+        run: >-
+          node scripts/profiles/issue-form-to-profile-pr.mjs
+          --event "$GITHUB_EVENT_PATH"
+          --metadata-output "$PROFILE_REQUEST_METADATA"
+          --profile-output "$PROFILE_REQUEST_PROFILE"
+          --pr-body-output "$PROFILE_REQUEST_PR_BODY"
+          --comment-output "$PROFILE_REQUEST_COMMENT"
+
+      - name: Create credits assistant token
+        id: credits-assistant-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SITCON_CREDITS_ASSISTANT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SITCON_CREDITS_ASSISTANT_APP_PRIVATE_KEY }}
+          owner: sitcon-tw
+          repositories: credits-profiles
+          permission-contents: write
+          permission-issues: write
+          permission-pull-requests: write
+
+      - name: Update profile request issue title
+        if: steps.build.outcome == 'success'
+        uses: actions/github-script@v9
+        env:
+          PROFILE_REQUEST_METADATA: ${{ runner.temp }}/profile-request-metadata.json
+        with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
+          script: |
+            const fs = require('node:fs');
+            const metadata = JSON.parse(fs.readFileSync(process.env.PROFILE_REQUEST_METADATA, 'utf8'));
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              title: `[個人公開資料] ${metadata.username}`,
+            });
+
+      - name: Comment profile request problem
+        if: steps.build.outcome == 'failure'
+        uses: actions/github-script@v9
+        env:
+          PROFILE_REQUEST_COMMENT: ${{ runner.temp }}/profile-request-comment.md
+        with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- sitcon-credits-profile-request -->';
+            if (!fs.existsSync(process.env.PROFILE_REQUEST_COMMENT)) {
+              return;
+            }
+            const body = fs.readFileSync(process.env.PROFILE_REQUEST_COMMENT, 'utf8');
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) =>
+              ['github-actions[bot]', 'sitcon-credits[bot]'].includes(comment.user?.login) &&
+              comment.body?.includes(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+
+      - name: Stop after invalid request
+        if: steps.build.outcome == 'failure'
+        run: exit 1
+
+      - name: Create or update profile PR
+        id: pr
+        uses: actions/github-script@v9
+        env:
+          PROFILE_REQUEST_METADATA: ${{ runner.temp }}/profile-request-metadata.json
+          PROFILE_REQUEST_PROFILE: ${{ runner.temp }}/profile-request-profile.json
+          PROFILE_REQUEST_PR_BODY: ${{ runner.temp }}/profile-request-pr-body.md
+        with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
+          script: |
+            const fs = require('node:fs');
+            const metadata = JSON.parse(fs.readFileSync(process.env.PROFILE_REQUEST_METADATA, 'utf8'));
+            const profileText = fs.readFileSync(process.env.PROFILE_REQUEST_PROFILE, 'utf8');
+            const prBody = fs.readFileSync(process.env.PROFILE_REQUEST_PR_BODY, 'utf8');
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const base = context.payload.repository.default_branch;
+
+            const baseRef = await github.rest.git.getRef({
+              owner,
+              repo,
+              ref: `heads/${base}`,
+            });
+
+            try {
+              await github.rest.git.getRef({
+                owner,
+                repo,
+                ref: `heads/${metadata.branchName}`,
+              });
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+              await github.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/heads/${metadata.branchName}`,
+                sha: baseRef.data.object.sha,
+              });
+            }
+
+            let existingFileSha;
+            try {
+              const existingFile = await github.rest.repos.getContent({
+                owner,
+                repo,
+                path: metadata.profilePath,
+                ref: metadata.branchName,
+              });
+              if (!Array.isArray(existingFile.data)) {
+                existingFileSha = existingFile.data.sha;
+              }
+            } catch (error) {
+              if (error.status !== 404) {
+                throw error;
+              }
+            }
+
+            await github.rest.repos.createOrUpdateFileContents({
+              owner,
+              repo,
+              path: metadata.profilePath,
+              branch: metadata.branchName,
+              message: `chore: update ${metadata.username} profile from issue #${context.issue.number}`,
+              content: Buffer.from(profileText, 'utf8').toString('base64'),
+              sha: existingFileSha,
+            });
+
+            const pulls = await github.paginate(github.rest.pulls.list, {
+              owner,
+              repo,
+              state: 'open',
+              head: `${owner}:${metadata.branchName}`,
+              base,
+              per_page: 100,
+            });
+
+            let pull = pulls[0];
+            if (pull) {
+              await github.rest.pulls.update({
+                owner,
+                repo,
+                pull_number: pull.number,
+                title: metadata.prTitle,
+                body: prBody,
+              });
+            } else {
+              const created = await github.rest.pulls.create({
+                owner,
+                repo,
+                title: metadata.prTitle,
+                head: metadata.branchName,
+                base,
+                body: prBody,
+                maintainer_can_modify: true,
+              });
+              pull = created.data;
+            }
+
+            core.setOutput('number', String(pull.number));
+            core.setOutput('url', pull.html_url);
+
+      - name: Comment profile PR link
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
+          script: |
+            const marker = '<!-- sitcon-credits-profile-request -->';
+            const body = [
+              marker,
+              `已依照這份表單建立或更新 profile PR：#${{ steps.pr.outputs.number }}`,
+              '',
+              '後續請到 PR 查看自動檢查結果。PR 合併後，這個 issue 會因為 PR 說明中的關聯自動關閉。',
+            ].join('\n');
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) =>
+              ['github-actions[bot]', 'sitcon-credits[bot]'].includes(comment.user?.login) &&
+              comment.body?.includes(marker)
+            );
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+              return;
+            }
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
