@@ -1,0 +1,29 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "劉雁",
+  "bio": "2013 緊急協助 COSCUP 行銷設計後，即相連協助在 SITCON, g0v Summit, CCTW 等社群。在 SITCON 持續扮演行銷公關角色，協助各式資源整合與推廣議題。現於 OCF 開放文化基金會服務，專注於企業開源、開源合規治理、開源 AI 相關議題研究。",
+  "avatar_url": "https://0.gravatar.com/userimage/30960019/3ef87329e37ce035eb8cc3d656d9e0c7?size=1024",
+  "public_email": "ian@ocf.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/yanyiyi"
+    },
+    {
+      "type": "website",
+      "url": "https://www.yannest.net"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/yanyiyi"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/ianliu1990"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/yanyiyi"
+    }
+  ]
+}
