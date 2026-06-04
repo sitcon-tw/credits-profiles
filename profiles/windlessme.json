@@ -1,8 +1,13 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "Windless",
+  "bio": "嘻嘻",
+  "avatar_url": "https://github.com/windlessme.png?size=512",
+  "public_email": "hi@windless.me",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/windlessme"
+    }
+  ]
 }
