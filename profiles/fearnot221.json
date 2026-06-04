@@ -1,8 +1,25 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "Fearnot",
+  "bio": "嗨我是 Fearnot ，喜歡參與各個資訊社群，長期貢獻於 SITCON 、 SCIST 等社群",
+  "avatar_url": "https://gravatar.com/avatar/582da575ff5a78f8f1271e3537f8b987?s=400",
+  "public_email": "kenin221@gmail.com",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://fearnot.tw"
+    },
+    {
+      "type": "github",
+      "url": "https://github.com/fearnot221"
+    },
+    {
+      "type": "instagram",
+      "url": "https://instagram.com/fearnot221"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/fearnot221"
+    }
+  ]
 }
