@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "飄飄",
+  "bio": "",
+  "avatar_url": "https://github.com/yihan5555.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/plantghost"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/plantghost"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/yi-han-chiu-ba1097280/"
+    }
+  ]
+}
