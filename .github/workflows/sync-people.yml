@@ -1,4 +1,4 @@
-name: Sync credits people helper
+name: Sync credits profile data
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   dispatch:
-    name: Request people sheet sync
+    name: Request people sheet sync and Pages rebuild
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -37,6 +37,22 @@ jobs:
               owner: 'sitcon-tw',
               repo: 'credits',
               event_type: 'sync-people-from-profiles',
+              client_payload: {
+                source_repository: `${context.repo.owner}/${context.repo.repo}`,
+                source_sha: context.sha,
+                source_run_id: context.runId,
+              },
+            });
+
+      - name: Dispatch credits Pages rebuild workflow
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'sitcon-tw',
+              repo: 'credits',
+              event_type: 'rebuild-pages-from-profiles',
               client_payload: {
                 source_repository: `${context.repo.owner}/${context.repo.repo}`,
                 source_sha: context.sha,

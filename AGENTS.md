@@ -88,7 +88,7 @@ These checks validate file format, filename shape, allowed fields, URL rules, pu
 
 ## Automation Status
 
-GitHub Actions CI, a profile issue form request workflow, a self-service PR ownership guard, a trusted profile review dispatch workflow, and a cross-repository people-helper dispatch workflow exist in `.github/workflows/`.
+GitHub Actions CI, a profile issue form request workflow, a self-service PR ownership guard, a trusted profile review dispatch workflow, and cross-repository profile-data dispatch workflows exist in `.github/workflows/`.
 
 The preferred non-technical contributor entrypoint is `.github/ISSUE_TEMPLATE/profile-request.yml`. That issue form creates a public `profile-request` issue. `Profile issue request` reads the issue body, uses the issue author's GitHub username as the profile filename key, creates or updates `profiles/<github_username>.json` on a `profile-request/...` branch, opens or updates a Pull Request, and links the PR back to the issue with `Closes #...`.
 
@@ -96,9 +96,9 @@ For ordinary Pull Requests, the guard checks low-risk profile scope: a self-serv
 
 The trusted profile review workflow runs on `pull_request_target`, uses only base repository code, reads the pull request head's single profile JSON through the GitHub API, validates the profile content, and dispatches `sitcon-tw/credits`, where the canonical Google Sheets export and profile PR comment/merge action happen under the main Credits repo's secrets. The review action checks that the trusted profile review and guard also passed for the same head SHA and only merges when the profile username is already present in `appearances.github_username`; otherwise it comments for maintainers to adjust or confirm appearances data. Assistant-created PRs skip self-approval because GitHub Apps cannot approve their own pull requests. When an immediate auto-merge succeeds for a same-repo `profile-request/...` branch, the automation deletes that branch after merge.
 
-The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet. Changes under `site-profiles/` do not trigger people-helper sync.
+The sync dispatch workflow notifies `sitcon-tw/credits` after profile JSON files merge to `master`, so the main repo can synchronize the Google Sheets `people` helper sheet and rebuild GitHub Pages with the latest profile data. Changes under `site-profiles/` do not trigger people-helper sync or Pages rebuild.
 
-The workflow files exist for profile issue form PR creation, profile scope checks, trusted profile review dispatch, people-helper sync dispatch, and receiving generated blank profile templates from the main `credits` repository. Do not describe branch protection, auto-merge permissions, repository secrets, GitHub App installation, or cross-repository build integration as active unless those repository settings are confirmed.
+The workflow files exist for profile issue form PR creation, profile scope checks, trusted profile review dispatch, people-helper sync dispatch, Pages rebuild dispatch, and receiving generated blank profile templates from the main `credits` repository. Do not describe branch protection, auto-merge permissions, repository secrets, GitHub App installation, or cross-repository build integration as active unless those repository settings are confirmed.
 
 Branch protection for profile self-service automation should require `Check profile PR scope`, `Check trusted profile PR`, and the intended profile review policy checks. Do not require the general `CI` workflow for pull requests, because fork PRs intentionally avoid `pull_request` CI approval waits and profile PRs are validated by the trusted checks instead.
 

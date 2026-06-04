@@ -49,8 +49,9 @@ flowchart TD
   required -->|否| waitOrSkip["等待或略過自動審查"]
   appearance -->|是| merge["Assistant 核准並 squash merge"]
   appearance -->|否| comment["Assistant 留言提醒維護者審查"]
-  merge --> sync["master push 後 dispatch sync-people-from-profiles"]
+  merge --> sync["master push 後 dispatch profile data updates"]
   sync --> people["credits 同步 Google Sheets people helper"]
+  sync --> pages["credits 重建 GitHub Pages"]
 ```
 
 自助 PR 可以自動核准與合併的前提：
@@ -92,13 +93,14 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 ## 與主 repo 的 dispatch
 
-`credits-profiles` 不保存 canonical Google Sheets credentials。需要讀取 canonical appearances 或同步 `people` helper sheet 的動作，都 dispatch 到 [`sitcon-tw/credits`](https://github.com/sitcon-tw/credits) 執行。
+`credits-profiles` 不保存 canonical Google Sheets credentials，也不直接部署 GitHub Pages。需要讀取 canonical appearances、同步 `people` helper sheet 或重建 Pages 的動作，都 dispatch 到 [`sitcon-tw/credits`](https://github.com/sitcon-tw/credits) 執行。
 
-有兩個跨 repo dispatch：
+有三個跨 repo dispatch：
 
 - `review-profile-pr`：由 `Trusted profile review` 送出，請主 repo 根據 canonical appearances 決定是否核准、合併或留言。
 - `sync-people-from-profiles`：由 `Sync credits people helper` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。
+- `rebuild-pages-from-profiles`：由 `Sync credits profile data` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 重新匯出 canonical Sheet、讀取最新 `credits-profiles`，並部署 GitHub Pages。
 
-這兩個 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
+這些 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
 
-`site-profiles/**` 的變更不會觸發 `sync-people-from-profiles`，也不會被當作 contributor-owned profile username。
+`site-profiles/**` 的變更不會觸發 `sync-people-from-profiles` 或 `rebuild-pages-from-profiles`，也不會被當作 contributor-owned profile username。
