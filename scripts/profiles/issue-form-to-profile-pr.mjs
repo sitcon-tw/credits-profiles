@@ -21,7 +21,7 @@ export const FORM_LABELS = {
   avatarUrl: '進階：公開頭像圖片 URL',
   publicEmail: '公開 email',
   acknowledgements: '公開資料確認',
-  historicalHints: '我有跳坑過，需要把貢獻紀錄和個人公開資料建立連結（選填）',
+  historicalHints: '貢獻紀錄標記網址（選填）',
 };
 
 export const LINK_FORM_FIELDS = [
@@ -164,7 +164,7 @@ function formatPullRequestBody({ issue, updateType, profile, historicalHints }) 
     checkbox(CONTENT_SAFETY_ACKNOWLEDGEMENT, true),
     checkbox('我理解這個 PR 不會自動修改 SITCON Credits 的歷史貢獻紀錄，也不會自動完成身份合併。', true),
     '',
-    '## 我以前跳坑過，幫我把紀錄和 profile 建立關聯（選填）',
+    '## 貢獻紀錄標記網址（選填）',
     '',
     historicalHints || '（未填寫）',
     '',

@@ -166,17 +166,12 @@ body:
       placeholder: https://example.com/portfolio
     validations:
       required: false
-  - type: textarea
+  - type: input
     id: historical_hints
     attributes:
-      label: 我有跳坑過，需要把貢獻紀錄和個人公開資料建立連結（選填）
-      description: 如果只是新增或更新個人公開資料，這段可以留空。若你在[公開貢獻紀錄表](https://docs.google.com/spreadsheets/d/1L2drpIE2ocZF3Stba9X0DnLGmYi_igeGWUhaQB_evsQ/edit?gid=517327050#gid=517327050)看到可能是在記錄你本人的資料，可以照下方格式提供線索；這不會自動完成身份合併。
-      placeholder: |
-        - 活動名稱和年份（event_id）：
-        - 目前該列的 github_username：
-        ---
-        - 活動名稱和年份（event_id）：
-        - 目前該列的 github_username：
+      label: 貢獻紀錄標記網址（選填）
+      description: 如果只是更新個人公開資料，這段可以留空。若你已經在 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1) 選取項目，可以貼上該頁網址，請維護者協助確認；這不會自動完成身份合併。
+      placeholder: http://sitcon.org/credits/?claim=1&claims=...
     validations:
       required: false
   - type: checkboxes
