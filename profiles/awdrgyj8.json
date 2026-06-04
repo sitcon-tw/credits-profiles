@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Zhenyuan",
+  "bio": "",
+  "avatar_url": "https://github.com/awdrgyj8.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/awdrgyj8"
+    },
+    {
+      "type": "website",
+      "url": "https://zhenyuan.dev"
+    }
+  ]
+}
