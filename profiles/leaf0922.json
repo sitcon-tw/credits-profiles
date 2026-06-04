@@ -1,0 +1,29 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Leaf",
+  "bio": "葉子是不會飛翔的翅膀，翅膀是落在天上的葉子。",
+  "avatar_url": "https://github.com/leaf0922.png?size=512",
+  "public_email": "hi@leaftseng.me",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://leaftseng.me/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/leaf_tseng"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/leaftseng"
+    },
+    {
+      "type": "youtube",
+      "url": "https://youtube.leaftseng.me/"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/leaftseng"
+    }
+  ]
+}
