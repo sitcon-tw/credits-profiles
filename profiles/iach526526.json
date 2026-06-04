@@ -1,8 +1,29 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
+  "display_name": "Each",
   "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "avatar_url": "https://gravatar.com/avatar/17e00664ef815abebb952dc4f449e1f1582d0fe0b94c6701e368d68349e151e6?s=512&r=g",
+  "public_email": "info@iach.cc",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/iach526526"
+    },
+    {
+      "type": "website",
+      "url": "https://iach.cc"
+    },
+    {
+      "type": "blog",
+      "url": "https://www.iach.cc"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/BM4LTB"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/@eachchen2147"
+    }
+  ]
 }
