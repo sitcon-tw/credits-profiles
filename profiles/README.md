@@ -59,7 +59,7 @@ GitHub username 只能使用 GitHub 支援的格式：英文字母、數字與 `
 
 標準服務請使用固定的 `type`，不要自行填寫顯示名稱。網站前端會依照 `type` 決定標準名稱、圖示與呈現方式。
 
-目前支援的標準 `type`：
+支援的標準 `type`：
 
 ```text
 github

@@ -111,6 +111,7 @@ Passing the self-service guard, receiving an automated approval, or syncing the 
 - `site-profiles/README.md` documents display-only site profile files.
 - `docs/workflows.md` is the reader-facing explanation of self-service PR checks and cross-repository dispatch.
 - `CONTRIBUTING.md` is the copyable prompt for technically comfortable users who want a coding agent to prepare a profile PR.
+- `DATA_USAGE.md` documents the public-data usage context for contributor profiles and site profiles.
 - `AGENTS.md` remains the local instruction entrypoint for LLM agents and automated maintainers.
 
 ## Agent Operating Rules

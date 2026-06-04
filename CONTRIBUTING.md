@@ -12,7 +12,7 @@
 1. 如果下面任何欄位還是預設說明、空白或資訊不足，請不要照抄預設值，也不要自行補完；請先一次列出最多 5 個必要問題。選填欄位請提供「留空」選項，不要為我已明確留空的欄位追問。
 2. 請先整理 profile JSON 草稿和 Pull Request 文字草稿，完整列給我確認。
 3. 在我看過完整 JSON、完整 Pull Request title/description 與 diff 摘要，並明確回覆「我同意送出這個 Pull Request」或等同清楚語句前，不要 push branch、不要建立 Pull Request、不要送出 review/merge 操作。一般聊天回覆、修改建議或確認某個欄位，不算送出同意。
-4. 如果你目前的環境不能直接送 Pull Request，請改成提供我可以用 GitHub 網頁手動送出的內容與步驟。
+4. 如果執行環境不能直接送 Pull Request，請改成提供我可以用 GitHub 網頁手動送出的內容與步驟。
 
 Repository:
 https://github.com/sitcon-tw/credits-profiles
@@ -53,7 +53,7 @@ links:
 工作方式：
 
 1. 請先檢查 `profiles/<我的 GitHub username>.json` 是否已存在。已存在就是更新 profile，不存在就是新增 profile；只有在無法檢查 repo 或 GitHub username 不明時，才需要問我。
-2. 請優先使用你目前已經可用、且我已登入或授權的 GitHub connector、GitHub skill、GitHub app、內建 Pull Request 發布功能，或等效的受託整合來建立 branch 與 Pull Request。
+2. 請優先使用已可用、且我已登入或授權的 GitHub connector、GitHub skill、GitHub app、內建 Pull Request 發布功能，或等效的受託整合來建立 branch 與 Pull Request。
 3. 不要要求我安裝、設定或登入 GitHub CLI（gh）、git credential helper、SSH key，或其他命令列發布工具。
 4. 如果你不能直接建立 Pull Request，請不要改成要求安裝 CLI。請改為輸出以下內容，讓我用 GitHub 網頁完成：
    - 建議 branch 名稱
@@ -83,7 +83,7 @@ links:
 6. 不要加入歷史活動紀錄、貢獻紀錄、角色紀錄、活動出現紀錄、source URL，或任何身份合併／身份確認宣告。
 7. 不要根據姓名、暱稱、GitHub 帳號、相似拼音、搜尋結果、既有記憶或外部資料推測我是誰。
 8. 不要搜尋網路或其他儲存庫來補完我的個人資料。只有在我已提供貢獻紀錄標記網址，或我明確貼上公開紀錄線索時，才可以用來整理候選線索。
-9. 不要讀取、列印、搜尋或要求任何 credential、token、cookie、SSH key、GitHub CLI auth 狀態、環境變數、credential helper、瀏覽器登入資料或 secret 檔案；只能使用目前工具已提供且不需揭露憑證內容的授權能力。
+9. 不要讀取、列印、搜尋或要求任何 credential、token、cookie、SSH key、GitHub CLI auth 狀態、環境變數、credential helper、瀏覽器登入資料或 secret 檔案；只能使用工具已提供且不需揭露憑證內容的授權能力。
 10. 不要修改 `site-profiles/`。
 11. 不要修改 schema、workflow、template、README、其他人的 profile，或任何與我的 `profiles/<github_username>.json` 無關的檔案。
 12. 如果資料不足、格式不確定，或你需要更多資訊，請先問我，不要自行補完。

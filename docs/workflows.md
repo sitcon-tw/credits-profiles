@@ -63,7 +63,7 @@ flowchart TD
 
 自動合併只代表 profile PR 符合低風險自助更新條件。它不代表 workflow 建立了新的身份連結，也不代表它處理了歷史資料更正、profile 刪除、profile rename 或隱私政策例外。
 
-如果 `Check profile PR scope` 或 `Check trusted profile PR` 沒有通過，bot 會在 PR 留言中指出目前失敗的項目與可採取的修正方式；修正後重新 push，通過檢查時舊的提醒留言會自動移除。
+如果 `Check profile PR scope` 或 `Check trusted profile PR` 沒有通過，bot 會在 PR 留言中指出失敗的項目與可採取的修正方式；修正後重新 push，通過檢查時先前的提醒留言會自動移除。
 
 ## 需要維護者 review 的情況
 
@@ -94,7 +94,7 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 `credits-profiles` 不保存 canonical Google Sheets credentials。需要讀取 canonical appearances 或同步 `people` helper sheet 的動作，都 dispatch 到 [`sitcon-tw/credits`](https://github.com/sitcon-tw/credits) 執行。
 
-目前有兩個跨 repo dispatch：
+有兩個跨 repo dispatch：
 
 - `review-profile-pr`：由 `Trusted profile review` 送出，請主 repo 根據 canonical appearances 決定是否核准、合併或留言。
 - `sync-people-from-profiles`：由 `Sync credits people helper` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。

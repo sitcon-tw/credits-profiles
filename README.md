@@ -1,8 +1,8 @@
 # SITCON Credits Profiles
 
-這個儲存庫保存 SITCON Credits 貢獻者自願公開顯示的個人公開資料。你可以提供偏好的公開顯示名稱、簡介、頭像、公開 email 與公開連結。
+這個儲存庫保存 SITCON Credits 貢獻者自願公開顯示的個人公開資料。曾經參與 SITCON 相關活動的工作人員或講者，可以在這裡提供偏好的公開顯示名稱、簡介、頭像、公開 email 與公開連結，讓 SITCON Credits 的公開索引頁呈現得更完整。
 
-這裡不新增或修改歷史貢獻紀錄，也不會自動完成身份連結。歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 維護。
+這裡不新增或修改歷史貢獻紀錄，也不會自動完成身份連結。歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 的 canonical Google Sheet 維護。你在這裡送出的資料是公開 profile 內容；若你想讓某些歷史紀錄連到自己的 profile，請提供線索給維護者人工確認。
 
 ## 開始填寫
 
@@ -13,6 +13,8 @@
 如果還沒有 GitHub 帳號，請先到 [GitHub 註冊頁面](https://github.com/signup) 建立帳號，再回來填寫表單。這個流程需要 GitHub username，系統會用它建立 `profiles/<GitHub username>.json`。
 
 表單送出後會建立公開的 GitHub issue。請只填你本人願意公開顯示在 SITCON Credits 的資料；不知道要不要公開的欄位可以留空。
+
+這是一般填寫者建議使用的入口。它不需要你手動 fork repository、編輯 JSON 或建立 Pull Request；系統會根據表單內容建立或更新 profile PR。
 
 ## 可以填哪些資料
 
@@ -47,7 +49,7 @@
 
 ## 請 agent 協助
 
-如果你熟悉 Codex、Claude Code 或其他 coding agent，可以請 agent 幫你整理資料、檢查格式或直接建立 Pull Request。這比較適合已經知道 GitHub、PR、JSON 是什麼的人；一般填寫者建議直接使用表單。
+如果你熟悉 Codex、Claude Code 或其他 coding agent，可以請 agent 幫你整理資料、檢查格式或直接建立 Pull Request。這條路徑比較適合已經知道 GitHub、PR、JSON 是什麼的人；一般填寫者建議直接使用表單，讓 workflow 代為建立 PR。
 
 可複製的完整 prompt 請看：[CONTRIBUTING.md](CONTRIBUTING.md)。
 
@@ -85,6 +87,8 @@ pnpm test
 `profiles:validate` 只檢查 profile 檔案格式、檔名、URL、public email 格式與基本資料最小化規則。它不會審核身份連結、歷史紀錄修正、移除請求或隱私政策例外。
 
 `site-profiles/` 存放維護者從歷屆活動公開網站整理出的顯示用名稱與頭像。它不是本人自願公開 profile，也不接受一般 Pull Request 修改。`site-profiles/` 不會觸發 people helper 同步，也不會讓任何 `site:<source_person_id>` 變成可自助編輯的 GitHub profile。
+
+repo 內已有 profile issue form、表單轉 PR、自助 PR scope guard、trusted profile review dispatch、people helper dispatch 等 workflow。這些 workflow 定義存在，不等於 branch ruleset、repository secrets、GitHub App 安裝或跨 repo 權限都已在 GitHub 上完成設定；維護者撰寫或更新文件時應分開描述。
 
 ## 授權與資料使用
 
