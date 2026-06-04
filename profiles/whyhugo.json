@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Hugo",
+  "bio": "在 SITCON 吃了無數披薩的 Hugo。",
+  "avatar_url": "https://github.com/whyhugo.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/whyhugo"
+    },
+    {
+      "type": "website",
+      "url": "https://whyhugo.me"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/whyhugo/"
+    }
+  ]
+}
