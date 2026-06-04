@@ -1,8 +1,25 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "RSChiang",
+  "bio": "RSChiang／<ruby lang=\"hak-TW\">姜柏任<rt>Giongˋ Pagˋ Rhim+</rt></ruby>是 SITCON 共同發起人之一，在校期間活躍於社團經營與校園參與，也在 SITCON 推廣開源精神多年。目前的研究領域是數位政府、開放資料與網路治理。你可以在 SITCON 的社群平台群組、Mastodon、或是 RS 的個人網站上捕捉到他，也可以跟他打聽肉桂捲的獨到見解。",
+  "avatar_url": "https://github.com/rschiang.png?size=512",
+  "public_email": "hi@poren.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/rschiang"
+    },
+    {
+      "type": "website",
+      "url": "https://poren.tw"
+    },
+    {
+      "type": "slides",
+      "url": "https://speakerdeck.com/rschiang"
+    },
+    {
+      "type": "mastodon",
+      "url": "https://g0v.social/@RSChiang"
+    }
+  ]
 }
