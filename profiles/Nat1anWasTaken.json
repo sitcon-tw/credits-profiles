@@ -2,7 +2,17 @@
   "$schema": "../schemas/profile.schema.json",
   "display_name": "Nathan",
   "bio": "",
-  "avatar_url": "https://github.com/Nat1anWasTaken.png?size=512",
-  "public_email": "",
-  "links": []
+  "avatar_url": "",
+  "public_email": "me@nath.tw",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://nath.tw"
+    },
+    {
+      "type": "custom",
+      "label": "Calendar",
+      "url": "https://nath.tw/cal"
+    }
+  ]
 }
