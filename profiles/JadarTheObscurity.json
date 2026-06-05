@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "家答",
+  "bio": "家答是一個怪人",
+  "avatar_url": "https://github.com/JadarTheObscurity.png?size=512",
+  "public_email": "",
+  "links": []
+}
