@@ -30,12 +30,37 @@ jobs:
               return;
             }
 
-            const associated = await github.rest.repos.listPullRequestsAssociatedWithCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              commit_sha: context.sha,
-            });
-            const merged = associated.data.find((pr) => pr.merged_at);
+            let merged = null;
+            for (let attempt = 0; attempt < 6; attempt += 1) {
+              const associated = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                commit_sha: context.sha,
+              });
+              merged = associated.data.find((pr) => pr.merged_at) || null;
+              if (merged) {
+                break;
+              }
+              await new Promise((resolve) => setTimeout(resolve, 5000));
+            }
+            if (!merged) {
+              const commit = await github.rest.repos.getCommit({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: context.sha,
+              });
+              const match = commit.data.commit.message.match(/\(#(\d+)\)\s*$/m);
+              if (match) {
+                const pull = await github.rest.pulls.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: Number(match[1]),
+                });
+                if (pull.data.merged_at && pull.data.merge_commit_sha === context.sha) {
+                  merged = pull.data;
+                }
+              }
+            }
             if (!merged) {
               core.setOutput('pull_number', '');
               core.setOutput('username', '');
