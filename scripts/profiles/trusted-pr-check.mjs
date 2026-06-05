@@ -158,7 +158,7 @@ function formatValidationIssueForContributor(issue) {
   return `${location}：${translateValidationIssueMessage(issue.message)}`;
 }
 
-function translateValidationIssueMessage(message) {
+export function translateValidationIssueMessage(message) {
   const translations = new Map([
     ['field is not allowed in profile files', '這個欄位不在 profile 允許清單內，請移除。'],
     ['required field is missing', '這個必要欄位缺少了，請補上。'],

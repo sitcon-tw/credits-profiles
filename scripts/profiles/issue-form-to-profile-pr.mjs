@@ -4,9 +4,9 @@ import {
   CONTENT_SAFETY_ACKNOWLEDGEMENT,
   PUBLIC_EMAIL_ACKNOWLEDGEMENT,
   hasCheckedCheckbox,
+  translateValidationIssueMessage,
 } from './trusted-pr-check.mjs';
 import {
-  formatIssue,
   validateProfileJsonText,
 } from './validate.mjs';
 
@@ -80,10 +80,7 @@ export function buildProfileRequestPullRequest({ issue, profileExists = false })
   const profileText = `${JSON.stringify(profile, null, 2)}\n`;
   const validationIssues = validateProfileJsonText(`${username}.json`, profileText, { template: false });
   if (validationIssues.length > 0) {
-    throw new Error([
-      '表單內容還不能轉成有效的 profile JSON：',
-      ...validationIssues.map((issue) => `- ${formatIssue(issue)}`),
-    ].join('\n'));
+    throw new Error(formatProfileRequestValidationIssues(validationIssues));
   }
 
   const updateType = profileExists ? '更新我的 profile' : '新增我的 profile';
@@ -144,6 +141,82 @@ export function collectLinks(fields) {
   }
 
   return links;
+}
+
+export function formatProfileRequestValidationIssues(issues) {
+  return [
+    '請修改下列欄位：',
+    '',
+    ...issues.map((issue) => `- ${formatProfileRequestValidationIssue(issue)}`),
+  ].join('\n');
+}
+
+function formatProfileRequestValidationIssue(issue) {
+  if (issue.field === 'links' && issue.message === 'must contain 8 links or fewer') {
+    return '公開連結最多只能填 8 個。請刪除或清空多餘的連結欄位，保留最想公開的 8 個以內。';
+  }
+
+  const fieldLabel = formatIssueFormFieldLabel(issue.field);
+  const translatedMessage = translateValidationIssueMessage(issue.message);
+
+  if (issue.message === 'must use https:') {
+    return `${fieldLabel}：需要使用 \`https://\` 開頭。請把網址改成 \`https://...\`，或先清空這個欄位。`;
+  }
+  if (issue.message === 'must be a valid URL') {
+    return `${fieldLabel}：不是有效網址。請確認網址完整，並包含 \`https://\` 開頭。`;
+  }
+  if (issue.message === 'must not be blank') {
+    return `${fieldLabel}：不能留空。請填入內容，或清空這個連結欄位。`;
+  }
+
+  return `${fieldLabel}：${translatedMessage}`;
+}
+
+function formatIssueFormFieldLabel(field) {
+  if (!field) {
+    return '表單內容';
+  }
+
+  const directLabels = new Map([
+    ['display_name', FORM_LABELS.displayName],
+    ['bio', FORM_LABELS.bio],
+    ['avatar_url', FORM_LABELS.avatarUrl],
+    ['public_email', FORM_LABELS.publicEmail],
+    ['links', '公開連結'],
+  ]);
+  if (directLabels.has(field)) {
+    return directLabels.get(field);
+  }
+
+  const linkMatch = /^links\[(\d+)\](?:\.(.+))?$/.exec(field);
+  if (!linkMatch) {
+    return `\`${field}\` 欄位`;
+  }
+
+  const linkIndex = Number(linkMatch[1]);
+  const linkField = linkMatch[2] ?? '';
+  const linkLabel = linkFormFieldLabel(linkIndex);
+  if (linkField === 'url') {
+    return `${linkLabel} 欄位的網址`;
+  }
+  if (linkField === 'label') {
+    return `${linkLabel} 欄位的名稱`;
+  }
+  if (linkField === 'type') {
+    return `${linkLabel} 欄位`;
+  }
+  return `${linkLabel} 欄位`;
+}
+
+function linkFormFieldLabel(index) {
+  const standardLink = LINK_FORM_FIELDS[index];
+  if (standardLink) {
+    return standardLink[1];
+  }
+  if (index === LINK_FORM_FIELDS.length) {
+    return '自訂連結';
+  }
+  return `第 ${index + 1} 個公開連結`;
 }
 
 function formatPullRequestBody({ issue, updateType, profile, historicalHints }) {
@@ -260,7 +333,7 @@ async function fileExists(filePath) {
 export function formatFailureComment(message) {
   return [
     PROFILE_REQUEST_COMMENT_MARKER,
-    '表單內容目前還不能建立 profile PR，請更新這個 issue 後讓系統重試。',
+    '表單內容目前還不能建立 profile PR。請直接編輯這個 issue，修正下面項目後系統會自動重試。',
     '',
     '需要處理的項目：',
     '',

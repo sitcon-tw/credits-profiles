@@ -16,6 +16,7 @@ import {
   buildAvatarUrl,
   collectLinks,
   buildProfileRequestPullRequest,
+  formatFailureComment,
   parseIssueFormBody,
 } from './issue-form-to-profile-pr.mjs';
 
@@ -225,8 +226,42 @@ test('buildProfileRequestPullRequest validates generated profile JSON', () => {
     () => buildProfileRequestPullRequest({
       issue: issue(formBody({ [FORM_LABELS.avatarUrl]: 'http://example.com/avatar.png' })),
     }),
-    /must use https:/,
+    /公開頭像圖片 URL：需要使用 `https:\/\/` 開頭/,
   );
+});
+
+test('buildProfileRequestPullRequest explains issue form link validation in Traditional Chinese', () => {
+  assert.throws(
+    () => buildProfileRequestPullRequest({
+      issue: issue(formBody({
+        GitHub: 'https://github.com/octocat',
+        個人網站: 'https://example.com',
+        Blog: 'https://blog.example.com',
+        Instagram: 'https://www.instagram.com/octocat',
+        Telegram: 'https://t.me/octocat',
+        LinkedIn: 'https://www.linkedin.com/in/octocat',
+        Facebook: 'http://www.facebook.com/octocat',
+        YouTube: 'https://www.youtube.com/@octocat',
+        Slides: 'https://speakerdeck.com/octocat',
+        [CUSTOM_LINK_URL_FIELD]: '',
+      })),
+    }),
+    (error) => {
+      assert.match(error.message, /公開連結最多只能填 8 個/);
+      assert.match(error.message, /Facebook 欄位的網址：需要使用 `https:\/\/` 開頭/);
+      assert.doesNotMatch(error.message, /ERROR/);
+      assert.doesNotMatch(error.message, /must contain 8 links or fewer/);
+      return true;
+    },
+  );
+});
+
+test('formatFailureComment tells issue authors to edit the issue and retry', () => {
+  const comment = formatFailureComment('表單內容還不能建立 profile PR，請修改下列欄位：\n\n- 公開連結最多只能填 8 個。');
+
+  assert.match(comment, /請直接編輯這個 issue/);
+  assert.match(comment, /系統會自動重試/);
+  assert.match(comment, /公開連結最多只能填 8 個/);
 });
 
 test('buildProfileRequestPullRequest rejects edited issue body with missing acknowledgement', () => {
