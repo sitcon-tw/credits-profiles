@@ -282,7 +282,17 @@ test('assistant missing appearance comment matching supports configured app logi
     body: formatMissingAppearanceComment('octocat'),
   };
 
-  assert.equal(isAssistantMissingAppearanceComment(assistantComment), false);
+  assert.equal(isAssistantMissingAppearanceComment(assistantComment), true);
   assert.equal(isAssistantMissingAppearanceComment(assistantComment, 'sitcon-credits'), true);
   assert.equal(findAssistantMissingAppearanceComment([assistantComment], 'sitcon-credits'), assistantComment);
+});
+
+test('assistant missing appearance comment matching supports bot suffix variants', () => {
+  const assistantComment = {
+    id: 4,
+    user: { login: 'sitcon-credits-assistant[bot]' },
+    body: formatMissingAppearanceComment('octocat'),
+  };
+
+  assert.equal(isAssistantMissingAppearanceComment(assistantComment, 'sitcon-credits-assistant'), true);
 });

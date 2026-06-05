@@ -364,7 +364,28 @@ export function findAssistantMissingAppearanceComment(comments, assistantLogin =
 
 export function isAssistantMissingAppearanceComment(comment, assistantLogin = CREDITS_ASSISTANT_BOT_LOGIN) {
   return comment.body?.includes(MISSING_APPEARANCE_COMMENT_MARKER) &&
-    comment.user?.login === assistantLogin;
+    assistantCommentLogins(assistantLogin).has(comment.user?.login);
+}
+
+export function assistantCommentLogins(assistantLogin = CREDITS_ASSISTANT_BOT_LOGIN) {
+  const logins = new Set([
+    CREDITS_ASSISTANT_BOT_LOGIN,
+    'sitcon-credits',
+    'sitcon-credits[bot]',
+  ]);
+  for (const login of [assistantLogin, stripBotSuffix(assistantLogin)]) {
+    if (!login) {
+      continue;
+    }
+    logins.add(login);
+    logins.add(`${login}[bot]`);
+    logins.add(`app/${login}`);
+  }
+  return logins;
+}
+
+function stripBotSuffix(login) {
+  return String(login ?? '').replace(/\[bot\]$/, '');
 }
 
 async function approvePullRequest(token, options, body) {
