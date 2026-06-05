@@ -99,13 +99,13 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 有三個跨 repo dispatch：
 
 - `review-profile-pr`：由 `Trusted profile review` 送出，請主 repo 根據 canonical appearances 決定是否核准、合併或留言。
-- `apply-profile-claims`：由 `Confirm profile claim links` 在維護者點擊 `Confirm Credits appearance links` Check Run action 後送出，請主 repo 重新驗證 PR 標記網址與 canonical Sheet，確認後才更新 `appearances.github_username`。
+- `apply-profile-claims`：由 `Confirm profile claim links` 在維護者勾選 claim confirmation comment 的確認 checkbox 後送出，請主 repo 重新驗證 PR 標記網址與 canonical Sheet，確認後才更新 `appearances.github_username`。
 - `sync-people-from-profiles`：由 `Sync credits people helper` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。
 - `rebuild-pages-from-profiles`：由 `Sync credits profile data` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 重新匯出 canonical Sheet、讀取最新 `credits-profiles`，並部署 GitHub Pages。
 
 這些 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
 
-`Confirm profile claim links` 只驗證 GitHub 上的點擊者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number、head SHA 與 check run id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
+`Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number、head SHA 與確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
 
 `Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。
 

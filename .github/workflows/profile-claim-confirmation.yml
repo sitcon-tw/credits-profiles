@@ -1,12 +1,13 @@
 name: Confirm profile claim links
 
 on:
-  check_run:
+  issue_comment:
     types:
-      - requested_action
+      - edited
 
 permissions:
   contents: read
+  issues: read
 
 jobs:
   dispatch:
@@ -35,7 +36,7 @@ jobs:
       - name: Build dispatch payload
         id: payload
         run: |
-          node scripts/profiles/claim-check-dispatch.mjs \
+          node scripts/profiles/claim-comment-dispatch.mjs \
             --event "$GITHUB_EVENT_PATH" \
             --output "$RUNNER_TEMP/apply-claims-payload.json"
           dispatch="$(node -e "const fs=require('fs'); const path=process.env.RUNNER_TEMP + '/apply-claims-payload.json'; console.log(JSON.parse(fs.readFileSync(path, 'utf8')).dispatch ? 'true' : 'false')")"
@@ -48,7 +49,7 @@ jobs:
           script: |
             const sender = context.payload.sender?.login;
             if (!sender) {
-              core.setFailed('check_run sender is missing.');
+              core.setFailed('comment sender is missing.');
               return;
             }
             const permission = await github.rest.repos.getCollaboratorPermissionLevel({
