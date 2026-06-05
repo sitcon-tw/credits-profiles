@@ -1,0 +1,92 @@
+name: Confirm profile claim links
+
+on:
+  check_run:
+    types:
+      - requested_action
+
+permissions:
+  contents: read
+
+jobs:
+  dispatch:
+    name: Dispatch confirmed profile claims
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out profiles repository
+        uses: actions/checkout@v6
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10.18.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build dispatch payload
+        id: payload
+        run: |
+          node scripts/profiles/claim-check-dispatch.mjs \
+            --event "$GITHUB_EVENT_PATH" \
+            --output "$RUNNER_TEMP/apply-claims-payload.json"
+          dispatch="$(node -e "const fs=require('fs'); const path=process.env.RUNNER_TEMP + '/apply-claims-payload.json'; console.log(JSON.parse(fs.readFileSync(path, 'utf8')).dispatch ? 'true' : 'false')")"
+          echo "dispatch=$dispatch" >> "$GITHUB_OUTPUT"
+
+      - name: Verify requester repository permission
+        if: steps.payload.outputs.dispatch == 'true'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const sender = context.payload.sender?.login;
+            if (!sender) {
+              core.setFailed('check_run sender is missing.');
+              return;
+            }
+            const permission = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: sender,
+            });
+            const allowed = new Set(['write', 'maintain', 'admin']);
+            if (!allowed.has(permission.data.permission)) {
+              core.setFailed(`@${sender} does not have write permission to ${context.repo.owner}/${context.repo.repo}.`);
+            }
+
+      - name: Create credits assistant token
+        if: steps.payload.outputs.dispatch == 'true'
+        id: credits-assistant-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.SITCON_CREDITS_ASSISTANT_APP_CLIENT_ID }}
+          private-key: ${{ secrets.SITCON_CREDITS_ASSISTANT_APP_PRIVATE_KEY }}
+          owner: sitcon-tw
+          repositories: credits
+          permission-contents: write
+
+      - name: Dispatch apply-profile-claims
+        if: steps.payload.outputs.dispatch == 'true'
+        uses: actions/github-script@v9
+        with:
+          github-token: ${{ steps.credits-assistant-token.outputs.token }}
+          script: |
+            const fs = require('fs');
+            const result = JSON.parse(fs.readFileSync(`${process.env.RUNNER_TEMP}/apply-claims-payload.json`, 'utf8'));
+            if (!result.dispatch) {
+              core.warning(`Skipping apply-profile-claims dispatch: ${result.reason}`);
+              return;
+            }
+            await github.rest.repos.createDispatchEvent({
+              owner: 'sitcon-tw',
+              repo: 'credits',
+              event_type: 'apply-profile-claims',
+              client_payload: result.payload,
+            });
