@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "咪路",
+  "bio": "精靈魔法王國的王子，潛伏在人類世界當全端工程師",
+  "avatar_url": "https://github.com/mirumodapon.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/mirumodapon"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.mirumo.net"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/mirumo_0915/"
+    }
+  ]
+}
