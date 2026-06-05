@@ -1,0 +1,37 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "夏川",
+  "bio": "22歲 什麼都會一點的人類 目前只是個一直畢不了業的設計系大學生 可以叫我桃源就好 是源不是園 本人也不住桃園（苗栗人）\n愛玩攝影、會女裝、cosplay 、剪輯特效、資訊相關正在學習中、喜歡打遊戲、喜歡看V曾經是個烤肉、日文也在學習中\n以上請多多指教 我真的是個I人",
+  "avatar_url": "https://gravatar.com/natsukawa0707",
+  "public_email": "haoyuanqiu084@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Natsukawa-Taoyuan"
+    },
+    {
+      "type": "website",
+      "url": "https://natsukawataoyuan.com/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/natsukawa_taoyuan/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://telegram.me/natsukawa_taoyuan"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/@natsukawa_taoyuan"
+    },
+    {
+      "type": "discord",
+      "url": "https://discordapp.com/users/1243981642297774159"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/xia_tao18587"
+    }
+  ]
+}
