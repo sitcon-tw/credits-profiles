@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   dispatch:
@@ -18,6 +19,54 @@ jobs:
     timeout-minutes: 5
 
     steps:
+      - name: Resolve merged profile PR
+        id: merged-profile
+        uses: actions/github-script@v9
+        with:
+          script: |
+            if (context.eventName !== 'push') {
+              core.setOutput('pull_number', '');
+              core.setOutput('username', '');
+              return;
+            }
+
+            const associated = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+            });
+            const merged = associated.data.find((pr) => pr.merged_at);
+            if (!merged) {
+              core.setOutput('pull_number', '');
+              core.setOutput('username', '');
+              return;
+            }
+
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: merged.number,
+              per_page: 100,
+            });
+            const usernames = new Set();
+            for (const file of files) {
+              if (file.status === 'removed' || file.status === 'renamed') {
+                continue;
+              }
+              const match = /^profiles\/([^/_][^/]*)\.json$/.exec(file.filename);
+              if (match) {
+                usernames.add(match[1]);
+              }
+            }
+            if (usernames.size !== 1) {
+              core.setOutput('pull_number', '');
+              core.setOutput('username', '');
+              return;
+            }
+
+            core.setOutput('pull_number', String(merged.number));
+            core.setOutput('username', [...usernames][0]);
+
       - name: Create credits assistant token
         id: credits-assistant-token
         uses: actions/create-github-app-token@v3
@@ -57,5 +106,7 @@ jobs:
                 source_repository: `${context.repo.owner}/${context.repo.repo}`,
                 source_sha: context.sha,
                 source_run_id: context.runId,
+                profile_pull_number: '${{ steps.merged-profile.outputs.pull_number }}',
+                profile_username: '${{ steps.merged-profile.outputs.username }}',
               },
             });

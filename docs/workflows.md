@@ -52,6 +52,7 @@ flowchart TD
   merge --> sync["master push 後 dispatch profile data updates"]
   sync --> people["credits 同步 Google Sheets people helper"]
   sync --> pages["credits 重建 GitHub Pages"]
+  pages --> published["Pages deploy 成功後回 PR 留下公開頁面連結"]
 ```
 
 自助 PR 可以自動核准與合併的前提：
@@ -105,5 +106,7 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 這些 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
 
 `Confirm profile claim links` 只驗證 GitHub 上的點擊者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number、head SHA 與 check run id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
+
+`Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。
 
 `site-profiles/**` 的變更不會觸發 `sync-people-from-profiles` 或 `rebuild-pages-from-profiles`，也不會被當作 contributor-owned profile username。
