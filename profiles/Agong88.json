@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Agong",
+  "bio": "",
+  "avatar_url": "https://github.com/Agong88.png?size=512",
+  "public_email": "agong961021@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Agong88"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/agong1021"
+    }
+  ]
+}
