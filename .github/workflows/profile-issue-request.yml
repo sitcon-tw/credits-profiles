@@ -6,7 +6,6 @@ on:
       - opened
       - edited
       - reopened
-      - labeled
 
 permissions:
   contents: read
@@ -15,7 +14,9 @@ permissions:
 jobs:
   create-pr:
     name: Create profile PR from issue form
-    if: contains(github.event.issue.labels.*.name, 'profile-request')
+    if: >-
+      contains(github.event.issue.labels.*.name, 'profile-request') &&
+      (github.event.action != 'edited' || contains(toJSON(github.event.changes), '"body"'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
