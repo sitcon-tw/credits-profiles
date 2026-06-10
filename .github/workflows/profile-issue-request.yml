@@ -225,7 +225,9 @@ jobs:
               marker,
               `已依照這份表單建立或更新 profile PR：#${{ steps.pr.outputs.number }}`,
               '',
-              '後續請到 PR 查看自動檢查結果。PR 合併後，這個 issue 會因為 PR 說明中的關聯自動關閉。',
+              '後續自動檢查與維護者確認會在 PR 上進行；若需要維護者確認歷史貢獻紀錄連結，系統也會回到這個 issue 留言通知你目前正在等待確認。',
+              '',
+              'PR 合併並部署到 SITCON Credits 後，系統會再回到這個 issue 留下公開頁面連結。你也可以隨時到 PR 查看完整檢查紀錄。',
             ].join('\n');
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner: context.repo.owner,

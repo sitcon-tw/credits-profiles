@@ -18,7 +18,7 @@ flowchart TD
   linked --> normal["進入一般自助更新檢查"]
 ```
 
-表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。
+表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。系統會在原 issue 留下 PR 連結；若後續等待維護者確認歷史貢獻紀錄連結，或 Pages 部署完成，也會回到原 issue 通知建立者。
 
 若貢獻者想請維護者確認哪些公開貢獻紀錄可能是在記錄自己，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)。頁面會產生可帶入 issue form 的標記網址；這個網址只會出現在 issue 與 PR 說明中，供維護者 review canonical appearances，不會由 `credits-profiles` workflow 自動改寫歷史紀錄或完成身份合併。
 
@@ -52,7 +52,7 @@ flowchart TD
   merge --> sync["master push 後 dispatch profile data updates"]
   sync --> people["credits 同步 Google Sheets people helper"]
   sync --> pages["credits 重建 GitHub Pages"]
-  pages --> published["Pages deploy 成功後回 PR 留下公開頁面連結"]
+  pages --> published["Pages deploy 成功後回 PR 與 linked issue 留公開頁面連結"]
 ```
 
 自助 PR 可以自動核准與合併的前提：
@@ -108,6 +108,6 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 `Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number、head SHA 與確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
 
-`Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。
+`Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言；若 PR linked 到 profile request issue，也會回到原 issue 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。
 
 `site-profiles/**` 的變更不會觸發 `sync-people-from-profiles` 或 `rebuild-pages-from-profiles`，也不會被當作 contributor-owned profile username。
