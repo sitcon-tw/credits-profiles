@@ -1,38 +1,8 @@
 {
   "$schema": "../schemas/profile.schema.json",
   "display_name": "凱文 Kevinowo",
-  "bio": "安安逆好~\n我是凱文，一個平平無奇的網路應用開發者\n是個前端工程師，斜了點槓去寫遊戲模組，還有修點音遊機台\n會玩會修八個鍵的傻逼馬桶遊戲，剩下ㄉ都很爛\n如果現實/線上有機會找到我，歡迎來找我聊天+吃飯owo\n\n都看到這了，要不要試試我的音樂機器人？\nTKablent: https://bot.kevin0216.us/invite",
+  "bio": "",
   "avatar_url": "https://github.com/kevin0216.png?size=512",
-  "public_email": "hi@kevin0216.us",
-  "links": [
-    {
-      "type": "github",
-      "url": "https://github.com/kevin0216"
-    },
-    {
-      "type": "instagram",
-      "url": "https://www.instagram.com/kevin0216_owo/"
-    },
-    {
-      "type": "telegram",
-      "url": "https://t.me/kevinowo"
-    },
-    {
-      "type": "linkedin",
-      "url": "https://www.linkedin.com/in/kevinowo/"
-    },
-    {
-      "type": "facebook",
-      "url": "https://www.facebook.com/kevincsh0216/"
-    },
-    {
-      "type": "discord",
-      "url": "https://discord.com/users/264778789844811778"
-    },
-    {
-      "type": "custom",
-      "label": "我ㄉ機器人",
-      "url": "https://bot.kevin0216.us/invite"
-    }
-  ]
+  "public_email": "",
+  "links": []
 }
