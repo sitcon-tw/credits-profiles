@@ -14,18 +14,18 @@ flowchart TD
   valid -->|否| issueComment["在 issue 留言提醒可修正項目"]
   valid -->|是| branch["建立或更新 profile-request branch"]
   branch --> pr["建立或更新 profile PR"]
-  pr --> linked["PR body Closes 原 issue"]
+  pr --> linked["PR body 參照原 issue"]
   linked --> normal["進入一般自助更新檢查"]
 ```
 
-表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。系統會在原 issue 留下 PR 連結；若後續等待維護者確認歷史貢獻紀錄連結，或 Pages 部署完成，也會回到原 issue 通知建立者。
+表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。成功建立或更新 PR 時，系統不會只為了提供 PR 連結而回覆 issue；若需要等待維護者確認歷史貢獻紀錄連結，系統會用等待確認留言通知建立者。Pages 部署完成後，系統會回到原 issue 留下公開頁面連結，然後關閉 issue。
 
 若貢獻者想請維護者確認哪些公開貢獻紀錄可能是在記錄自己，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)。頁面會產生可帶入 issue form 的標記網址；這個網址只會出現在 issue 與 PR 說明中，供維護者 review canonical appearances，不會由 `credits-profiles` workflow 自動改寫歷史紀錄或完成身份合併。
 
 因為 PR 作者會是 `sitcon-credits[bot]`，不是填表者本人，`Check profile PR scope` 和 `Check trusted profile PR` 會在符合下列條件時，改用原始 issue 作者作為自助流程 owner：
 
 - PR 作者是 `sitcon-credits[bot]`。
-- PR body 使用 `Closes #...` 連到同 repo issue。
+- PR body 使用 `Refs #...` 參照同 repo issue。
 - 該 issue 有 `profile-request` label。
 - profile 檔名中的 GitHub username 來自 issue 作者。
 
@@ -52,7 +52,7 @@ flowchart TD
   merge --> sync["master push 後 dispatch profile data updates"]
   sync --> people["credits 同步 Google Sheets people helper"]
   sync --> pages["credits 重建 GitHub Pages"]
-  pages --> published["Pages deploy 成功後回 PR 與 linked issue 留公開頁面連結"]
+  pages --> published["Pages deploy 成功後回 PR 與 linked issue 留公開頁面連結並關閉 issue"]
 ```
 
 自助 PR 可以自動核准與合併的前提：

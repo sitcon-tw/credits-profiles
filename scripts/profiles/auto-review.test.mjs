@@ -215,9 +215,10 @@ test('decideProfileAutoReview rejects assistant PR when linked issue author does
   assert.equal(decision.reason, 'not-self-service-profile-pr');
 });
 
-test('extractLinkedIssueNumber reads closing keywords from PR body', () => {
+test('extractLinkedIssueNumber reads closing and reference keywords from PR body', () => {
   assert.equal(extractLinkedIssueNumber('Closes #21'), 21);
   assert.equal(extractLinkedIssueNumber('fixes #22'), 22);
+  assert.equal(extractLinkedIssueNumber('Refs #23'), 23);
   assert.equal(extractLinkedIssueNumber('No linked issue'), null);
 });
 

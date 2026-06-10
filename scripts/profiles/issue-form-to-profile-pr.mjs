@@ -85,6 +85,7 @@ export function buildProfileRequestPullRequest({ issue, profileExists = false })
 
   const updateType = profileExists ? '更新我的 profile' : '新增我的 profile';
   const historicalHints = readOptionalField(fields, FORM_LABELS.historicalHints);
+  const hasSiteClaims = containsSiteClaimReference(historicalHints);
 
   return {
     username,
@@ -93,6 +94,7 @@ export function buildProfileRequestPullRequest({ issue, profileExists = false })
     profileText,
     prTitle: `${updateType}: ${username}`,
     prBody: formatPullRequestBody({ issue, updateType, profile, historicalHints }),
+    hasSiteClaims,
   };
 }
 
@@ -243,10 +245,14 @@ function formatPullRequestBody({ issue, updateType, profile, historicalHints }) 
     '',
     '## Issue form',
     '',
-    `Closes #${issue.number}`,
+    `Refs #${issue.number}`,
     '',
     '這個 PR 是由 SITCON Credits Assistant 依照 profile request issue 建立。自動流程仍會檢查 profile JSON、PR 範圍與 canonical appearances；這不代表身份合併已核准。',
   ].join('\n');
+}
+
+function containsSiteClaimReference(value) {
+  return /site(?::|%3a)/i.test(String(value ?? ''));
 }
 
 function checkRequiredAcknowledgements(fields) {
@@ -306,6 +312,7 @@ async function runCli(argv = process.argv.slice(2)) {
       branchName: result.branchName,
       profilePath: result.profilePath,
       prTitle: result.prTitle,
+      hasSiteClaims: result.hasSiteClaims,
     }, null, 2)}\n`);
     await writeFile(profileOutputPath, result.profileText);
     await writeFile(prBodyOutputPath, `${result.prBody}\n`);

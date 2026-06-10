@@ -195,7 +195,8 @@ test('buildProfileRequestPullRequest creates profile JSON and linked PR body', (
   assert.match(result.profileText, /"display_name": "Octocat"/);
   assert.match(result.profileText, /"avatar_url": "https:\/\/github.com\/octocat.png\?size=512"/);
   assert.match(result.profileText, /"type": "github"/);
-  assert.match(result.prBody, /Closes #123/);
+  assert.match(result.prBody, /Refs #123/);
+  assert.equal(result.hasSiteClaims, true);
   assert.match(result.prBody, /我確認這份 profile 沒有放入惡意 HTML/);
   assert.match(result.prBody, /## 貢獻紀錄標記網址（選填）/);
   assert.match(result.prBody, /http:\/\/sitcon\.org\/credits\/\?claim=1&claims=EVENT-B%2Fsite%3Asource-1/);
