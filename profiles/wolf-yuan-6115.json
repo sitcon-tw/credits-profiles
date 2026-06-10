@@ -1,8 +1,33 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "Wolf Yuan",
+  "bio": "SITCON 好玩好玩、SITCON Camp 有趣有趣",
+  "avatar_url": "https://github.com/wolf-yuan-6115.png?size=512",
+  "public_email": "me@wolf-yuan.dev",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/wolf-yuan-6115"
+    },
+    {
+      "type": "website",
+      "url": "https://wolf-yuan.dev"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/wolf.yuan/"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://gitlab.com/wolf-yuan"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/669194742218752070"
+    },
+    {
+      "type": "threads",
+      "url": "https://www.threads.com/@wolf.yuan"
+    }
+  ]
 }
