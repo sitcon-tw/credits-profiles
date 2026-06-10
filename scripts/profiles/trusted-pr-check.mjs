@@ -14,7 +14,7 @@ export const TRUSTED_PROFILE_CHECKLIST_COMMENT_MARKER = '<!-- sitcon-credits-pro
 export const PUBLIC_EMAIL_ACKNOWLEDGEMENT =
   '我理解 public_email 會公開顯示在網路上，可能被搜尋引擎、爬蟲或第三方保存。';
 export const CONTENT_SAFETY_ACKNOWLEDGEMENT =
-  '我確認這份 profile 沒有放入惡意 HTML、JavaScript、刻意破壞頁面顯示的內容，或任何可能造成 SITCON 夥伴困擾的資料；我理解若發生這類行為，維護者可以拒絕信任這次自助提交並改由人工審查。';
+  '我確認這份 profile 沒有放入會破壞頁面或造成 SITCON 夥伴困擾的內容；若有疑慮，維護者可以改由人工審查。';
 
 async function runCli(argv = process.argv.slice(2), env = process.env) {
   const options = parseArgs(argv);

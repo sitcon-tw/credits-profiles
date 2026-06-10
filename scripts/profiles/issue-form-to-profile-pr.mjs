@@ -44,7 +44,9 @@ export const LINK_FORM_FIELDS = [
 export const CUSTOM_LINK_LABEL_FIELD = '自訂連結名稱';
 export const CUSTOM_LINK_URL_FIELD = '自訂連結 URL';
 export const ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT =
-  '我確認這份個人公開資料沒有放入惡意 HTML、JavaScript、刻意破壞頁面顯示的內容，或任何可能造成 SITCON 夥伴困擾的資料；我理解若發生這類行為，維護者可以拒絕信任這次自助提交並改由人工審查。';
+  '我確認這份個人公開資料沒有放入會破壞頁面或造成 SITCON 夥伴困擾的內容；若有疑慮，維護者可以改由人工審查。';
+export const HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT =
+  '我理解歷史貢獻紀錄連結需要維護者確認；送出資料不代表已完成確認。';
 
 const REQUIRED_ACKNOWLEDGEMENTS = [
   '我確認這是我自願公開的個人資料。',
@@ -52,7 +54,7 @@ const REQUIRED_ACKNOWLEDGEMENTS = [
   '我沒有放入未經本人或他人同意公開的 email 或社群帳號。',
   PUBLIC_EMAIL_ACKNOWLEDGEMENT,
   ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT,
-  '我理解這個 PR 不會自動修改 SITCON Credits 的歷史貢獻紀錄，也不會自動完成身份合併。',
+  HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT,
 ];
 
 export function buildProfileRequestPullRequest({ issue, profileExists = false }) {
@@ -237,7 +239,7 @@ function formatPullRequestBody({ issue, updateType, profile, historicalHints }) 
     checkbox('我沒有放入未經本人或他人同意公開的 email 或社群帳號。', true),
     checkbox(PUBLIC_EMAIL_ACKNOWLEDGEMENT, true),
     checkbox(CONTENT_SAFETY_ACKNOWLEDGEMENT, true),
-    checkbox('我理解這個 PR 不會自動修改 SITCON Credits 的歷史貢獻紀錄，也不會自動完成身份合併。', true),
+    checkbox(HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT, true),
     '',
     '## 貢獻紀錄標記網址（選填）',
     '',

@@ -70,7 +70,7 @@ test('trusted checklist comment includes a stable marker and issue messages', ()
 
   assert.match(comment, /sitcon-credits-profile-trusted-checklist/);
   assert.match(comment, /public_email/);
-  assert.match(comment, /惡意 HTML/);
+  assert.match(comment, /會破壞頁面/);
 });
 
 test('trusted validation comment explains profile JSON fixes', () => {

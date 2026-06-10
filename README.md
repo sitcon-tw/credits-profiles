@@ -2,7 +2,7 @@
 
 這個儲存庫保存 SITCON Credits 貢獻者自願公開顯示的個人公開資料。曾經參與 SITCON 相關活動的工作人員或講者，可以在這裡提供偏好的公開顯示名稱、簡介、頭像、公開 email 與公開連結，讓 SITCON Credits 的公開索引頁呈現得更完整。
 
-這裡不新增或修改歷史貢獻紀錄，也不會自動完成身份連結。歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 的 canonical Google Sheet 維護。你在這裡送出的資料是公開 profile 內容；若你想讓某些歷史紀錄連到自己的 profile，請提供線索給維護者人工確認。
+這裡主要保存你自願公開的 profile 內容。歷史活動紀錄、角色、來源 URL 與身份連結審核仍由 [SITCON Credits](https://github.com/sitcon-tw/credits) 的 canonical Google Sheet 維護；若你想讓某些歷史紀錄連到自己的 profile，請提供線索給維護者確認。
 
 ## 開始填寫
 
@@ -14,7 +14,7 @@
 
 表單送出後會建立公開的 GitHub issue。請只填你本人願意公開顯示在 SITCON Credits 的資料；不知道要不要公開的欄位可以留空。
 
-這是一般填寫者建議使用的入口。它不需要你手動 fork repository、編輯 JSON 或建立 Pull Request；系統會根據表單內容建立或更新 profile PR。
+這是一般填寫者建議使用的入口。它不需要你手動 fork repository、編輯 JSON 或建立 Pull Request；系統會根據表單內容建立或更新 profile PR。若資料可以處理，系統通常不會只為了提供 PR 連結而另外留言；需要你修正、等待維護者確認，或公開頁面更新完成時，才會回到 issue 通知。
 
 ## 可以填哪些資料
 
@@ -24,7 +24,7 @@
 | 公開簡介 | 選填。一句到幾句自願公開的簡短介紹。 |
 | 頭像 | 選填。留空時會使用 GitHub 公開頭像；想更換頭像時，建議先更新 GitHub 帳號的大頭貼。 |
 | 公開 email | 選填。只有願意讓 email 公開顯示、被搜尋引擎或第三方保存時才填。 |
-| 公開連結 | 選填。GitHub、個人網站、Blog、Instagram、Telegram、LinkedIn、Facebook、YouTube、Slides、GitLab、Discord、Mastodon、Threads、X 或自訂連結。 |
+| 公開連結 | 選填。選最重要的幾個即可，最多 8 筆。可填 GitHub、個人網站、Blog、Instagram、Telegram、LinkedIn、Facebook、YouTube、Slides、GitLab、Discord、Mastodon、Threads、X 或自訂連結。 |
 | 標記網址 | 選填。若你已在 SITCON Credits 網頁標記可能是在記錄自己的公開紀錄，可以把標記後的頁面網址提供給維護者人工確認。 |
 
 請不要填私人 email、電話、地址、證件資料、內部聯絡方式、未經同意公開的他人資料，或任何你不確定是否能公開的內容。
@@ -33,13 +33,14 @@
 
 1. `SITCON Credits Assistant` 會讀取表單內容。
 2. 系統會使用你送出 issue 的 GitHub 帳號，建立或更新 `profiles/<GitHub username>.json`。
-3. 系統會建立 Pull Request，並在原本的 issue 留下 PR 連結。
-4. 如果格式有問題，assistant 會在 issue 或 PR 留言提醒；你可以直接編輯 issue 內容或等待維護者協助。
-5. PR 合併後，issue 會因為 PR 關聯自動關閉。
+3. 系統會建立或更新 Pull Request；若一切正常，通常不會只為了提供 PR 連結而回覆 issue。
+4. 如果表單內容有問題，assistant 會在 issue 留言提醒；你可以直接編輯 issue 內容，系統會自動重試。
+5. 如果你提供了貢獻紀錄標記網址，而且需要維護者確認歷史紀錄連結，assistant 會回到 issue 留言說明等待狀態。
+6. PR 合併並完成 SITCON Credits 公開頁面更新後，assistant 會在 issue 留下公開頁面連結，然後關閉 issue。
 
-自動建立 PR、通過檢查或合併 profile，都不代表身份連結已經核准，也不代表 Google Sheets 的歷史貢獻紀錄已經修改。
+自動建立 PR、通過檢查或合併 profile，都不代表歷史貢獻紀錄連結已經完成確認。若需要把歷史紀錄連到你的 profile，仍要由維護者確認。
 
-如果你想請維護者確認哪些歷史貢獻紀錄可能是在記錄你，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)，再把標記後的頁面網址帶進表單。這只是提供審核線索，不會自動修改主資料。
+如果你想請維護者確認哪些歷史貢獻紀錄可能是在記錄你，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)，再把標記後的頁面網址帶進表單。這只是提供審核線索；確認後才會更新主資料。
 
 ## 頭像補充
 
