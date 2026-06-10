@@ -61,6 +61,7 @@ flowchart TD
 - profile JSON 符合 schema 與資料最小化規則。
 - PR template 中必要的公開資料與內容安全確認事項已勾選。
 - `sitcon-tw/credits` canonical Google Sheets 的 `appearances.github_username` 已經有這個 username。
+- PR 或 linked issue 內沒有仍待維護者確認並寫入 Sheet 的 `site:` 標記網址。
 - 同一個 head SHA 的 `Check profile PR scope` 與 `Check trusted profile PR` 都成功。
 
 自動合併只代表 profile PR 符合低風險自助更新條件。它不代表 workflow 建立了新的身份連結，也不代表它處理了歷史資料更正、profile 刪除、profile rename 或隱私政策例外。

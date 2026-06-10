@@ -11,7 +11,7 @@ export const MISSING_APPEARANCE_COMMENT_MARKER = '<!-- sitcon-credits-profile-ap
 export const CREDITS_ASSISTANT_BOT_LOGIN = 'sitcon-credits-assistant[bot]';
 const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 
-export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns, sourceIssue = null }) {
+export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns, sourceIssue = null, claimPlan = null }) {
   const checkSummary = summarizeRequiredChecks(checkRuns, REQUIRED_CHECK_NAMES);
   if (!checkSummary.ready) {
     return { action: 'wait', reason: 'required-checks-pending', checkSummary };
@@ -35,6 +35,15 @@ export function decideProfileAutoReview({ pullRequest, files, exportPayload, che
   }
 
   const username = profileUsernames[0];
+  if (isBlockingClaimPlan(claimPlan)) {
+    return {
+      action: 'skip',
+      reason: claimPlan.status === 'ready' ? 'profile-claim-confirmation-required' : 'profile-claim-needs-maintainer-review',
+      username,
+      claimPlan,
+    };
+  }
+
   const appearanceUsernames = collectAppearanceUsernames(exportPayload);
   if (!appearanceUsernames.has(username.toLowerCase())) {
     return {
@@ -52,6 +61,10 @@ export function decideProfileAutoReview({ pullRequest, files, exportPayload, che
     reviewBody: formatApprovalReviewBody(username),
     mergeTitle: formatMergeTitle(username),
   };
+}
+
+export function isBlockingClaimPlan(claimPlan) {
+  return claimPlan?.status === 'ready' || claimPlan?.status === 'blocked';
 }
 
 export function profilePullRequestHeadMatches(pullRequest, expectedHeadSha) {
@@ -170,6 +183,9 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
   const files = await githubPaginate(apiToken, `GET /repos/${options.owner}/${options.repo}/pulls/${options.pullNumber}/files`);
   const sourceIssue = await fetchLinkedProfileRequestIssue(apiToken, options, pullRequest);
   const exportPayload = JSON.parse(await readFile(options.exportPath, 'utf8'));
+  const claimPlan = options.claimPlanPath
+    ? JSON.parse(await readFile(options.claimPlanPath, 'utf8'))
+    : null;
 
   const deadline = Date.now() + options.waitMs;
   let decision;
@@ -184,6 +200,7 @@ async function runCli(argv = process.argv.slice(2), env = process.env) {
       exportPayload,
       checkRuns: checks.check_runs ?? [],
       sourceIssue,
+      claimPlan,
     });
 
     if (decision.action !== 'wait' || Date.now() >= deadline) {
@@ -288,6 +305,11 @@ function parseArgs(argv) {
     }
     if (arg === '--export') {
       options.exportPath = readNextArg(argv, index, arg);
+      index += 1;
+      continue;
+    }
+    if (arg === '--claim-plan') {
+      options.claimPlanPath = readNextArg(argv, index, arg);
       index += 1;
       continue;
     }

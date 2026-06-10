@@ -14,6 +14,7 @@ import {
   hasProfileRequestLabel,
   isAssistantMissingAppearanceComment,
   isAssistantAuthoredPullRequest,
+  isBlockingClaimPlan,
   isPullRequestNotReadyToMergeGraphqlError,
   profilePullRequestHeadMatches,
   summarizeRequiredChecks,
@@ -94,6 +95,60 @@ test('decideProfileAutoReview approves self-service profile already used in appe
 
   assert.equal(decision.action, 'approve');
   assert.equal(decision.username, 'octocat');
+});
+
+test('decideProfileAutoReview skips auto-merge while site claim confirmation is pending', () => {
+  const decision = decideProfileAutoReview({
+    pullRequest: pullRequest('octocat'),
+    files: [profileFile('octocat')],
+    exportPayload: exportPayload(['Octocat']),
+    checkRuns: successfulChecks(),
+    claimPlan: {
+      status: 'ready',
+      reason: 'ready',
+      username: 'octocat',
+      updates: [{ rowNumber: 2 }],
+    },
+  });
+
+  assert.equal(decision.action, 'skip');
+  assert.equal(decision.reason, 'profile-claim-confirmation-required');
+});
+
+test('decideProfileAutoReview skips auto-merge when site claims need maintainer review', () => {
+  const decision = decideProfileAutoReview({
+    pullRequest: pullRequest('octocat'),
+    files: [profileFile('octocat')],
+    exportPayload: exportPayload(['Octocat']),
+    checkRuns: successfulChecks(),
+    claimPlan: {
+      status: 'blocked',
+      reason: 'claim-token-mismatch',
+      username: 'octocat',
+      updates: [],
+    },
+  });
+
+  assert.equal(decision.action, 'skip');
+  assert.equal(decision.reason, 'profile-claim-needs-maintainer-review');
+});
+
+test('decideProfileAutoReview approves when site claim updates are already applied', () => {
+  const decision = decideProfileAutoReview({
+    pullRequest: pullRequest('octocat'),
+    files: [profileFile('octocat')],
+    exportPayload: exportPayload(['Octocat']),
+    checkRuns: successfulChecks(),
+    claimPlan: {
+      status: 'not_applicable',
+      reason: 'claim-updates-already-applied',
+      username: 'octocat',
+      updates: [],
+    },
+  });
+
+  assert.equal(decision.action, 'approve');
+  assert.equal(decision.reason, 'profile-username-present-in-appearances');
 });
 
 test('decideProfileAutoReview comments when profile username is not used in appearances', () => {
@@ -233,6 +288,13 @@ test('getDeletableProfileRequestBranch only accepts same-repo profile request br
 
 test('formatMergeTitle names the profile update', () => {
   assert.equal(formatMergeTitle('octocat'), 'chore: update octocat profile');
+});
+
+test('isBlockingClaimPlan only blocks pending or failed claim plans', () => {
+  assert.equal(isBlockingClaimPlan({ status: 'ready' }), true);
+  assert.equal(isBlockingClaimPlan({ status: 'blocked' }), true);
+  assert.equal(isBlockingClaimPlan({ status: 'not_applicable' }), false);
+  assert.equal(isBlockingClaimPlan(null), false);
 });
 
 test('formatGraphqlMergeMethod converts merge method to enum value', () => {
