@@ -1,0 +1,37 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "IU",
+  "bio": "第二次跳志工就當夏令營總召的傻人，但也因此找到人生的另一半；同時後面還有當過資訊組長與主年會總召。\n社群是我人生中重要的一段旅程，很高興在這裡跟很多的朋友一起共事與成長！\n主業是軟體工程師，寫過前後端 APP SRE，並在隔壁坑 COSCUP 開源人年會 當總召，有興趣的朋友也可以找我聊聊。",
+  "avatar_url": "https://github.com/yoyo930021.png?size=512",
+  "public_email": "yoyo930021@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/yoyo930021"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/yoyo930021"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/yoyo930021"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/yoyo930021"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/yoyo930021"
+    },
+    {
+      "type": "mastodon",
+      "url": "https://mas.to/@yoyo930021"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/yoyo930021"
+    }
+  ]
+}
