@@ -99,11 +99,11 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 `credits-profiles` 不保存 canonical Google Sheets credentials，也不直接部署 GitHub Pages。需要讀取 canonical appearances、同步 `people` helper sheet 或重建 Pages 的動作，都 dispatch 到 [`sitcon-tw/credits`](https://github.com/sitcon-tw/credits) 執行。
 
-有三個跨 repo dispatch：
+有四個跨 repo dispatch：
 
 - `review-profile-pr`：由 `Trusted profile review` 送出，請主 repo 根據 canonical appearances 決定是否核准、合併或留言。
 - `apply-profile-claims`：由 `Confirm profile claim links` 在維護者勾選 claim confirmation comment 的確認 checkbox 後送出，請主 repo 重新驗證 PR 標記網址與 canonical Sheet，確認後才更新 `appearances.github_username`。
-- `sync-people-from-profiles`：由 `Sync credits people helper` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。
+- `sync-people-from-profiles`：由 `Sync credits profile data` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。
 - `rebuild-pages-from-profiles`：由 `Sync credits profile data` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 重新匯出 canonical Sheet、讀取最新 `credits-profiles`，並部署 GitHub Pages。
 
 這些 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
