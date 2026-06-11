@@ -71,43 +71,13 @@ jobs:
 
       - name: Comment profile request problem
         if: steps.build.outcome == 'failure'
-        uses: actions/github-script@v9
-        env:
-          PROFILE_REQUEST_COMMENT: ${{ runner.temp }}/profile-request-comment.md
+        uses: ./.github/actions/sticky-comment
         with:
           github-token: ${{ steps.credits-assistant-token.outputs.token }}
-          script: |
-            const fs = require('node:fs');
-            const marker = '<!-- sitcon-credits-profile-request -->';
-            if (!fs.existsSync(process.env.PROFILE_REQUEST_COMMENT)) {
-              return;
-            }
-            const body = fs.readFileSync(process.env.PROFILE_REQUEST_COMMENT, 'utf8');
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              per_page: 100,
-            });
-            const existing = comments.find((comment) =>
-              ['github-actions[bot]', 'sitcon-credits[bot]'].includes(comment.user?.login) &&
-              comment.body?.includes(marker)
-            );
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-              return;
-            }
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body,
-            });
+          marker: '<!-- sitcon-credits-profile-request -->'
+          mode: upsert
+          body-file: ${{ runner.temp }}/profile-request-comment.md
+          issue-number: ${{ github.event.issue.number }}
 
       - name: Stop after invalid request
         if: steps.build.outcome == 'failure'

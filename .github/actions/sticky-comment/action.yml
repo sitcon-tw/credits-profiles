@@ -1,0 +1,102 @@
+name: Sticky marker comment
+description: Upsert or clear a single bot comment identified by a hidden marker on an issue or pull request.
+
+inputs:
+  github-token:
+    description: Token used to list, create, update, or delete the comment.
+    required: true
+  marker:
+    description: Hidden HTML marker that identifies the sticky comment.
+    required: true
+  mode:
+    description: upsert to create or update the comment from body-file, clear to delete matching comments.
+    required: true
+  body-file:
+    description: Path to the comment body file. Required for upsert; if the file does not exist, upsert is skipped.
+    required: false
+    default: ''
+  issue-number:
+    description: Issue or pull request number that owns the comment.
+    required: true
+  bot-logins:
+    description: Comma-separated bot logins whose comments may be updated or deleted.
+    required: false
+    default: github-actions[bot],sitcon-credits[bot]
+
+runs:
+  using: composite
+  steps:
+    - name: Apply sticky comment
+      uses: actions/github-script@v9
+      env:
+        STICKY_COMMENT_MARKER: ${{ inputs.marker }}
+        STICKY_COMMENT_MODE: ${{ inputs.mode }}
+        STICKY_COMMENT_BODY_FILE: ${{ inputs.body-file }}
+        STICKY_COMMENT_ISSUE_NUMBER: ${{ inputs.issue-number }}
+        STICKY_COMMENT_BOT_LOGINS: ${{ inputs.bot-logins }}
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const fs = require('node:fs');
+          const marker = process.env.STICKY_COMMENT_MARKER;
+          const mode = process.env.STICKY_COMMENT_MODE;
+          const issueNumber = Number(process.env.STICKY_COMMENT_ISSUE_NUMBER);
+          const commentBotLogins = new Set(
+            process.env.STICKY_COMMENT_BOT_LOGINS.split(',')
+              .map((login) => login.trim())
+              .filter(Boolean),
+          );
+
+          if (mode !== 'upsert' && mode !== 'clear') {
+            core.setFailed(`Unknown sticky comment mode: ${mode}`);
+            return;
+          }
+
+          let body = '';
+          if (mode === 'upsert') {
+            const bodyPath = process.env.STICKY_COMMENT_BODY_FILE;
+            if (!bodyPath || !fs.existsSync(bodyPath)) {
+              return;
+            }
+            body = fs.readFileSync(bodyPath, 'utf8');
+          }
+
+          const comments = await github.paginate(github.rest.issues.listComments, {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issueNumber,
+            per_page: 100,
+          });
+          const matches = comments.filter((comment) =>
+            commentBotLogins.has(comment.user?.login) &&
+            comment.body?.includes(marker)
+          );
+
+          if (mode === 'clear') {
+            for (const comment of matches) {
+              await github.rest.issues.deleteComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: comment.id,
+              });
+            }
+            return;
+          }
+
+          const existing = matches[0];
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: existing.id,
+              body,
+            });
+            return;
+          }
+
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issueNumber,
+            body,
+          });

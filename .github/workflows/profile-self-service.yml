@@ -53,78 +53,22 @@ jobs:
 
       - name: Comment profile scope reminder
         if: steps.scope_check.outcome == 'failure'
-        uses: actions/github-script@v9
-        env:
-          PROFILE_SCOPE_COMMENT: ${{ runner.temp }}/profile-scope-comment.md
+        uses: ./.github/actions/sticky-comment
         with:
           github-token: ${{ steps.credits-assistant-token.outputs.token }}
-          script: |
-            const fs = require('node:fs');
-            const marker = '<!-- sitcon-credits-profile-scope-check -->';
-            const commentBotLogins = new Set(['github-actions[bot]', 'sitcon-credits[bot]']);
-            const bodyPath = process.env.PROFILE_SCOPE_COMMENT;
-            if (!fs.existsSync(bodyPath)) {
-              return;
-            }
-
-            const body = fs.readFileSync(bodyPath, 'utf8');
-            const pr = context.payload.pull_request;
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              per_page: 100,
-            });
-            const existing = comments.find((comment) =>
-              commentBotLogins.has(comment.user?.login) &&
-              comment.body?.includes(marker)
-            );
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-              return;
-            }
-
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              body,
-            });
+          marker: '<!-- sitcon-credits-profile-scope-check -->'
+          mode: upsert
+          body-file: ${{ runner.temp }}/profile-scope-comment.md
+          issue-number: ${{ github.event.pull_request.number }}
 
       - name: Clear profile scope reminder
         if: steps.scope_check.outcome == 'success'
-        uses: actions/github-script@v9
+        uses: ./.github/actions/sticky-comment
         with:
           github-token: ${{ steps.credits-assistant-token.outputs.token }}
-          script: |
-            const marker = '<!-- sitcon-credits-profile-scope-check -->';
-            const commentBotLogins = new Set(['github-actions[bot]', 'sitcon-credits[bot]']);
-            const pr = context.payload.pull_request;
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: pr.number,
-              per_page: 100,
-            });
-
-            for (const comment of comments) {
-              if (
-                commentBotLogins.has(comment.user?.login) &&
-                comment.body?.includes(marker)
-              ) {
-                await github.rest.issues.deleteComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: comment.id,
-                });
-              }
-            }
+          marker: '<!-- sitcon-credits-profile-scope-check -->'
+          mode: clear
+          issue-number: ${{ github.event.pull_request.number }}
 
       - name: Fail profile scope
         if: steps.scope_check.outcome == 'failure'
