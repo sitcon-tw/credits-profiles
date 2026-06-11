@@ -321,7 +321,7 @@ test('isPullRequestNotReadyToMergeGraphqlError detects merge-state errors only',
 test('assistant missing appearance comment matching ignores legacy user comments', () => {
   const assistantComment = {
     id: 2,
-    user: { login: 'sitcon-credits-assistant[bot]' },
+    user: { login: 'sitcon-credits[bot]' },
     body: formatMissingAppearanceComment('octocat'),
   };
   const comments = [
@@ -353,9 +353,9 @@ test('assistant missing appearance comment matching supports configured app logi
 test('assistant missing appearance comment matching supports bot suffix variants', () => {
   const assistantComment = {
     id: 4,
-    user: { login: 'sitcon-credits-assistant[bot]' },
+    user: { login: 'configured-app[bot]' },
     body: formatMissingAppearanceComment('octocat'),
   };
 
-  assert.equal(isAssistantMissingAppearanceComment(assistantComment, 'sitcon-credits-assistant'), true);
+  assert.equal(isAssistantMissingAppearanceComment(assistantComment, 'configured-app'), true);
 });

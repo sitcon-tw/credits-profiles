@@ -8,7 +8,7 @@ import {
 
 export const REQUIRED_CHECK_NAMES = ['Check trusted profile PR', 'Check profile PR scope'];
 export const MISSING_APPEARANCE_COMMENT_MARKER = '<!-- sitcon-credits-profile-appearance-check -->';
-export const CREDITS_ASSISTANT_BOT_LOGIN = 'sitcon-credits-assistant[bot]';
+export const CREDITS_ASSISTANT_BOT_LOGIN = 'sitcon-credits[bot]';
 const GITHUB_USERNAME_PATTERN = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/;
 
 export function decideProfileAutoReview({ pullRequest, files, exportPayload, checkRuns, sourceIssue = null, claimPlan = null }) {
@@ -392,8 +392,7 @@ export function isAssistantMissingAppearanceComment(comment, assistantLogin = CR
 export function assistantCommentLogins(assistantLogin = CREDITS_ASSISTANT_BOT_LOGIN) {
   const logins = new Set([
     CREDITS_ASSISTANT_BOT_LOGIN,
-    'sitcon-credits',
-    'sitcon-credits[bot]',
+    stripBotSuffix(CREDITS_ASSISTANT_BOT_LOGIN),
   ]);
   for (const login of [assistantLogin, stripBotSuffix(assistantLogin)]) {
     if (!login) {
