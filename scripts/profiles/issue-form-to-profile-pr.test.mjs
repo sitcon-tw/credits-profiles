@@ -115,6 +115,16 @@ test('issue form labels stay aligned with parser labels', () => {
   }
 });
 
+test('profile issue request workflow only processes meaningful issue events', () => {
+  const workflowText = readFileSync(path.join(repoRoot, '.github/workflows/profile-issue-request.yml'), 'utf8');
+
+  assert.match(workflowText, /types:\n\s+- opened\n\s+- edited\n\s+- reopened/u);
+  assert.doesNotMatch(workflowText, /^\s+- labeled$/mu);
+  assert.match(workflowText, /contains\(github\.event\.issue\.labels\.\*\.name, 'profile-request'\)/u);
+  assert.match(workflowText, /github\.event\.action != 'edited'/u);
+  assert.match(workflowText, /contains\(toJSON\(github\.event\.changes\), '"body"'\)/u);
+});
+
 test('buildAvatarUrl defaults to GitHub public avatar', () => {
   const fields = parseIssueFormBody(formBody());
 
