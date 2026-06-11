@@ -1,0 +1,47 @@
+name: Collect profile PR context
+description: Collect the PR changed files and the linked profile-request issue into runner temp JSON files for trusted base-repository checks.
+
+runs:
+  using: composite
+  steps:
+    - name: Collect changed files
+      uses: actions/github-script@v9
+      env:
+        PROFILE_FILES_JSON: ${{ runner.temp }}/profile-files.json
+      with:
+        script: |
+          const pr = context.payload.pull_request;
+          const files = await github.paginate(github.rest.pulls.listFiles, {
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: pr.number,
+            per_page: 100,
+          });
+          const fs = require('node:fs');
+          fs.writeFileSync(process.env.PROFILE_FILES_JSON, JSON.stringify(files, null, 2));
+
+    - name: Collect linked profile request issue
+      uses: actions/github-script@v9
+      env:
+        PROFILE_SOURCE_ISSUE_JSON: ${{ runner.temp }}/profile-source-issue.json
+      with:
+        script: |
+          const fs = require('node:fs');
+          const pr = context.payload.pull_request;
+          const match = pr.body?.match(/\b(?:close[sd]?|fix(?:e[sd])?|resolve[sd]?|refs?)\s+#(\d+)\b/i);
+          if (!match) {
+            fs.writeFileSync(process.env.PROFILE_SOURCE_ISSUE_JSON, 'null');
+            return;
+          }
+
+          const issue_number = Number(match[1]);
+          const { data: issue } = await github.rest.issues.get({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number,
+          });
+          if (!issue.labels.some((label) => label.name === 'profile-request')) {
+            fs.writeFileSync(process.env.PROFILE_SOURCE_ISSUE_JSON, 'null');
+            return;
+          }
+          fs.writeFileSync(process.env.PROFILE_SOURCE_ISSUE_JSON, JSON.stringify(issue, null, 2));
