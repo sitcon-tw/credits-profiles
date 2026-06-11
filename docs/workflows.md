@@ -20,6 +20,8 @@ flowchart TD
 
 表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。成功建立或更新 PR 時，系統不會只為了提供 PR 連結而回覆 issue；若需要等待維護者確認歷史貢獻紀錄連結，系統會用等待確認留言通知建立者。Pages 部署完成後，系統會回到原 issue 留下公開頁面連結，然後關閉 issue。
 
+`Profile issue request` 只處理新建立、重新開啟，或表單內容被編輯的 `profile-request` issue。只新增 label，或只是由系統把 issue 標題改成 `[個人公開資料] <github_username>`，不會重新產生 PR、重送 comment 或觸發後續檢查。若貢獻者要修正表單內容，直接編輯 issue body 即可讓 workflow 重新整理同一個 profile request branch 與 PR。
+
 若貢獻者想請維護者確認哪些公開貢獻紀錄可能是在記錄自己，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)。頁面會產生可帶入 issue form 的標記網址；這個網址只會出現在 issue 與 PR 說明中，供維護者 review canonical appearances，不會由 `credits-profiles` workflow 自動改寫歷史紀錄或完成身份合併。
 
 因為 PR 作者會是 `sitcon-credits[bot]`，不是填表者本人，`Check profile PR scope` 和 `Check trusted profile PR` 會在符合下列條件時，改用原始 issue 作者作為自助流程 owner：
