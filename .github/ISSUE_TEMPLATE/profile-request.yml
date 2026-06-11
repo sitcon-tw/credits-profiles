@@ -179,11 +179,7 @@ body:
     attributes:
       label: 公開資料確認
       options:
-        - label: 我確認這是我自願公開的個人資料。
-          required: true
-        - label: 我沒有放入私人 email、電話、地址、證件資料或內部聯絡資訊。
-          required: true
-        - label: 我沒有放入未經本人或他人同意公開的 email 或社群帳號。
+        - label: 我確認這是我自願公開的個人資料，沒有其他機敏、未經本人或他人同意公開的資訊。
           required: true
         - label: 我理解 public_email 會公開顯示在網路上，可能被搜尋引擎、爬蟲或第三方保存。
           required: true

@@ -47,11 +47,11 @@ export const ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT =
   '我確認這份個人公開資料沒有放入會破壞頁面或造成 SITCON 夥伴困擾的內容；若有疑慮，維護者可以改由人工審查。';
 export const HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT =
   '我理解歷史貢獻紀錄連結需要維護者確認；送出資料不代表已完成確認。';
+export const VOLUNTARY_PUBLIC_PROFILE_ACKNOWLEDGEMENT =
+  '我確認這是我自願公開的個人資料，沒有其他機敏、未經本人或他人同意公開的資訊。';
 
 const REQUIRED_ACKNOWLEDGEMENTS = [
-  '我確認這是我自願公開的個人資料。',
-  '我沒有放入私人 email、電話、地址、證件資料或內部聯絡資訊。',
-  '我沒有放入未經本人或他人同意公開的 email 或社群帳號。',
+  VOLUNTARY_PUBLIC_PROFILE_ACKNOWLEDGEMENT,
   PUBLIC_EMAIL_ACKNOWLEDGEMENT,
   ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT,
   HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT,
@@ -234,9 +234,7 @@ function formatPullRequestBody({ issue, updateType, profile, historicalHints }) 
     '',
     '## 確認事項',
     '',
-    checkbox('我確認這是我自願公開的個人資料。', true),
-    checkbox('我沒有放入私人 email、電話、地址、證件資料或內部聯絡資訊。', true),
-    checkbox('我沒有放入未經本人或他人同意公開的 email 或社群帳號。', true),
+    checkbox(VOLUNTARY_PUBLIC_PROFILE_ACKNOWLEDGEMENT, true),
     checkbox(PUBLIC_EMAIL_ACKNOWLEDGEMENT, true),
     checkbox(CONTENT_SAFETY_ACKNOWLEDGEMENT, true),
     checkbox(HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT, true),

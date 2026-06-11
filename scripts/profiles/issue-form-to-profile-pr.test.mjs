@@ -14,6 +14,7 @@ import {
   FORM_LABELS,
   HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT,
   ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT,
+  VOLUNTARY_PUBLIC_PROFILE_ACKNOWLEDGEMENT,
   buildAvatarUrl,
   collectLinks,
   buildProfileRequestPullRequest,
@@ -47,9 +48,7 @@ function formBody(overrides = {}) {
     [CUSTOM_LINK_URL_FIELD]: 'https://example.com',
     [FORM_LABELS.historicalHints]: '',
     [FORM_LABELS.acknowledgements]: [
-      '- [x] 我確認這是我自願公開的個人資料。',
-      '- [x] 我沒有放入私人 email、電話、地址、證件資料或內部聯絡資訊。',
-      '- [x] 我沒有放入未經本人或他人同意公開的 email 或社群帳號。',
+      `- [x] ${VOLUNTARY_PUBLIC_PROFILE_ACKNOWLEDGEMENT}`,
       `- [x] ${PUBLIC_EMAIL_ACKNOWLEDGEMENT}`,
       `- [x] ${ISSUE_FORM_CONTENT_SAFETY_ACKNOWLEDGEMENT}`,
       `- [x] ${HISTORY_LINK_REVIEW_ACKNOWLEDGEMENT}`,
@@ -279,7 +278,7 @@ test('formatFailureComment tells issue authors to edit the issue and retry', () 
 test('buildProfileRequestPullRequest rejects edited issue body with missing acknowledgement', () => {
   assert.throws(
     () => buildProfileRequestPullRequest({
-      issue: issue(formBody({ [FORM_LABELS.acknowledgements]: '- [x] 我確認這是我自願公開的個人資料。' })),
+      issue: issue(formBody({ [FORM_LABELS.acknowledgements]: `- [x] ${VOLUNTARY_PUBLIC_PROFILE_ACKNOWLEDGEMENT}` })),
     }),
     /請保留並勾選所有公開資料確認事項/,
   );
