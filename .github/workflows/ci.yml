@@ -21,8 +21,6 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v6
-        with:
-          version: 10.18.0
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -41,17 +39,3 @@ jobs:
 
       - name: Validate site profiles
         run: pnpm site-profiles:validate
-
-      - name: Save PR metadata
-        if: github.event_name == 'pull_request'
-        run: |
-          mkdir -p "$RUNNER_TEMP/profile-pr"
-          printf '%s\n' '${{ github.event.pull_request.number }}' > "$RUNNER_TEMP/profile-pr/number"
-
-      - name: Upload PR metadata
-        if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
-        with:
-          name: profile-pr-metadata
-          path: ${{ runner.temp }}/profile-pr/number
-          retention-days: 1
