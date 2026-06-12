@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Sciuridae 松鼠",
+  "bio": "",
+  "avatar_url": "https://gravatar.com/avatar/60ce6b00bae88e0ff15c9480a9ce92f5",
+  "public_email": "sciuridae@sciuridae.me",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Sciuridae0603"
+    },
+    {
+      "type": "website",
+      "url": "https://sciuridae.me"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/Sciuridae"
+    }
+  ]
+}
