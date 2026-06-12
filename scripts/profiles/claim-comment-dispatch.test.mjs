@@ -41,10 +41,47 @@ test('isApplyCheckboxChecked detects checked confirmation item only', () => {
 
 test('parseClaimMetadata reads hidden claim metadata', () => {
   assert.deepEqual(parseClaimMetadata(commentBody({ checked: true })), {
+    mode: 'pull_request',
     pull_number: 60,
+    issue_number: undefined,
     head_sha: 'head-sha',
     plan_hash: 'hash',
     username: 'octocat',
+  });
+});
+
+test('buildApplyClaimsDispatch creates issue-mode apply workflow payload', () => {
+  const body = [
+    '<!-- sitcon-credits-profile-claim-confirmation -->',
+    '<!-- sitcon-credits-profile-claim: {"mode":"issue","issue_number":82,"plan_hash":"hash","username":"octocat"} -->',
+    '- [x] 我已確認上述 1 筆歷史貢獻連結，請更新 SITCON Credits canonical Google Sheets。 <!-- sitcon-credits-profile-claim-apply -->',
+  ].join('\n');
+  const result = buildApplyClaimsDispatch({
+    action: 'edited',
+    issue: {
+      number: 82,
+    },
+    comment: {
+      id: 456,
+      body,
+    },
+    repository: {
+      name: 'credits-profiles',
+      owner: { login: 'sitcon-tw' },
+    },
+    sender: { login: 'maintainer' },
+  });
+
+  assert.deepEqual(result, {
+    dispatch: true,
+    reason: 'ready',
+    payload: {
+      source_repository: 'sitcon-tw/credits-profiles',
+      issue_number: 82,
+      username: 'octocat',
+      confirmation_comment_id: 456,
+      requested_by: 'maintainer',
+    },
   });
 });
 

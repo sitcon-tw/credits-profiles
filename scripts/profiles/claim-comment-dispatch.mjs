@@ -22,9 +22,6 @@ export function buildApplyClaimsDispatch(event) {
   if (event?.action !== 'edited') {
     return { dispatch: false, reason: 'not-comment-edited' };
   }
-  if (!event?.issue?.pull_request) {
-    return { dispatch: false, reason: 'not-pull-request-comment' };
-  }
 
   const body = String(event?.comment?.body ?? '');
   if (!body.includes(CLAIM_COMMENT_MARKER)) {
@@ -37,6 +34,31 @@ export function buildApplyClaimsDispatch(event) {
   const metadata = parseClaimMetadata(body);
   if (!metadata) {
     return { dispatch: false, reason: 'missing-claim-metadata' };
+  }
+  if (metadata.mode === 'issue') {
+    if (event?.issue?.pull_request) {
+      return { dispatch: false, reason: 'issue-mode-comment-on-pull-request' };
+    }
+    if (metadata.issue_number !== event.issue.number) {
+      return { dispatch: false, reason: 'issue-number-mismatch' };
+    }
+    if (!metadata.username) {
+      return { dispatch: false, reason: 'missing-username' };
+    }
+    return {
+      dispatch: true,
+      reason: 'ready',
+      payload: {
+        source_repository: `${event.repository.owner.login}/${event.repository.name}`,
+        issue_number: metadata.issue_number,
+        username: metadata.username,
+        confirmation_comment_id: event.comment.id,
+        requested_by: event.sender?.login ?? '',
+      },
+    };
+  }
+  if (!event?.issue?.pull_request) {
+    return { dispatch: false, reason: 'not-pull-request-comment' };
   }
   if (metadata.pull_number !== event.issue.number) {
     return { dispatch: false, reason: 'pull-number-mismatch' };
@@ -71,7 +93,9 @@ export function parseClaimMetadata(body) {
   try {
     const parsed = JSON.parse(match[1]);
     return {
-      pull_number: Number(parsed.pull_number),
+      mode: String(parsed.mode ?? 'pull_request'),
+      pull_number: parsed.pull_number === undefined ? undefined : Number(parsed.pull_number),
+      issue_number: parsed.issue_number === undefined ? undefined : Number(parsed.issue_number),
       head_sha: String(parsed.head_sha ?? ''),
       plan_hash: String(parsed.plan_hash ?? ''),
       username: String(parsed.username ?? ''),

@@ -134,6 +134,10 @@ test('profile issue request workflow avoids metadata-only duplicate updates', ()
   assert.match(workflowText, /is already up to date on/u);
   assert.match(workflowText, /compareCommitsWithBasehead/u);
   assert.match(workflowText, /comparison\.data\.ahead_by === 0/u);
+  assert.match(workflowText, /metadata\.hasSiteClaims/u);
+  assert.match(workflowText, /event_type: 'review-profile-claim-issue'/u);
+  assert.match(workflowText, /issue_number: context\.issue\.number/u);
+  assert.match(workflowText, /dispatched claim-only issue review/u);
   assert.match(workflowText, /no pull request is needed/u);
   assert.match(workflowText, /createOrUpdateFileContents/u);
 });

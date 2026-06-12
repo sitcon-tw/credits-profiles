@@ -51,7 +51,9 @@ jobs:
           client-id: ${{ vars.SITCON_CREDITS_ASSISTANT_APP_CLIENT_ID }}
           private-key: ${{ secrets.SITCON_CREDITS_ASSISTANT_APP_PRIVATE_KEY }}
           owner: sitcon-tw
-          repositories: credits-profiles
+          repositories: |
+            credits-profiles
+            credits
           permission-contents: write
           permission-issues: write
           permission-pull-requests: write
@@ -195,6 +197,20 @@ jobs:
                 basehead: `${base}...${metadata.branchName}`,
               });
               if (existingProfileText === profileText && comparison.data.ahead_by === 0) {
+                if (metadata.hasSiteClaims) {
+                  await github.rest.repos.createDispatchEvent({
+                    owner,
+                    repo: 'credits',
+                    event_type: 'review-profile-claim-issue',
+                    client_payload: {
+                      source_repository: `${owner}/${repo}`,
+                      issue_number: context.issue.number,
+                      username: metadata.username,
+                    },
+                  });
+                  core.info(`${metadata.branchName} has no profile changes; dispatched claim-only issue review`);
+                  return;
+                }
                 core.info(`${metadata.branchName} has no profile changes; no pull request is needed`);
                 return;
               }
