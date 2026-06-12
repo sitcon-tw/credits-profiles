@@ -69,7 +69,7 @@ export function buildProfileRequestPullRequest({ issue, profileExists = false })
     throw new Error('GitHub username 格式不正確。請使用 GitHub 支援的 username 格式。');
   }
   const displayName = readRequiredField(fields, FORM_LABELS.displayName);
-  const avatarUrl = buildAvatarUrl({ fields, username });
+  const avatarUrl = buildAvatarUrl({ fields, username, profileExists });
 
   const profile = {
     $schema: '../schemas/profile.schema.json',
@@ -100,10 +100,13 @@ export function buildProfileRequestPullRequest({ issue, profileExists = false })
   };
 }
 
-export function buildAvatarUrl({ fields, username }) {
+export function buildAvatarUrl({ fields, username, profileExists = false }) {
   const explicitAvatarUrl = readOptionalField(fields, FORM_LABELS.avatarUrl);
   if (explicitAvatarUrl) {
     return explicitAvatarUrl;
+  }
+  if (profileExists) {
+    return '';
   }
 
   return `https://github.com/${username}.png?size=512`;
