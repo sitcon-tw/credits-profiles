@@ -189,6 +189,15 @@ jobs:
                 body: prBody,
               });
             } else {
+              const comparison = await github.rest.repos.compareCommitsWithBasehead({
+                owner,
+                repo,
+                basehead: `${base}...${metadata.branchName}`,
+              });
+              if (existingProfileText === profileText && comparison.data.ahead_by === 0) {
+                core.info(`${metadata.branchName} has no profile changes; no pull request is needed`);
+                return;
+              }
               const created = await github.rest.pulls.create({
                 owner,
                 repo,
