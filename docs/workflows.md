@@ -13,16 +13,21 @@ flowchart TD
   assistant --> valid{"表單可轉成有效 profile JSON？"}
   valid -->|否| issueComment["在 issue 留言提醒可修正項目"]
   valid -->|是| branch["建立或更新 profile-request branch"]
-  branch --> pr["建立或更新 profile PR"]
+  branch --> hasDiff{"profile branch 有實際變更？"}
+  hasDiff -->|是| pr["建立或更新 profile PR"]
+  hasDiff -->|否，沒有 site: 標記| noOp["成功結束，不留言"]
+  hasDiff -->|否，有 site: 標記| claimOnly["dispatch claim-only issue review"]
   pr --> linked["PR body 參照原 issue"]
   linked --> normal["進入一般自助更新檢查"]
 ```
 
-表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。成功建立或更新 PR 時，系統不會只為了提供 PR 連結而回覆 issue；若需要等待維護者確認歷史貢獻紀錄連結，系統會用等待確認留言通知建立者。Pages 部署完成後，系統會回到原 issue 留下公開頁面連結，然後關閉 issue。
+表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。成功建立或更新 PR 時，系統不會只為了提供 PR 連結而回覆 issue；若 profile JSON 沒有變更但 issue 內有 `site:` 標記網址，系統會 dispatch 到主 repo 走 claim-only review，不建立空 commit 或空 PR。Pages 部署完成後，系統會回到原 issue 留下公開頁面連結，然後關閉 issue。
 
 `Profile issue request` 只處理新建立、重新開啟，或表單內容被編輯的 `profile-request` issue。只新增 label，或只是由系統把 issue 標題改成 `[個人公開資料] <github_username>`，不會重新產生 PR、重送 comment 或觸發後續檢查。若貢獻者要修正表單內容，直接編輯 issue body 即可讓 workflow 重新整理同一個 profile request branch 與 PR；同一個 issue 的重跑會收斂到最新一次，且產出的 profile JSON 沒有變更時不會新增 commit。
 
-若貢獻者想請維護者確認哪些公開貢獻紀錄可能是在記錄自己，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)。頁面會產生可帶入 issue form 的標記網址；這個網址只會出現在 issue 與 PR 說明中，供維護者 review canonical appearances，不會由 `credits-profiles` workflow 自動改寫歷史紀錄或完成身份合併。
+若貢獻者想請維護者確認哪些公開貢獻紀錄可能是在記錄自己，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)。頁面會產生可帶入 issue form 的標記網址；這個網址只會出現在 issue 與 PR 說明中，或在 profile 欄位沒有變更時留在原 issue 供主 repo review canonical appearances。它不會由 `credits-profiles` workflow 自動改寫歷史紀錄或完成身份合併。
+
+為了避免對 issue 建立者產生無謂通知，`Profile issue request` 只有在表單內容無效時使用固定 marker comment 提醒修正。profile 欄位沒有變更且沒有 claim 時會安靜結束；profile 欄位沒有變更但有 claim 時，確認 comment 由 `sitcon-tw/credits` 在讀取 canonical Sheet 後集中管理，內容未變時不會反覆更新。
 
 因為 PR 作者會是 `sitcon-credits[bot]`，不是填表者本人，`Check profile PR scope` 和 `Check trusted profile PR` 會在符合下列條件時，改用原始 issue 作者作為自助流程 owner：
 
@@ -99,16 +104,17 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 `credits-profiles` 不保存 canonical Google Sheets credentials，也不直接部署 GitHub Pages。需要讀取 canonical appearances、同步 `people` helper sheet 或重建 Pages 的動作，都 dispatch 到 [`sitcon-tw/credits`](https://github.com/sitcon-tw/credits) 執行。
 
-有四個跨 repo dispatch：
+有五個跨 repo dispatch：
 
 - `review-profile-pr`：由 `Trusted profile review` 送出，請主 repo 根據 canonical appearances 決定是否核准、合併或留言。
-- `apply-profile-claims`：由 `Confirm profile claim links` 在維護者勾選 claim confirmation comment 的確認 checkbox 後送出，請主 repo 重新驗證 PR 標記網址與 canonical Sheet，確認後才更新 `appearances.github_username`。
+- `review-profile-claim-issue`：由 `Profile issue request` 在 profile JSON 無變更、沒有可開 PR 的 branch diff、但 issue 內有 `site:` 標記網址時送出，請主 repo匯出 canonical Sheet 並在原 issue 建立或更新維護者確認 comment。
+- `apply-profile-claims`：由 `Confirm profile claim links` 在維護者勾選 claim confirmation comment 的確認 checkbox 後送出，請主 repo 重新驗證 PR 或 issue 標記網址與 canonical Sheet，確認後才更新 `appearances.github_username`。
 - `sync-people-from-profiles`：由 `Sync credits profile data` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 將 profile username 與 display name 同步到 Google Sheets 的 `people` helper sheet。
 - `rebuild-pages-from-profiles`：由 `Sync credits profile data` 在 `profiles/*.json` merge 到 `master` 後送出，請主 repo 重新匯出 canonical Sheet、讀取最新 `credits-profiles`，並部署 GitHub Pages。
 
 這些 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
 
-`Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number、head SHA 與確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
+`Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number/head SHA 或 issue number/username、加上確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
 
 `Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言；若 PR linked 到 profile request issue，也會回到原 issue 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。
 

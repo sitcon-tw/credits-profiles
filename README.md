@@ -35,7 +35,7 @@
 2. 系統會使用你送出 issue 的 GitHub 帳號，建立或更新 `profiles/<GitHub username>.json`。
 3. 系統會建立或更新 Pull Request；若一切正常，通常不會只為了提供 PR 連結而回覆 issue。
 4. 如果表單內容有問題，assistant 會在 issue 留言提醒；你可以直接編輯 issue 內容，系統會自動重試。
-5. 如果你提供了貢獻紀錄標記網址，而且需要維護者確認歷史紀錄連結，assistant 會回到 issue 留言說明等待狀態。
+5. 如果你提供了貢獻紀錄標記網址，而且 profile 欄位本身沒有變更，系統不會為了 claim 建立空 PR；需要維護者確認時，assistant 會在 issue 維護一則確認用留言。
 6. PR 合併並完成 SITCON Credits 公開頁面更新後，assistant 會在 issue 留下公開頁面連結，然後關閉 issue。
 
 自動建立 PR、通過檢查或合併 profile，都不代表歷史貢獻紀錄連結已經完成確認。若需要把歷史紀錄連到你的 profile，仍要由維護者確認。
