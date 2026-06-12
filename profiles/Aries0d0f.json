@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Aries Cs",
+  "bio": "",
+  "avatar_url": "https://aries0d0f.me/avatar.gif",
+  "public_email": "aries0d0f@gmail.com",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://aries0d0f.me"
+    }
+  ]
+}
