@@ -118,10 +118,21 @@ test('profile issue request workflow only processes meaningful issue events', ()
   const workflowText = readFileSync(path.join(repoRoot, '.github/workflows/profile-issue-request.yml'), 'utf8');
 
   assert.match(workflowText, /types:\n\s+- opened\n\s+- edited\n\s+- reopened/u);
+  assert.match(workflowText, /concurrency:\n\s+group: profile-issue-request-\$\{\{ github\.event\.issue\.number \}\}\n\s+cancel-in-progress: true/u);
   assert.doesNotMatch(workflowText, /^\s+- labeled$/mu);
   assert.match(workflowText, /contains\(github\.event\.issue\.labels\.\*\.name, 'profile-request'\)/u);
   assert.match(workflowText, /github\.event\.action != 'edited'/u);
   assert.match(workflowText, /contains\(toJSON\(github\.event\.changes\), '"body"'\)/u);
+});
+
+test('profile issue request workflow avoids metadata-only duplicate updates', () => {
+  const workflowText = readFileSync(path.join(repoRoot, '.github/workflows/profile-issue-request.yml'), 'utf8');
+
+  assert.match(workflowText, /if \(context\.payload\.issue\.title !== title\)/u);
+  assert.match(workflowText, /Profile request issue title is already/u);
+  assert.match(workflowText, /existingProfileText === profileText/u);
+  assert.match(workflowText, /is already up to date on/u);
+  assert.match(workflowText, /createOrUpdateFileContents/u);
 });
 
 test('buildAvatarUrl defaults to GitHub public avatar', () => {
