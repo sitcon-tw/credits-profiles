@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "秉虎",
+  "bio": "",
+  "avatar_url": "https://github.com/allen0099.png?size=512",
+  "public_email": "s96016641@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/allen0099"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/allen0099"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://git.acl.tw/allen0099"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/361357837722583050"
+    }
+  ]
+}
