@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Mouse Kuo",
+  "bio": "",
+  "avatar_url": "https://github.com/mousems.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/mousems"
+    }
+  ]
+}
