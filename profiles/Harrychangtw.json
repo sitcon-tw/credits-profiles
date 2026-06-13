@@ -1,0 +1,33 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Harry",
+  "bio": "",
+  "avatar_url": "https://github.com/Harrychangtw.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Harrychangtw"
+    },
+    {
+      "type": "website",
+      "url": "https://www.harrychang.me"
+    },
+    {
+      "type": "instagram",
+      "url": "https://harrychang.me/instagram"
+    },
+    {
+      "type": "telegram",
+      "url": "https://harrychang.me/telegram"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://harrychang.me/linkedin"
+    },
+    {
+      "type": "discord",
+      "url": "https://harrychang.me/linkedin"
+    }
+  ]
+}
