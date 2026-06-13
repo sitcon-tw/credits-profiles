@@ -1,8 +1,33 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
+  "display_name": "Kaiyasi",
   "bio": "",
   "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "public_email": "zengcode0315@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/kaiyasi"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.gonets.top"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/kaiyasi_0315/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/kaiyasi"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://gitlab.com/kaiyasi"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/759651999036997672"
+    }
+  ]
 }
