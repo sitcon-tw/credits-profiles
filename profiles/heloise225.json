@@ -1,8 +1,13 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
+  "display_name": "艾洛",
+  "bio": "吃瓜不嫌事大，吃瓜是動力來源（x\n是個社恐（信我，真的",
   "avatar_url": "",
   "public_email": "",
-  "links": []
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/heloise_owo"
+    }
+  ]
 }
