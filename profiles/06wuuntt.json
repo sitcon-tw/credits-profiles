@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "wuuntt",
+  "bio": "",
+  "avatar_url": "https://github.com/06wuuntt.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/06wuuntt"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/wu.ntt"
+    }
+  ]
+}
