@@ -23,6 +23,8 @@ flowchart TD
 
 表單入口適合不熟 JSON 或不想手動 fork/開 PR 的貢獻者。GitHub issue form 只會建立 issue，不支援直接建立 Pull Request；因此這個 repo 使用 `Profile issue request` workflow 由 `SITCON Credits Assistant` 讀取 issue body，使用 issue 作者的 GitHub username 產生 `profiles/<github_username>.json`，再建立或更新 PR。成功建立或更新 PR 時，系統不會只為了提供 PR 連結而回覆 issue；若 profile JSON 沒有變更但 issue 內有 `site:` 標記網址，系統會 dispatch 到主 repo 走 claim-only review，不建立空 commit 或空 PR。Pages 部署完成後，系統會回到原 issue 留下公開頁面連結，然後關閉 issue。
 
+profile issue form 產生的 PR body 刻意使用 `Refs #...`，不是 `Closes #...`、`Fixes #...` 或 `Resolves #...`。profile PR merge 只代表 profile JSON 已合併到 `credits-profiles`，還要等主 repo `credits` 重新匯出 canonical Sheet、重建並部署 GitHub Pages 後，公開頁面才真正更新。若使用 GitHub auto-close keyword，issue 會在 PR merge 當下提早關閉，無法反映後續 Pages rebuild 是否成功。真正的完成點是主 repo Pages deploy 成功後，由 `sitcon-credits[bot]` 回到 PR 與 linked issue 留下公開頁面連結，再明確關閉 issue。
+
 `Profile issue request` 只處理新建立、重新開啟，或表單內容被編輯的 `profile-request` issue。只新增 label，或只是由系統把 issue 標題改成 `[個人公開資料] <github_username>`，不會重新產生 PR、重送 comment 或觸發後續檢查。若貢獻者要修正表單內容，直接編輯 issue body 即可讓 workflow 重新整理同一個 profile request branch 與 PR；同一個 issue 的重跑會收斂到最新一次，且產出的 profile JSON 沒有變更時不會新增 commit。
 
 若貢獻者想請維護者確認哪些公開貢獻紀錄可能是在記錄自己，建議先打開 [標記我的貢獻紀錄](http://sitcon.org/credits/?claim=1)。頁面會產生可帶入 issue form 的標記網址；這個網址只會出現在 issue 與 PR 說明中，或在 profile 欄位沒有變更時留在原 issue 供主 repo review canonical appearances。它不會由 `credits-profiles` workflow 自動改寫歷史紀錄或完成身份合併。
@@ -116,6 +118,6 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 `Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number/head SHA 或 issue number/username、加上確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
 
-`Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言；若 PR linked 到 profile request issue，也會回到原 issue 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。
+`Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言；若 PR linked 到 profile request issue，也會回到原 issue 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。主 repo 的 Pages workflow 會把連續 profile merge 收斂到最新部署；若較早的 rebuild run 被後續 run 取消，成功部署後會掃描近期已 merge 的 linked profile PR，補齊被取消 run 遺失的 PR/issue comment 與 issue close。
 
 `site-profiles/**` 的變更不會觸發 `sync-people-from-profiles` 或 `rebuild-pages-from-profiles`，也不會被當作 contributor-owned profile username。
