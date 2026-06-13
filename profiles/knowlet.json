@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "洋蔥",
+  "bio": "就是根蔥",
+  "avatar_url": "https://github.com/knowlet.png?size=512",
+  "public_email": "",
+  "links": []
+}
