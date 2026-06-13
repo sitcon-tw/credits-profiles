@@ -1,37 +1,37 @@
 {
   "$schema": "../schemas/profile.schema.json",
   "display_name": "noeFly",
-  "bio": "",
-  "avatar_url": "",
+  "bio": "凹灣～我是 noeFly～我學程式、玩遊戲，偶爾也整理筆記到自己的網站上～",
+  "avatar_url": "https://gravatar.com/avatar/c4e071c073971018b1d21f1bb367fd1c",
   "public_email": "w@noefly.cc",
   "links": [
-      {
-          "type": "blog",
-          "url": "https://noefly.cc/blog"
-      },
-      {
-          "type": "discord",
-          "url": "https://noefly.cc/dc"
-      },
-      {
-          "type": "github",
-          "url": "https://noefly.cc/github"
-      },
-      {
-          "type": "gitlab",
-          "url": "https://noefly.cc/gitlab"
-      },
-      {
-          "type": "instagram",
-          "url": "https://noefly.cc/ig"
-      },
-      {
-          "type": "telegram",
-          "url": "https://noefly.cc/tg"
-      },
-      {
-          "type": "website",
-          "url": "https://noefly.cc"
-      }
+    {
+      "type": "github",
+      "url": "https://noefly.cc/github"
+    },
+    {
+      "type": "website",
+      "url": "https://noefly.cc"
+    },
+    {
+      "type": "blog",
+      "url": "https://noefly.cc/blog"
+    },
+    {
+      "type": "instagram",
+      "url": "https://noefly.cc/ig"
+    },
+    {
+      "type": "telegram",
+      "url": "https://noefly.cc/tg"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://noefly.cc/gitlab"
+    },
+    {
+      "type": "discord",
+      "url": "https://noefly.cc/dc"
+    }
   ]
 }
