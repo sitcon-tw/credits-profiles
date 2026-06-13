@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "紅馬",
+  "bio": "",
+  "avatar_url": "https://github.com/JieyHsu.png?size=512",
+  "public_email": "jiey0312@gmail.com",
+  "links": [
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/jiey.hsu/"
+    }
+  ]
+}
