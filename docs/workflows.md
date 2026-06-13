@@ -116,7 +116,7 @@ profile self-service 的 branch protection 或 ruleset 應要求：
 
 這些 dispatch 都應使用 `SITCON Credits Assistant` GitHub App，不應使用維護者個人 token。
 
-`Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number/head SHA 或 issue number/username、加上確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。
+`Confirm profile claim links` 只驗證 GitHub 上勾選 confirmation comment 的使用者對 `credits-profiles` 有 write、maintain 或 admin 權限，並把 PR number/head SHA 或 issue number/username、加上確認 comment id dispatch 到主 repo。它不讀取 Google Sheets credentials，也不在本 repo 直接修改 canonical appearances；實際寫入與資料驗證仍由 `sitcon-tw/credits` 完成。confirmation comment 本身是可恢復的維護者確認意圖，dispatch 只是觸發訊號；若 GitHub Actions 建立了 `Apply profile claims` run 但被 skip 或 cancel，主 repo 後續會掃描近期已勾選的 confirmation comments，重新驗證 comment metadata、checkbox、PR head SHA、plan hash 與 canonical Sheet，再補 apply 或補後續 review / Pages rebuild dispatch。
 
 `Sync credits profile data` 會在能辨識單一 merged profile PR 時，把 PR number 與 profile username 放進 Pages rebuild dispatch。主 repo 只有在 Pages deploy 成功後才回到該 PR 留言；若 PR linked 到 profile request issue，也會回到原 issue 留言，提供 `https://sitcon.org/credits/#person=<github_username>` 讓貢獻者查看公開呈現。主 repo 的 Pages workflow 會把連續 profile merge 收斂到最新部署；若較早的 rebuild run 被後續 run 取消，成功部署後會掃描近期已 merge 的 linked profile PR，補齊被取消 run 遺失的 PR/issue comment 與 issue close。
 
