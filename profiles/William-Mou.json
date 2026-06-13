@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "William Mou",
+  "bio": "從 SITCON 接觸資訊社群，現專注於 HPC 及 IP 設計領域，在各社群的攝影組隨機出沒",
+  "avatar_url": "https://www.gravatar.com/avatar/9a51023daf8ec97748277899cf9683f7?s=320&d=retro",
+  "public_email": "contact@mou.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/William-Mou"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/WilliamMou"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/%E5%B1%95%E4%BD%91-%E7%89%9F-357a69152/"
+    },
+    {
+      "type": "facebook",
+      "url": "https://fb.mou.tw"
+    }
+  ]
+}
