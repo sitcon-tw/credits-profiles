@@ -148,10 +148,13 @@ test('buildAvatarUrl defaults to GitHub public avatar', () => {
   assert.equal(buildAvatarUrl({ fields, username: 'octocat' }), 'https://github.com/octocat.png?size=512');
 });
 
-test('buildAvatarUrl preserves blank avatar for existing profile updates', () => {
+test('buildAvatarUrl defaults to GitHub public avatar for existing profile updates', () => {
   const fields = parseIssueFormBody(formBody());
 
-  assert.equal(buildAvatarUrl({ fields, username: 'octocat', profileExists: true }), '');
+  assert.equal(
+    buildAvatarUrl({ fields, username: 'octocat', profileExists: true }),
+    'https://github.com/octocat.png?size=512',
+  );
 });
 
 test('buildAvatarUrl accepts an explicit advanced avatar URL', () => {
@@ -243,7 +246,7 @@ test('buildProfileRequestPullRequest marks existing profile as update', () => {
   });
 
   assert.equal(result.prTitle, '更新我的 profile: octocat');
-  assert.match(result.profileText, /"avatar_url": ""/);
+  assert.match(result.profileText, /"avatar_url": "https:\/\/github.com\/octocat.png\?size=512"/);
   assert.match(result.prBody, /- \[x\] 更新我的 profile/);
   assert.match(result.prBody, /- \[ \] 新增我的 profile/);
 });

@@ -105,9 +105,6 @@ export function buildAvatarUrl({ fields, username, profileExists = false }) {
   if (explicitAvatarUrl) {
     return explicitAvatarUrl;
   }
-  if (profileExists) {
-    return '';
-  }
 
   return `https://github.com/${username}.png?size=512`;
 }
