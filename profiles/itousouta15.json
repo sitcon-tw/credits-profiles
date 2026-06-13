@@ -1,0 +1,41 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "itouSouta",
+  "bio": "SCAICT 5th President.\nU can call me itouSouta / 伊藤蒼太 / 郭家睿\n\n我好想睡覺",
+  "avatar_url": "https://blog.itousouta15.tw/avatar/avatar.webp",
+  "public_email": "me@itousouta15.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/itousouta15"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.itousouta15.tw"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/itou.souta15"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/itousouta15"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://gitlab.com/itou.souta15"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/user/itou.souta15"
+    },
+    {
+      "type": "threads",
+      "url": "https://www.threads.com/@itou.souta15"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/itousouta15"
+    }
+  ]
+}
