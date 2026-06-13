@@ -292,6 +292,32 @@ test('buildProfileRequestPullRequest explains issue form link validation in Trad
   );
 });
 
+test('buildProfileRequestPullRequest reports validation errors on the submitted link field', () => {
+  assert.throws(
+    () => buildProfileRequestPullRequest({
+      issue: issue(formBody({
+        GitHub: 'https://github.com/octocat',
+        個人網站: 'https://example.com',
+        Blog: 'https://blog.example.com',
+        Instagram: 'https://www.instagram.com/octocat',
+        Telegram: '',
+        LinkedIn: '',
+        Facebook: '',
+        YouTube: '',
+        Slides: '',
+        GitLab: '',
+        Discord: 'octocat_12345',
+        [CUSTOM_LINK_URL_FIELD]: '',
+      })),
+    }),
+    (error) => {
+      assert.match(error.message, /Discord 欄位的網址：不是有效網址/);
+      assert.doesNotMatch(error.message, /Telegram 欄位的網址/);
+      return true;
+    },
+  );
+});
+
 test('formatFailureComment tells issue authors to edit the issue and retry', () => {
   const comment = formatFailureComment('表單內容還不能建立 profile PR，請修改下列欄位：\n\n- 公開連結最多只能填 8 個。');
 

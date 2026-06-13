@@ -82,7 +82,7 @@ export function buildProfileRequestPullRequest({ issue, profileExists = false })
   const profileText = `${JSON.stringify(profile, null, 2)}\n`;
   const validationIssues = validateProfileJsonText(`${username}.json`, profileText, { template: false });
   if (validationIssues.length > 0) {
-    throw new Error(formatProfileRequestValidationIssues(validationIssues));
+    throw new Error(formatProfileRequestValidationIssues(validationIssues, profile.links));
   }
 
   const updateType = profileExists ? '更新我的 profile' : '新增我的 profile';
@@ -150,20 +150,20 @@ export function collectLinks(fields) {
   return links;
 }
 
-export function formatProfileRequestValidationIssues(issues) {
+export function formatProfileRequestValidationIssues(issues, links = []) {
   return [
     '請修改下列欄位：',
     '',
-    ...issues.map((issue) => `- ${formatProfileRequestValidationIssue(issue)}`),
+    ...issues.map((issue) => `- ${formatProfileRequestValidationIssue(issue, links)}`),
   ].join('\n');
 }
 
-function formatProfileRequestValidationIssue(issue) {
+function formatProfileRequestValidationIssue(issue, links) {
   if (issue.field === 'links' && issue.message === 'must contain 8 links or fewer') {
     return '公開連結最多只能填 8 個。請刪除或清空多餘的連結欄位，保留最想公開的 8 個以內。';
   }
 
-  const fieldLabel = formatIssueFormFieldLabel(issue.field);
+  const fieldLabel = formatIssueFormFieldLabel(issue.field, links);
   const translatedMessage = translateValidationIssueMessage(issue.message);
 
   if (issue.message === 'must use https:') {
@@ -179,7 +179,7 @@ function formatProfileRequestValidationIssue(issue) {
   return `${fieldLabel}：${translatedMessage}`;
 }
 
-function formatIssueFormFieldLabel(field) {
+function formatIssueFormFieldLabel(field, links) {
   if (!field) {
     return '表單內容';
   }
@@ -202,7 +202,7 @@ function formatIssueFormFieldLabel(field) {
 
   const linkIndex = Number(linkMatch[1]);
   const linkField = linkMatch[2] ?? '';
-  const linkLabel = linkFormFieldLabel(linkIndex);
+  const linkLabel = linkFormFieldLabel(linkIndex, links);
   if (linkField === 'url') {
     return `${linkLabel} 欄位的網址`;
   }
@@ -215,7 +215,18 @@ function formatIssueFormFieldLabel(field) {
   return `${linkLabel} 欄位`;
 }
 
-function linkFormFieldLabel(index) {
+function linkFormFieldLabel(index, links = []) {
+  const linkType = links[index]?.type;
+  if (linkType) {
+    if (linkType === 'custom') {
+      return '自訂連結';
+    }
+    const standardLink = LINK_FORM_FIELDS.find(([type]) => type === linkType);
+    if (standardLink) {
+      return standardLink[1];
+    }
+  }
+
   const standardLink = LINK_FORM_FIELDS[index];
   if (standardLink) {
     return standardLink[1];
