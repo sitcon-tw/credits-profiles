@@ -1,8 +1,21 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
+  "display_name": "TonicatOWO",
+  "bio": "2026 SITCON Camp 開發組組員\n一個高二高中生\nCampfire , Daydream 兩場台灣黑客松的員工",
   "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "public_email": "tonicatowo@proton.me",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/tonicatowo"
+    },
+    {
+      "type": "website",
+      "url": "https://tonicatowo.xyz"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/tonicatowo"
+    }
+  ]
 }
