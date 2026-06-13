@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Clarence",
+  "bio": "曾參與 SITCON 等技術社群活動，關心學生社群、開源協作與技術知識分享。平常專注後端開發、DevOps、雲端基礎架構、LLM 應用與網路技術實作，並持續透過部落格整理實務經驗與踩坑紀錄。",
+  "avatar_url": "https://github.com/clarencetw.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/clarencetw"
+    },
+    {
+      "type": "website",
+      "url": "https://clarence.tw/"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.clarence.tw/"
+    }
+  ]
+}
