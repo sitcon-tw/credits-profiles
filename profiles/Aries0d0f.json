@@ -6,6 +6,10 @@
   "public_email": "aries0d0f@gmail.com",
   "links": [
     {
+      "type": "github",
+      "url": "https://aries0d0f.me/s/github?ref=sitcon-contribute"
+    },
+    {
       "type": "website",
       "url": "https://aries0d0f.me"
     }
