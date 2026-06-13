@@ -1,17 +1,29 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "Aries Cs",
+  "display_name": "白羊",
   "bio": "",
   "avatar_url": "https://aries0d0f.me/avatar.gif",
   "public_email": "aries0d0f@gmail.com",
   "links": [
     {
       "type": "github",
-      "url": "https://aries0d0f.me/s/github?ref=sitcon-contribute"
+      "url": "https://aries0d0f.me/s/github?ref=sitcon-credits"
     },
     {
       "type": "website",
       "url": "https://aries0d0f.me"
+    },
+    {
+      "type": "telegram",
+      "url": "https://aries0d0f.me/s/t.me?ref=sitcon-credits"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://aries0d0f.me/s/linked/in?ref=sitcon-credits"
+    },
+    {
+      "type": "x",
+      "url": "https://aries0d0f.me/s/x?ref=sitcon-credits"
     }
   ]
 }
