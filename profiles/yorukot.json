@@ -2,7 +2,7 @@
   "$schema": "../schemas/profile.schema.json",
   "display_name": "Yorukot",
   "bio": "來自台灣的開源開發者，關注 Go、系統設計、開源協作與終端機工具，喜歡打造快速、實用且帶有個人風格的工具與網站。",
-  "avatar_url": "",
+  "avatar_url": "https://github.com/yorukot.png?size=512",
   "public_email": "hi@yorukot.me",
   "links": [
     {
