@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "萊姆",
+  "bio": "嗨嗨我是萊姆！是個喜歡寫寫小專案、看看書、和人聊聊天的人",
+  "avatar_url": "https://github.com/slimuCS.png?size=512",
+  "public_email": "",
+  "links": []
+}
