@@ -1,8 +1,25 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
-  "avatar_url": "",
-  "public_email": "",
-  "links": []
+  "display_name": "白龍",
+  "bio": "一隻龍",
+  "avatar_url": "https://gravatar.com/avatar/8ed5daf641164b6e5a3044e8fa2cfe06c6c42747bc20571cd48844b8767b2ac3",
+  "public_email": "whitedragon@fury.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Whitedragon115"
+    },
+    {
+      "type": "website",
+      "url": "https://whitedragon.life"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/darkingfury"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/968013433482141696"
+    }
+  ]
 }
