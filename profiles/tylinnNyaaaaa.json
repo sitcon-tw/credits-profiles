@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "牛排",
+  "bio": "嗨各位我是牛排，很高興可以跟大家一起辦營隊！",
+  "avatar_url": "https://github.com/tylinnNyaaaaa.png?size=512",
+  "public_email": "twcherrylin@gmail.com",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/lincaiyi1228?igsh=MXVtN2ExaTNpaDdkbw%3D%3D&utm_source=qr"
+    }
+  ]
+}
