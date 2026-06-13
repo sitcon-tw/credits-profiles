@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Chloe / 金魚",
+  "bio": "",
+  "avatar_url": "https://github.com/Chloe8avocado.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/ch1ngh_?igsh=NDBxZmN1c3J2NGFr&utm_source=qr"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/%E4%BA%AC%E6%A8%BA-%E8%94%A1-aa988b407"
+    },
+    {
+      "type": "youtube",
+      "url": "https://youtube.com/@cchloee_?si=cjk9IlG0NgbZqAjO"
+    }
+  ]
+}
