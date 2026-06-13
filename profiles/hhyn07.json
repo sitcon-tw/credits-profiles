@@ -1,0 +1,13 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "芋泥",
+  "bio": "",
+  "avatar_url": "https://github.com/hhyn07.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/__hhyn.7?igsh=a3V0amx0NzZsYXcy&utm_source=qr"
+    }
+  ]
+}
