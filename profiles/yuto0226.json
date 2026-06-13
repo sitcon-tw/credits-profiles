@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Yuto",
+  "bio": "嗨我是 Yuto，要畢業的電鍋大學資工系學生",
+  "avatar_url": "https://github.com/yuto0226.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/yuto0226"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.yuto0226.dev"
+    },
+    {
+      "type": "instagram",
+      "url": "https://instagram.com/sw_1a4"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/yuto0226/"
+    }
+  ]
+}
