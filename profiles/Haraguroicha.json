@@ -1,0 +1,41 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "腹黒い茶",
+  "bio": "",
+  "avatar_url": "https://github.com/Haraguroicha.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://haraguroicha.work/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://instagram.com/haraguroicha"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/Haraguroicha"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/haraguroicha"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/@%E8%85%B9%E9%BB%92%E3%81%84%E8%8C%B6"
+    },
+    {
+      "type": "gitlab",
+      "url": "https://gitlab.com/haraguroicha/"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/108379292303388672"
+    },
+    {
+      "type": "threads",
+      "url": "https://threads.com/@haraguroicha"
+    }
+  ]
+}
