@@ -2,7 +2,7 @@
   "$schema": "../schemas/profile.schema.json",
   "display_name": "Kaiyasi",
   "bio": "",
-  "avatar_url": "",
+  "avatar_url": "https://www.gravatar.com/avatar/3073c19c6b1efca1fb76df124e2d7047",
   "public_email": "zengcode0315@gmail.com",
   "links": [
     {
