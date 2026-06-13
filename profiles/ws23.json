@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Eunice Lin / ws育慈",
+  "bio": "",
+  "avatar_url": "https://github.com/ws23.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/ws23"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/ws23ya/"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/warmsnow23/"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/ws124310"
+    }
+  ]
+}
