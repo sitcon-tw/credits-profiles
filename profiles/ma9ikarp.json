@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "鯉魚 / LiYu",
+  "bio": "毫無反應，就是條鯉魚",
+  "avatar_url": "https://github.com/ma9ikarp.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/liyu0831"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/Carp_Lee"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/magikarp"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/liyu00226/"
+    }
+  ]
+}
