@@ -1,8 +1,33 @@
 {
   "$schema": "../schemas/profile.schema.json",
-  "display_name": "",
-  "bio": "",
+  "display_name": "毛哥EM",
+  "bio": "黃色藍色網頁毛茸茸龍",
   "avatar_url": "https://github.com/elvisdragonmao.png?size=512",
-  "public_email": "",
-  "links": []
+  "public_email": "info@elvismao.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/elvisdragonmao/"
+    },
+    {
+      "type": "website",
+      "url": "https://elvismao.com"
+    },
+    {
+      "type": "blog",
+      "url": "https://emtech.cc"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/elvisdragonmao"
+    },
+    {
+      "type": "discord",
+      "url": "https://discordapp.com/users/685630394431045863"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/elvisdragonmao"
+    }
+  ]
 }
