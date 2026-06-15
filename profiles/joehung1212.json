@@ -1,0 +1,33 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "裸男 Joe Hung",
+  "bio": "從國中開始踏入資訊社群，一路到碩士畢業受到社群的滋養與照顧，得以成長茁壯。",
+  "avatar_url": "https://github.com/joehung1212.png?size=512",
+  "public_email": "contact@joehung.taipei",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/joehung1212"
+    },
+    {
+      "type": "website",
+      "url": "https://joehung.taipei/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/joe.hung/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/JoeHung"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/joehung1212/"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/joehung1212/"
+    }
+  ]
+}
