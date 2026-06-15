@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "XC",
+  "bio": "",
+  "avatar_url": "https://github.com/Octoberlobster.png?size=512",
+  "public_email": "me@xclobster.dev",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Octoberlobster"
+    },
+    {
+      "type": "website",
+      "url": "https://xclobster.dev/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/xian_chang_lee"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/xclobster"
+    }
+  ]
+}
