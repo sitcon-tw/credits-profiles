@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "崑元 Rex",
+  "bio": "",
+  "avatar_url": "https://github.com/c22222200.png?size=512",
+  "public_email": "",
+  "links": []
+}
