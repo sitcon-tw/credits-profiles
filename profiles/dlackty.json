@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Richard Lee",
+  "bio": "",
+  "avatar_url": "https://github.com/dlackty.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/dlackty"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/richard-lee-7389b818/"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/dlackty"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/dlackty"
+    }
+  ]
+}
