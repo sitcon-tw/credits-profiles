@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "皮蛋",
+  "bio": "",
+  "avatar_url": "https://github.com/bruh0422.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "website",
+      "url": "https://bruh0422.xyz"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/bruh0422"
+    },
+    {
+      "type": "discord",
+      "url": "https://discordapp.com/users/518750068455768065"
+    }
+  ]
+}
