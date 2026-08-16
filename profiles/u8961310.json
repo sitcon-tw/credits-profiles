@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "蛋糕",
+  "bio": "",
+  "avatar_url": "https://github.com/u8961310.png?size=512",
+  "public_email": "u8961310@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/u8961310"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/u8961310"
+    }
+  ]
+}
