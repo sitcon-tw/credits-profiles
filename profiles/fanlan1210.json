@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "繁嵐",
+  "bio": "一位參與公民科技與社會行動的 Web 開發者。\n默默關注、討論社會議題，期望資訊科技能夠用以輔助社會。",
+  "avatar_url": "https://github.com/fanlan1210.png?size=512",
+  "public_email": "contact@fanlan.net",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/fanlan1210"
+    },
+    {
+      "type": "website",
+      "url": "https://www.fanlan.net"
+    },
+    {
+      "type": "blog",
+      "url": "https://blog.fanlan.net"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/fanlan1210"
+    }
+  ]
+}
