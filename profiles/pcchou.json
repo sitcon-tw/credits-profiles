@@ -1,0 +1,29 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "周秉宇 Ping-yu Chou (PCC)",
+  "bio": "「我們是在試探生命的寒暑，以少年堅決向前延伸的觸鬚。」——楊牧〈來自雙溪〉，《奇萊前書》）\n\n<hr/>\n\n記得幼時初次下載 650MB 的 LiveCD 看到 wiki 上酷斃了的 OpenFoundry 就像昨天，遙望在台北的 TICC 像秘密組織的盛宴。\n\n2014 年七月政大溪邊綠意的資科系館，那營隊的第一屆，伴隨午後雷陣雨的四天，天藍色的名牌、「I hack therefore I am.」的一切想望在幾間忘不了的教室裡。大家都在。\n\n還憶起 2015 PyCon TW 在 ETH 1.0 同期結識還沒投入那領域的強者，11 年後幾個人在 COSCUP 散場時巧遇，竟還妄言大談密碼學末日的避險措施與機會成本——這些年來我這人確實是出言不遜了，你們也是。\n\n我知道是因為我們在意，We do care.，所有透徹研析的言辭一如過往，帶著同時並行的天真與智慧。十年前、十年後，這些都是不可多得的。\n\n--\n\n確實外面世界變化不少。十餘年的「人×月神話」積累了電腦科技的進展，版本編號不斷推進。世上每個版本控制裡，每個人的 commits 及所有 commitments，用 SHA1 和 Merkle tree 寫下了跟矽晶圓蝕刻一樣通往永久的痕跡。\n\n2010s 後，我們供奉的 git/GitHub、Python 跟類 Unix 從某種邊緣爬上寶座，被認定為世界頂尖的名詞更了又替，每個人各自的身份、前輩們名片的排版換了無數次。\n\n但令人安心的是：十多年前的電腦少年／青年／壯年們都在，即使許多人如我已經半腳踏出這片天地外，然眼底盡是這裡染的斑斕色彩。回望這幾片草原，我想我們確實是一起長了年歲，只是在多年以後持續保守了世界的一切尚未改變時，或仍在改變時，的無邊妄想與燦爛期待。\n\n這令人滿意——今天我們仍有一個尚在改變中的世界，電子計算機裡外的各位：前程似錦，後會有期。",
+  "avatar_url": "https://github.com/pcchou.png?size=512",
+  "public_email": "mail@pcchou.me",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/pcchou"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/pingping5571/"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/khyu080229/"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/kshs080229"
+    },
+    {
+      "type": "threads",
+      "url": "https://threads.net/@pingping5571"
+    }
+  ]
+}
