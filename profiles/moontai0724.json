@@ -1,0 +1,30 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "月太",
+  "bio": "一個幾乎只在研討會拿起相機的野生工程師，默默的就跳了很多年，是個 [35P](https://hololive.hololivepro.com/talents/sakuramiko/)。",
+  "avatar_url": "https://www.gravatar.com/avatar/4e9d08c3b268edcc82ccfa958eda5e66?s=480",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/moontai0724"
+    },
+    {
+      "type": "website",
+      "url": "https://moontai0724.tw"
+    },
+    {
+      "type": "threads",
+      "url": "https://www.threads.com/@moontai0724"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/moontai0724"
+    },
+    {
+      "type": "custom",
+      "label": "社群攝影集",
+      "url": "https://flickr.moontai0724.tw/"
+    }
+  ]
+}
