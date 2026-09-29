@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Henry Wu",
+  "bio": "",
+  "avatar_url": "https://henrywu.tw/img/avatar.jpg",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/itshenrywu/"
+    },
+    {
+      "type": "website",
+      "url": "https://henrywu.tw"
+    },
+    {
+      "type": "instagram",
+      "url": "https://instagram.com/itshenrywu"
+    }
+  ]
+}
