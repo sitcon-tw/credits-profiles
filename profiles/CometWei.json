@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Comet Wei",
+  "bio": "熱衷於資訊安全、後端工程與開放原始碼技術的實踐者與社群參與者。曾參與 SITCON 學生計算機年會籌備，並積極投入 g0v 零時政府黑客松與 HITCON 資安社群活動。\n\n技術領域聚焦於 Linux 系統管理、晶片安全、網路架構及嵌入式工具開發。深信開源文化的力量，持續透過社群籌備、黑客松協作與技術分享，促進開放科技與資訊安全知識的普及與應用。",
+  "avatar_url": "https://github.com/CometWei.png?size=512",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/CometWei"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/CometWei"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/cometwei/"
+    }
+  ]
+}
