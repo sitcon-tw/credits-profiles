@@ -6,28 +6,32 @@
   "public_email": "joe10330@gmail.com",
   "links": [
     {
+      "type": "github",
+      "url": "https://github.com/joe10330"
+    },
+    {
       "type": "website",
       "url": "https://blog.joeangel.tw/"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/joeangel.tw/"
     },
     {
       "type": "telegram",
       "url": "https://t.me/JoeAngel"
     },
     {
-      "type": "facebook",
-      "url": "https://fb.me/joeangel.tw"
-    },
-	{
-      "type": "instagram",
-      "url": "https://www.instagram.com/joeangel.tw/"
-    },
-    {
       "type": "linkedin",
       "url": "https://tw.linkedin.com/in/joeangel-huang"
     },
     {
-      "type": "github",
-      "url": "https://github.com/joe10330"
+      "type": "facebook",
+      "url": "https://fb.me/joeangel.tw"
+    },
+    {
+      "type": "x",
+      "url": "https://x.com/JoeAngel_tw"
     }
   ]
 }
