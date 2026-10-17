@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "拉布",
+  "bio": "",
+  "avatar_url": "https://github.com/arthurc0102.png?size=512",
+  "public_email": "",
+  "links": []
+}
