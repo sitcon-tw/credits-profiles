@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "三線",
+  "bio": "",
+  "avatar_url": "https://sanxian-4348.github.io/public/images/profile.jpg",
+  "public_email": "sanxian4348@gmail.com",
+  "links": []
+}
