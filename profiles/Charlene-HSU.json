@@ -2,7 +2,7 @@
   "$schema": "../schemas/profile.schema.json",
   "display_name": "肯德基爺爺",
   "bio": "嗨我叫肯德基爺爺，至於為什麼不重要",
-  "avatar_url": "https://github.com/kfcisme.png?size=512",
+  "avatar_url": "https://github.com/Charlene-HSU.png?size=512",
   "public_email": "",
   "links": [
     {
@@ -16,6 +16,10 @@
     {
       "type": "instagram",
       "url": "https://www.instagram.com/kfc_is_me?srtk=azR4bzlwbXVucXVz&utm_source=qr"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/wowkfccc"
     }
   ]
 }
