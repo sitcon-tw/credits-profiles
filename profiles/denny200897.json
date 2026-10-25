@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "denny",
+  "bio": "websites: https://denny.li",
+  "avatar_url": "https://denny.li/images/avatar.jpg",
+  "public_email": "helloworld@denny.li",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/denny200897"
+    },
+    {
+      "type": "website",
+      "url": "https://denny.li"
+    }
+  ]
+}
