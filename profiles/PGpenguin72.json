@@ -1,0 +1,38 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "PGpenguin72",
+  "bio": "THJCC 臺灣高中職聯合資安競賽 第四屆總召、SCINT 北臺灣學生資訊社群 工作人員，我喜歡資訊界的各種有趣的東東，涉略廣泛但不深，我也很常到各種社群跑跑逛逛，我有去過 SITCON、COSCUP、HITCON、Cyber Summit Korea 等研討會，歡迎隨時揪出去玩喔 :D   \n（小提示，使用 DC 會比較容易照找到我喔，加我好友請記得一定要私訊說你從哪來ㄉ）",
+  "avatar_url": "https://pg72.tw/avatar.png",
+  "public_email": "hi@pg72.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/PGpenguin72"
+    },
+    {
+      "type": "website",
+      "url": "https://pg72.tw"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/pg_penguin_72/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/PGpenguin72"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/@pg_penguin_72"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/609189792571457550"
+    },
+    {
+      "type": "custom",
+      "label": "其他連結",
+      "url": "https://pg72.tw/links/"
+    }
+  ]
+}
