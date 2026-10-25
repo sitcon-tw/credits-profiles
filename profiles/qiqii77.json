@@ -1,0 +1,8 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "77",
+  "bio": "目前在花果山大學讀不分系，穿梭在各社群間的巴黎作息斜槓青年。",
+  "avatar_url": "https://github.com/qiqii77.png?size=512",
+  "public_email": "",
+  "links": []
+}
