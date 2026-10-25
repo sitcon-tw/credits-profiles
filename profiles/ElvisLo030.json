@@ -1,0 +1,42 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "小羅",
+  "bio": "",
+  "avatar_url": "https://github.com/ElvisLo030.png?size=512",
+  "public_email": "hi@elvislo.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/ElvisLo030"
+    },
+    {
+      "type": "website",
+      "url": "https://elvislo.tw"
+    },
+    {
+      "type": "blog",
+      "url": "https://elvislo.tw/blog"
+    },
+    {
+      "type": "instagram",
+      "url": "https://instagram.com/elvis._.lo"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/elvislo030"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://github.com/ElvisLo030"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/491249566750998529"
+    },
+    {
+      "type": "custom",
+      "label": "now page",
+      "url": "https://elvislo.tw/now/"
+    }
+  ]
+}
