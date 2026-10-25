@@ -1,0 +1,25 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Raymond Weng",
+  "bio": "",
+  "avatar_url": "https://avatars.githubusercontent.com/u/87399369",
+  "public_email": "",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/Raymond-Weng"
+    },
+    {
+      "type": "website",
+      "url": "https://raymondweng.dev"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/raymondwengcode"
+    },
+    {
+      "type": "threads",
+      "url": "https://www.threads.com/@raymondwengcode"
+    }
+  ]
+}
