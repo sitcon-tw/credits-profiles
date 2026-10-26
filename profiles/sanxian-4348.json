@@ -4,5 +4,18 @@
   "bio": "",
   "avatar_url": "https://sanxian-4348.github.io/public/images/profile.jpg",
   "public_email": "sanxian4348@gmail.com",
-  "links": []
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/11_sanxian/"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/sanxian43480"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/949974662908104734"
+    }
+  ]
 }
