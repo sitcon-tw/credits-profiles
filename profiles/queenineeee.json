@@ -1,0 +1,17 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Queenine",
+  "bio": "嗷~\n高中玩FRC的傢伙",
+  "avatar_url": "https://gravatar.com/bearkrispy81c484fd47",
+  "public_email": "queeninecheng@gmail.com",
+  "links": [
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/queenineeee?xtok=dzh1YW03NjZidGJp&utm_source=qr"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/invite/v8kEGrvK"
+    }
+  ]
+}
