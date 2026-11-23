@@ -1,0 +1,21 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "Katy",
+  "bio": "我是 Katy！目前主修資訊管理雙主修經濟，也正在銀行實習中。對 AI、LLM、金融科技與新創領域很有興趣，喜歡探索不同領域的新知與可能性。希望透過參與 SITCON，認識更多有趣的人，一起交流、學習，也探索技術的更多可能！",
+  "avatar_url": "https://github.com/katy-kt.png?size=512",
+  "public_email": "katy20050818@gmail.com",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/katy-kt"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/ktyen"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/katykt/"
+    }
+  ]
+}
