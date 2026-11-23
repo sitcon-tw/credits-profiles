@@ -1,0 +1,41 @@
+{
+  "$schema": "../schemas/profile.schema.json",
+  "display_name": "小弘",
+  "bio": "曾擔任 SITCON 2025 製播組組長，並參與其他開源社群活動（如 COSCUP, TWNOG）。",
+  "avatar_url": "https://github.com/hune1228.png?size=512",
+  "public_email": "hi@hankcheng399.tw",
+  "links": [
+    {
+      "type": "github",
+      "url": "https://github.com/hune1228"
+    },
+    {
+      "type": "website",
+      "url": "https://hankcheng399.tw"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/hank.cheng.399"
+    },
+    {
+      "type": "telegram",
+      "url": "https://t.me/hankcheng399"
+    },
+    {
+      "type": "linkedin",
+      "url": "https://www.linkedin.com/in/hankcheng399"
+    },
+    {
+      "type": "facebook",
+      "url": "https://www.facebook.com/hank.cheng.399"
+    },
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/@HankCheng399"
+    },
+    {
+      "type": "discord",
+      "url": "https://discord.com/users/hune1228"
+    }
+  ]
+}
